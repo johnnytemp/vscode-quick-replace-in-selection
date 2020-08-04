@@ -4,10 +4,19 @@ import { window, TextEditor, TextDocument, Selection, Position, Range, EndOfLine
  * QuickReplaceInSelectionCommand class
  */
 export class QuickReplaceInSelectionCommand {
+  static lastTarget : string = ''
+  static lastReplacement : string = ''
+
   public performCommand() {
-    window.showInputBox({ placeHolder: 'Replace target (regex)' }).then((target: string | undefined) => {
+    window.showInputBox({
+      placeHolder: 'Replace target (regex)',
+      value: QuickReplaceInSelectionCommand.lastTarget
+    }).then((target: string | undefined) => {
       if (target !== undefined) {
-        window.showInputBox({ placeHolder: 'Replace to' }).then((replacement: string | undefined) => {
+        window.showInputBox({
+          placeHolder: 'Replace to',
+          value: QuickReplaceInSelectionCommand.lastReplacement
+        }).then((replacement: string | undefined) => {
           if (replacement !== undefined) {
             this.performReplacement(target, replacement);
           }
@@ -16,7 +25,18 @@ export class QuickReplaceInSelectionCommand {
     });
   }
 
+  public clearHistory() {
+    QuickReplaceInSelectionCommand.lastTarget = '';
+    QuickReplaceInSelectionCommand.lastReplacement = '';
+  }
+
   public performReplacement(target: string, replacement: string) {
+    QuickReplaceInSelectionCommand.lastTarget = target;
+    QuickReplaceInSelectionCommand.lastReplacement = replacement;
+    if (target === '' && replacement === '') {  // this special case is for clear history
+      return;
+    }
+
     let editor = window.activeTextEditor;
     if (!editor) {
       return;

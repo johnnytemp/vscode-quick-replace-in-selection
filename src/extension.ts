@@ -3,6 +3,8 @@
 import * as vscode from 'vscode';
 import { QuickReplaceInSelectionCommand } from './QuickReplaceInSelectionCommand';
 
+var replaceInSelection = new QuickReplaceInSelectionCommand();
+
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -11,7 +13,7 @@ export function activate(context: vscode.ExtensionContext) {
   // This line of code will only be executed once when your extension is activated
   // console.log('Congratulations, your extension "quick-replace-in-selection" is now active!');
 
-  let replaceInSelection = new QuickReplaceInSelectionCommand();
+  // let replaceInSelection = new QuickReplaceInSelectionCommand();
 
   // The command has been defined in the package.json file
   // Now provide the implementation of the command with registerCommand
@@ -28,4 +30,6 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 // this method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate() {
+  replaceInSelection.clearHistory();
+}
