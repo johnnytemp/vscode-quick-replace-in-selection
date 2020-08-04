@@ -1,7 +1,7 @@
 {
 	"name": "quick-replace-in-selection",
 	"displayName": "Quick Replace In Selection",
-	"description": "Perform search and replace in current selection with quick steps",
+	"description": "Search and replace a regular expression in current selection with quick steps",
 	"version": "0.0.1",
 	"engines": {
 		"vscode": "^1.47.0"
@@ -10,14 +10,14 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:quick-replace-in-selection.helloWorld"
+		"onCommand:quick-replace-in-selection.replaceInSelection"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "quick-replace-in-selection.helloWorld",
-				"title": "Hello World"
+				"command": "quick-replace-in-selection.replaceInSelection",
+				"title": "Quick Replace In Selection"
 			}
 		]
 	},
