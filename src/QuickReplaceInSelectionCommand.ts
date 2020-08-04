@@ -5,9 +5,9 @@ import { window, TextEditor, TextDocument, Selection, Position, Range, EndOfLine
  */
 export class QuickReplaceInSelectionCommand {
   public performCommand() {
-    window.showInputBox().then((target: string | undefined) => {
+    window.showInputBox({ placeHolder: 'Replace target (regex)' }).then((target: string | undefined) => {
       if (target !== undefined) {
-        window.showInputBox().then((replacement: string | undefined) => {
+        window.showInputBox({ placeHolder: 'Replace to' }).then((replacement: string | undefined) => {
           if (replacement !== undefined) {
             this.performReplacement(target, replacement);
           }
