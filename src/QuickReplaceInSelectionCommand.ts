@@ -45,8 +45,23 @@ export class QuickReplaceInSelectionCommand {
     return new Selection(new Position(0, 0), documentLastPosition);
   }
 
+  /// treat `\n` as newline and `\\` as `\`. However, unknown sequence `\?` will be preserved, instead of escaped.
+  public unescapeReplacement(replacement : string) : string {
+    return replacement.replace(/\\./g, (text) => {
+      switch (text[1]) {
+        case 'n': return "\n";
+        case 'r': return "\r";
+        case 't': return "\t";
+        case '\\': return "\\";
+        default:
+          return text;
+      }
+    });
+  }
+
   public computeReplacements(target : string, replacement : string, document : TextDocument, selections : Selection[], ranges : Range[], texts : string[]) {
     let regex = new RegExp(target, 'g');
+    replacement = this.unescapeReplacement(replacement);
     let numSelections = selections.length;
     for (let i: number = 0; i < numSelections; i++) { // replace all selections or whole document
       let sel = selections[i];
