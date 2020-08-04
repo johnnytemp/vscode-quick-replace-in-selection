@@ -1,4 +1,4 @@
-import { window, TextEditor, TextDocument, Selection, Position, Range } from 'vscode';
+import { window, TextEditor, TextDocument, Selection, Position, Range, EndOfLine } from 'vscode';
 
 /**
  * QuickReplaceInSelectionCommand class
@@ -63,10 +63,17 @@ export class QuickReplaceInSelectionCommand {
     let regex = new RegExp(target, 'g');
     replacement = this.unescapeReplacement(replacement);
     let numSelections = selections.length;
+    let isCRLF = document.eol == EndOfLine.CRLF;
     for (let i: number = 0; i < numSelections; i++) { // replace all selections or whole document
       let sel = selections[i];
       let text = document.getText(sel);
-      text = text.replace(regex, replacement);
+      if (isCRLF) {
+        text = text.replace(/\r\n/g, "\n"); // CRLF to LF, so that "\n" is normalized to represent the whole newlines
+        text = text.replace(regex, replacement);
+        text = text.replace(/\n/g, "\r\n"); // convert LF back to CRLF
+      } else {
+        text = text.replace(regex, replacement);
+      }
       ranges.push(sel);
       texts.push(text);
     }
