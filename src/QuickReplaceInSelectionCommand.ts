@@ -18,7 +18,7 @@ export class QuickReplaceInSelectionCommand {
           value: QuickReplaceInSelectionCommand.lastReplacement
         }).then((replacement: string | undefined) => {
           if (replacement !== undefined) {
-            this.performReplacement(target, replacement);
+            this.performReplacement([target], [replacement], false);
           }
         })
       }
@@ -30,10 +30,15 @@ export class QuickReplaceInSelectionCommand {
     QuickReplaceInSelectionCommand.lastReplacement = '';
   }
 
-  public performReplacement(target: string, replacement: string) {
-    QuickReplaceInSelectionCommand.lastTarget = target;
-    QuickReplaceInSelectionCommand.lastReplacement = replacement;
-    if (target === '' && replacement === '') {  // this special case is for clear history
+  public performReplacement(targets: string[], replacements: string[], isSaved : boolean) {
+    if (targets.length == 0) {
+      return;
+    }
+    if (!isSaved) {
+      QuickReplaceInSelectionCommand.lastTarget = targets[0];
+      QuickReplaceInSelectionCommand.lastReplacement = replacements[0];
+    }
+    if (targets[0] === '' && replacements[0] === '') {  // this special case is for clear history
       return;
     }
 
@@ -51,7 +56,7 @@ export class QuickReplaceInSelectionCommand {
 
     let ranges : Range[] = [];
     let texts : string[] = [];
-    this.computeReplacements(target, replacement, document, selections, ranges, texts);
+    this.computeReplacements(targets, replacements, document, selections, ranges, texts);
 
     // do editor text replacements in a batch
     this.replaceTexts(editor, ranges, texts);
@@ -78,9 +83,13 @@ export class QuickReplaceInSelectionCommand {
     });
   }
 
-  public computeReplacements(target : string, replacement : string, document : TextDocument, selections : Selection[], ranges : Range[], texts : string[]) {
-    let regex = new RegExp(target, 'g');
-    replacement = this.unescapeReplacement(replacement);
+  public computeReplacements(targets : string[], replacements : string[], document : TextDocument, selections : Selection[], ranges : Range[], texts : string[]) {
+    let regexps : RegExp[] = [];
+    replacements = replacements.slice();
+    targets.forEach((target, i) => {
+      regexps.push(new RegExp(target, 'g'));
+      replacements[i] = this.unescapeReplacement(replacements[i]);
+    });
     let numSelections = selections.length;
     let isCRLF = document.eol == EndOfLine.CRLF;
     for (let i: number = 0; i < numSelections; i++) { // replace all selections or whole document
@@ -88,10 +97,14 @@ export class QuickReplaceInSelectionCommand {
       let text = document.getText(sel);
       if (isCRLF) {
         text = text.replace(/\r\n/g, "\n"); // CRLF to LF, so that "\n" is normalized to represent the whole newlines
-        text = text.replace(regex, replacement);
+        for (let i = 0; i < regexps.length; ++i) {
+          text = text.replace(regexps[i], replacements[i]);
+        }
         text = text.replace(/\n/g, "\r\n"); // convert LF back to CRLF
       } else {
-        text = text.replace(regex, replacement);
+        for (let i = 0; i < regexps.length; ++i) {
+          text = text.replace(regexps[i], replacements[i]);
+        }
       }
       ranges.push(sel);
       texts.push(text);
