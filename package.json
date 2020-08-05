@@ -32,13 +32,61 @@
 					"type": "object",
 					"description": "The rules for command Quick Replace In Selection (Use rule)...",
 					"default": {
-						"to json str": {
+						"Json stringify": {
 							"find": ["\\\\", "\"", "\n", "\r", "\t", "^", "$"],
 							"replace": ["\\\\", "\\\"", "\\n", "\\r", "\\t", "\"", "\""]
 						},
-						"to json str (escape slash)": {
+						"Json stringify (escape '/')": {
 							"find": ["\\\\", "\"", "\n", "\r", "\t", "/", "^", "$"],
 							"replace": ["\\\\", "\\\"", "\\n", "\\r", "\\t", "\\/", "\"", "\""]
+						},
+						"Json stringify (escape '<', '>', '&')": {
+							"find": ["\\\\", "\"", "\n", "\r", "\t", "<", ">", "&", "^", "$"],
+							"replace": ["\\\\", "\\\"", "\\n", "\\r", "\\t", "\\u003c", "\\u003e", "\\u0026", "\"", "\""]
+						},
+						"Json-decode string (incomplete)": {
+							"find": ["^\"", "\"$", "\\\\\\\\", "\\\\\"", "\\\\'", "\\\\n", "\\\\r", "\\\\t", "\\\\f", "\\\\b", "\\\\/", "\\\\u0026", "\\\\u003c", "\\\\u003e", "\u001f"],
+							"replace": ["", "", "\u001f", "\"", "'", "\n", "\r", "\t", "\f", "\b", "/", "&", "<", ">", "\\"]
+						},
+						"Quote as C-string": {
+							"find": ["\\\\", "\"", "\u0000", "\n", "^", "$"],
+							"replace": ["\\\\", "\\\"", "\\0", "\\n", "\"", "\""]
+						},
+						"Quote as single-quoted string (only escape `\\`, `'`)": {
+							"find": ["\\\\", "'", "^", "$"],
+							"replace": ["\\\\", "\\'", "'", "'"]
+						},
+						"Escape literal string for PCRE/extended regular expression": {
+							"find": ["\\\\", "[\\]{}(|)[.*+?^$]"],
+							"replace": ["\\\\", "\\$&"]
+						},
+						"Encode html entities (minimal)": {
+							"find": ["&", "<", ">", "\"", "'"],
+							"replace": ["&amp;", "&lt;", "&gt;", "&quot;", "&apos;"]
+						},
+						"Decode basic html entities (incomplete)": {
+							"find": ["&lt;", "&gt;", "&quot;", "&apos;", "&amp;"],
+							"replace": ["<", ">", "\"", "'", "&"]
+						},
+						"Split CSV into lines": {
+							"find": ["\n", "[,:;|+]"],
+							"replace": ["\n----\n", "\n"]
+						},
+						"Trim lines": {
+							"find": "[ \t]*(.*?)[ \t]*(\n|$)",
+							"replace": "$1$2"
+						},
+						"Join lines by comma": {
+							"find": "\n[ \t]*",
+							"replace": ", "
+						},
+						"Single-quote lines and join by comma": {
+							"find": "(.+|(?=\n))\n?[ \t]*",
+							"replace": "'$1', "
+						},
+						"Double-quote lines and join by comma": {
+							"find": "(.+|(?=\n))\n?[ \t]*",
+							"replace": "\"$1\", "
 						}
 					}
 				}
