@@ -1,36 +1,22 @@
 import { QuickReplaceInSelectionModule } from './QuickReplaceInSelectionModule';
 import { QuickReplaceInSelectionCommand } from './QuickReplaceInSelectionCommand';
-// import { window, TextEditor, TextDocument, Selection, Position, Range, EndOfLine } from 'vscode';
+import { window, QuickPickItem } from 'vscode';
 
 export class QuickReplaceInSelectionByRuleCommand extends QuickReplaceInSelectionCommand {
 
   public performCommand() {
-    /* window.showInputBox({
-      placeHolder: 'Target to replace (regex)',
-      value: QuickReplaceInSelectionCommand.lastTarget
-    }).then((target: string | undefined) => {
-      if (target !== undefined) {
-        window.showInputBox({
-          placeHolder: 'Replace to',
-          value: QuickReplaceInSelectionCommand.lastReplacement
-        }).then((replacement: string | undefined) => {
-          if (replacement !== undefined) {
-            this.performReplacement([target], [replacement], false);
-          }
-        })
-      }
-    }); */
     let module = QuickReplaceInSelectionModule.getInstance();
 
     let rules = module.getConfig().getRules();
-
-    let rule : { [key: string] : any } = {};
-    for (let key in rules) {  // only to get first rule for test
-      rule = rules[key];
-      break;
-    }
-
-    this.performReplacement(rule.find || [], rule.replace || [], true, false);
+    let ruleNames = Object.keys(rules);
+    window.showQuickPick(ruleNames, {
+      placeHolder: 'Choose Quick Replace Rule... or Esc to cancel'
+    }).then((ruleName : string | undefined) => {
+      if (ruleName === undefined)
+        return;
+      let rule = rules[ruleName];
+      this.performReplacement(rule.find || [], rule.replace || [], true, false);
+    });
   }
 
 }
