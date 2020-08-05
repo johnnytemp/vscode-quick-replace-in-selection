@@ -10,7 +10,8 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:quick-replace-in-selection.replaceInSelection"
+		"onCommand:quick-replace-in-selection.replaceInSelection",
+		"onCommand:quick-replace-in-selection.replaceInSelectionByRule"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -18,8 +19,31 @@
 			{
 				"command": "quick-replace-in-selection.replaceInSelection",
 				"title": "Quick Replace In Selection"
+			},
+			{
+				"command": "quick-replace-in-selection.replaceInSelectionByRule",
+				"title": "Quick Replace In Selection (Use rule)..."
 			}
-		]
+		],
+		"configuration": {
+			"title": "Open file configurations",
+			"properties": {
+				"quick-replace.rules": {
+					"type": "object",
+					"description": "The rules for command Quick Replace In Selection (Use rule)...",
+					"default": {
+						"to json str": {
+							"find": ["\\\\", "\"", "\n", "\r", "\t", "^", "$"],
+							"replace": ["\\\\", "\\\"", "\\n", "\\r", "\\t", "\"", "\""]
+						},
+						"to json str (escape slash)": {
+							"find": ["\\\\", "\"", "\n", "\r", "\t", "/", "^", "$"],
+							"replace": ["\\\\", "\\\"", "\\n", "\\r", "\\t", "\\/", "\"", "\""]
+						}
+					}
+				}
+			}
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",

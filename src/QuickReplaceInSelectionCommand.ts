@@ -18,7 +18,7 @@ export class QuickReplaceInSelectionCommand {
           value: QuickReplaceInSelectionCommand.lastReplacement
         }).then((replacement: string | undefined) => {
           if (replacement !== undefined) {
-            this.performReplacement([target], [replacement], false);
+            this.performReplacement([target], [replacement], false, true);
           }
         })
       }
@@ -30,7 +30,7 @@ export class QuickReplaceInSelectionCommand {
     QuickReplaceInSelectionCommand.lastReplacement = '';
   }
 
-  public performReplacement(targets: string[], replacements: string[], isSaved : boolean) {
+  public performReplacement(targets: string[], replacements: string[], isSaved : boolean, escapesInReplace : boolean) {
     if (targets.length == 0) {
       return;
     }
@@ -56,10 +56,11 @@ export class QuickReplaceInSelectionCommand {
 
     let ranges : Range[] = [];
     let texts : string[] = [];
-    this.computeReplacements(targets, replacements, document, selections, ranges, texts);
+    this.computeReplacements(targets, replacements, escapesInReplace, document, selections, ranges, texts);
 
     // do editor text replacements in a batch
-    this.replaceTexts(editor, ranges, texts);
+    if (ranges.length > 0)
+      this.replaceTexts(editor, ranges, texts);
 
     // window.showInformationMessage("Replaced from \"" + target + "\" to \"" + replacement + "\"");
   }
@@ -83,13 +84,25 @@ export class QuickReplaceInSelectionCommand {
     });
   }
 
-  public computeReplacements(targets : string[], replacements : string[], document : TextDocument, selections : Selection[], ranges : Range[], texts : string[]) {
+  public computeReplacements(targets : string[], replacements : string[], escapesInReplace : boolean, document : TextDocument, selections : Selection[], ranges : Range[], texts : string[]) {
     let regexps : RegExp[] = [];
-    replacements = replacements.slice();
+    replacements = escapesInReplace ? replacements.slice() : replacements;
+    let isOk = true;
     targets.forEach((target, i) => {
-      regexps.push(new RegExp(target, 'g'));
-      replacements[i] = this.unescapeReplacement(replacements[i]);
+      try {
+        regexps.push(new RegExp(target, 'g'));
+      }
+      catch (e) {
+        let error = 'QuickReplaceInSelection: RegExp "' + target +'": ' + (e as Error).message;
+        window.showErrorMessage(error);
+        // console.log(error);
+        isOk = false;
+      }
+      if (escapesInReplace)
+        replacements[i] = this.unescapeReplacement(replacements[i]);
     });
+    if (!isOk)
+      return;
     let numSelections = selections.length;
     let isCRLF = document.eol == EndOfLine.CRLF;
     for (let i: number = 0; i < numSelections; i++) { // replace all selections or whole document
