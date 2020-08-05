@@ -9,7 +9,7 @@ export class QuickReplaceInSelectionCommand {
 
   public performCommand() {
     window.showInputBox({
-      placeHolder: 'Replace target (regex)',
+      placeHolder: 'Target to replace (regex)',
       value: QuickReplaceInSelectionCommand.lastTarget
     }).then((target: string | undefined) => {
       if (target !== undefined) {
@@ -52,7 +52,6 @@ export class QuickReplaceInSelectionCommand {
     let ranges : Range[] = [];
     let texts : string[] = [];
     this.computeReplacements(target, replacement, document, selections, ranges, texts);
-    console.log(ranges, texts);
 
     // do editor text replacements in a batch
     this.replaceTexts(editor, ranges, texts);

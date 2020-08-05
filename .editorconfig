@@ -1,3 +1,20 @@
-[*.ts]
+# https://editorconfig.org
+
+[*.{ts,js,json,md}]
+trim_trailing_whitespace = true
+insert_final_newline = true
+# indent_size = 4
+# ^ For other files, recommend editor set default to indentSize=4, insertStyle=space.
+#   However, not set here for leaving editor to auto-detect opened files' indent style.
+
+# Group 1 - indent_size: 2
+
+[*.{ts,js}]
 indent_style = space
 indent_size = 2
+
+# Group 2 - indent_size: 4
+
+[*.md]
+indent_size = 4
+trim_trailing_whitespace = false
