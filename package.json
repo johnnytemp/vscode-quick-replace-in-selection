@@ -32,15 +32,27 @@
 					"type": "object",
 					"description": "The rules for command Quick Replace In Selection (Use rule)...",
 					"default": {
+						"Decode basic html entities (incomplete)": {
+							"find": ["&lt;", "&gt;", "&quot;", "&apos;", "&amp;"],
+							"replace": ["<", ">", "\"", "'", "&"]
+						},
+						"Encode html entities (minimal)": {
+							"find": ["&", "<", ">", "\"", "'"],
+							"replace": ["&amp;", "&lt;", "&gt;", "&quot;", "&apos;"]
+						},
+						"Escape literal string for PCRE/extended regular expression": {
+							"find": ["\\\\", "[\\]{}(|)[.*+?^$]"],
+							"replace": ["\\\\", "\\$&"]
+						},
 						"Json stringify": {
 							"find": ["\\\\", "\"", "\n", "\r", "\t", "^", "$"],
 							"replace": ["\\\\", "\\\"", "\\n", "\\r", "\\t", "\"", "\""]
 						},
-						"Json stringify (escape '/')": {
+						"Json stringify (also escape '/')": {
 							"find": ["\\\\", "\"", "\n", "\r", "\t", "/", "^", "$"],
 							"replace": ["\\\\", "\\\"", "\\n", "\\r", "\\t", "\\/", "\"", "\""]
 						},
-						"Json stringify (escape '<', '>', '&')": {
+						"Json stringify (also escape '<', '>', '&')": {
 							"find": ["\\\\", "\"", "\n", "\r", "\t", "<", ">", "&", "^", "$"],
 							"replace": ["\\\\", "\\\"", "\\n", "\\r", "\\t", "\\u003c", "\\u003e", "\\u0026", "\"", "\""]
 						},
@@ -56,22 +68,11 @@
 							"find": ["\\\\", "'", "^", "$"],
 							"replace": ["\\\\", "\\'", "'", "'"]
 						},
-						"Escape literal string for PCRE/extended regular expression": {
-							"find": ["\\\\", "[\\]{}(|)[.*+?^$]"],
-							"replace": ["\\\\", "\\$&"]
-						},
-						"Encode html entities (minimal)": {
-							"find": ["&", "<", ">", "\"", "'"],
-							"replace": ["&amp;", "&lt;", "&gt;", "&quot;", "&apos;"]
-						},
-						"Decode basic html entities (incomplete)": {
-							"find": ["&lt;", "&gt;", "&quot;", "&apos;", "&amp;"],
-							"replace": ["<", ">", "\"", "'", "&"]
-						},
 						"Split CSV into lines": {
 							"find": ["\n", "[,:;|+]"],
 							"replace": ["\n----\n", "\n"]
 						},
+
 						"Trim lines": {
 							"find": "[ \t]*(.*?)[ \t]*(\n|$)",
 							"replace": "$1$2"
