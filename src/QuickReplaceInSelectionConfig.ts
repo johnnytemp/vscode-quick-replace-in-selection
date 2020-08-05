@@ -1,6 +1,7 @@
 import { workspace, WorkspaceConfiguration } from 'vscode';
 
 type QuickReplaceRules = { [key: string]: { [key: string] : any } };
+type QuickReplaceRulesFalseAble = { [key: string]: { [key: string] : any } | false };
 
 
 export class QuickReplaceInSelectionConfig {
@@ -23,11 +24,12 @@ export class QuickReplaceInSelectionConfig {
   public reloadConfig() : WorkspaceConfiguration {
     let vsConfig = workspace.getConfiguration('quick-replace');
 
-    let configRules: QuickReplaceRules = vsConfig.get("rules") || {};
+    let configRules: QuickReplaceRulesFalseAble = vsConfig.get("rules") || {};
     this._rules = {};
     for (let key in configRules) {
       let rule = configRules[key];
-      if (rule['find'] === undefined || rule['replace'] === undefined)
+      // Remark: use `"Rule name": false` to delete a rule explicity
+      if (rule === false || (rule['find'] === undefined || rule['replace'] === undefined))
         continue;
       this._rules[key] = rule;
     }
