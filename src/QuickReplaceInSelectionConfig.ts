@@ -31,6 +31,9 @@ export class QuickReplaceInSelectionConfig {
       // Remark: use `"Rule name": false` to delete a rule explicity
       if (rule === false || (rule['find'] === undefined || rule['replace'] === undefined))
         continue;
+      if (typeof rule['find'] === 'string' && typeof rule['replace'] === 'string') {
+        rule = Object.assign({}, rule, { find: [rule.find], replace: [rule.replace] });
+      }
       this._rules[key] = rule;
     }
     return vsConfig;
