@@ -1,8 +1,8 @@
 {
 	"name": "quick-replace-in-selection",
 	"displayName": "Quick Replace In Selection",
-	"description": "Search and replace a regular expression in current selection with quick steps",
-	"version": "0.0.1",
+	"description": "Search and replace by a regular expression in current selection with quick steps",
+	"version": "1.0.0",
 	"engines": {
 		"vscode": "^1.47.0"
 	},
@@ -26,7 +26,7 @@
 			}
 		],
 		"configuration": {
-			"title": "Open file configurations",
+			"title": "Quick Replace In Selection configurations",
 			"properties": {
 				"quick-replace.rules": {
 					"type": "object",
