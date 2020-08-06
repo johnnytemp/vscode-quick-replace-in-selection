@@ -8,11 +8,11 @@ It also support predefined rules to be used, and those rules allow multiple repl
 
 ### Quick Replace In Selection
 
-![Quick Replace In Selection](images/replaceInSelection.gif)
+![Quick Replace In Selection](https://github.com/johnnytemp/vscode-quick-replace-in-selection/raw/master/images/replaceInSelection.gif)
 
 ### Quick Replace In Selection (Use Rule)... (Shortcut: `Ctrl-K Ctrl-H`)
 
-![Quick Replace In Selection (Use Rule)...](images/replaceInSelectionByRule.gif)
+![Quick Replace In Selection (Use Rule)...](https://github.com/johnnytemp/vscode-quick-replace-in-selection/raw/master/images/replaceInSelectionByRule.gif)
 
 ## Requirements
 
