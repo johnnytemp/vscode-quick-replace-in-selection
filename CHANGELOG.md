@@ -10,5 +10,5 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [1.0.0] - 2020-08-06
 
 - Initial release
-- Support inputing "Target to replace" and "Replace to"
+- Support inputting "Target to replace" and "Replace to"
 - Support replace by a defined rule with multiple replacements
