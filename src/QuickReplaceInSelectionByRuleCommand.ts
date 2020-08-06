@@ -27,6 +27,7 @@ export class QuickReplaceInSelectionByRuleCommand extends QuickReplaceInSelectio
       if (ruleName.startsWith('( Last Rule: ')) {
         ruleName = lastRuleName;
       } else if (ruleName === '( Input Expressions )') {
+        QuickReplaceInSelectionByRuleCommand.lastRuleName = ''; // also clear last rule, so that '( Input Expressions )' is the first item for faster re-run.
         module.getQuickReplaceCommand().performCommand();
         return;
       } else {
