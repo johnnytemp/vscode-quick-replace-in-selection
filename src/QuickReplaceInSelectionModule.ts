@@ -33,4 +33,9 @@ export class QuickReplaceInSelectionModule {
   public getReplaceByRuleCommand() : QuickReplaceInSelectionByRuleCommand {
     return this._replaceByRuleCommand;
   }
+
+  public clearHistory() {
+    this.getQuickReplaceCommand().clearHistory();
+    this.getReplaceByRuleCommand().clearHistory();
+  }
 }
