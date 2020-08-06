@@ -1,6 +1,7 @@
 # quick-replace-in-selection README
 
 Quick Replace In Selection let you search and replace by a regular expression within the current selection or the whole document.
+
 It also support predefined rules to be used, and those rules allow multiple replacements in order at a time.
 
 ## Features
@@ -9,7 +10,7 @@ It also support predefined rules to be used, and those rules allow multiple repl
 
 ![Quick Replace In Selection](images/replaceInSelection.gif)
 
-### Quick Replace In Selection (Use Rule)...
+### Quick Replace In Selection (Use Rule)... (Shortcut: `Ctrl-K Ctrl-H`)
 
 ![Quick Replace In Selection (Use Rule)...](images/replaceInSelectionByRule.gif)
 

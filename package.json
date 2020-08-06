@@ -25,6 +25,14 @@
 				"title": "Quick Replace In Selection (Use rule)..."
 			}
 		],
+		"keybindings": [
+			{
+				"command": "quick-replace-in-selection.replaceInSelectionByRule",
+				"key": "ctrl+k ctrl+h",
+				"mac": "cmd+k cmd+h",
+				"when": "editorTextFocus"
+			}
+		],
 		"configuration": {
 			"title": "Quick Replace In Selection configurations",
 			"properties": {
