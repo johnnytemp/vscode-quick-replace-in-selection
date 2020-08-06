@@ -50,7 +50,8 @@ export class QuickReplaceInSelectionCommand {
     let document = editor.document;
     let selections = editor.selections;
     let numSelections = selections.length;
-    if (numSelections <= 1 && (numSelections == 0 || editor.selections[0].isEmpty)) {
+    let isUseWholeDocumentSelection = numSelections <= 1 && (numSelections === 0 || editor.selections[0].isEmpty);
+    if (isUseWholeDocumentSelection) {
       selections = [this.getWholeDocumentSelection(document)];
     }
 
@@ -60,7 +61,12 @@ export class QuickReplaceInSelectionCommand {
 
     // do editor text replacements in a batch
     if (ranges.length > 0) {
-      this.replaceTexts(editor, ranges, texts);
+      this.replaceTexts(editor, ranges, texts)/* .then(() => {
+        // select all text afterwards for empty selection
+        if (isUseWholeDocumentSelection) {
+          (editor as TextEditor).selections = [this.getWholeDocumentSelection(document)];
+        }
+      }) */;
     }
 
     // window.showInformationMessage("Replaced from \"" + target + "\" to \"" + replacement + "\"");
