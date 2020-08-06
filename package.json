@@ -76,8 +76,8 @@
 							"find": ["\\\\", "'", "^", "$"],
 							"replace": ["\\\\", "\\'", "'", "'"]
 						},
-						"Split CSV into lines": {
-							"find": ["\n", "[,:;|+]"],
+						"Split CSV/TSV into lines": {
+							"find": ["\n", "[,:;|\t]"],
 							"replace": ["\n----\n", "\n"]
 						},
 

@@ -4,8 +4,8 @@ import { window, TextEditor, TextDocument, Selection, Position, Range, EndOfLine
  * QuickReplaceInSelectionCommand class
  */
 export class QuickReplaceInSelectionCommand {
-  static lastTarget : string = ''
-  static lastReplacement : string = ''
+  static lastTarget : string = '';
+  static lastReplacement : string = '';
 
   public performCommand() {
     window.showInputBox({
@@ -20,7 +20,7 @@ export class QuickReplaceInSelectionCommand {
           if (replacement !== undefined) {
             this.performReplacement([target], [replacement], false, true);
           }
-        })
+        });
       }
     });
   }
@@ -31,7 +31,7 @@ export class QuickReplaceInSelectionCommand {
   }
 
   public performReplacement(targets: string[], replacements: string[], isSaved : boolean, escapesInReplace : boolean) {
-    if (targets.length == 0) {
+    if (targets.length === 0) {
       return;
     }
     if (!isSaved) {
@@ -59,8 +59,9 @@ export class QuickReplaceInSelectionCommand {
     this.computeReplacements(targets, replacements, escapesInReplace, document, selections, ranges, texts);
 
     // do editor text replacements in a batch
-    if (ranges.length > 0)
+    if (ranges.length > 0) {
       this.replaceTexts(editor, ranges, texts);
+    }
 
     // window.showInformationMessage("Replaced from \"" + target + "\" to \"" + replacement + "\"");
   }
@@ -98,13 +99,15 @@ export class QuickReplaceInSelectionCommand {
         // console.log(error);
         isOk = false;
       }
-      if (escapesInReplace)
+      if (escapesInReplace) {
         replacements[i] = this.unescapeReplacement(replacements[i]);
+      }
     });
-    if (!isOk)
+    if (!isOk) {
       return;
+    }
     let numSelections = selections.length;
-    let isCRLF = document.eol == EndOfLine.CRLF;
+    let isCRLF = document.eol === EndOfLine.CRLF;
     for (let i: number = 0; i < numSelections; i++) { // replace all selections or whole document
       let sel = selections[i];
       let text = document.getText(sel);

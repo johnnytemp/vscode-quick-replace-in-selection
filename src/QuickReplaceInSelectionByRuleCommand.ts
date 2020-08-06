@@ -19,7 +19,7 @@ export class QuickReplaceInSelectionByRuleCommand extends QuickReplaceInSelectio
     ruleNames = ruleNames.concat(Object.keys(rules));
 
     window.showQuickPick(ruleNames, {
-      placeHolder: 'Choose Quick Replace Rule... or Esc to cancel'
+      placeHolder: 'Choose Quick Replace Rule or Esc to cancel...'
     }).then((ruleName : string | undefined) => {
       if (ruleName === undefined) {
         return;
