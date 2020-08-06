@@ -18,7 +18,7 @@ export class QuickReplaceInSelectionCommand {
           value: QuickReplaceInSelectionCommand.lastReplacement
         }).then((replacement: string | undefined) => {
           if (replacement !== undefined) {
-            this.performReplacement([target], [replacement], false, true);
+            this.handleError(this.performReplacement([target], [replacement], false, true));
           }
         });
       }
@@ -30,37 +30,46 @@ export class QuickReplaceInSelectionCommand {
     QuickReplaceInSelectionCommand.lastReplacement = '';
   }
 
-  public performReplacement(targets: string[], replacements: string[], isSaved : boolean, escapesInReplace : boolean) {
-    if (targets.length === 0) {
+  public handleError(error : string | null) {
+    if (error === null) {
       return;
+    }
+    error = 'QuickReplaceInSelection: ' + error;
+    window.showErrorMessage(error);
+    // console.log(error);
+  }
+
+  public performReplacement(targets: string[], replacements: string[], isSaved : boolean, escapesInReplace : boolean) : string | null {
+    if (targets.length === 0 || targets.length !== replacements.length) {
+      return 'Invalid find/replace parameters';
     }
     if (!isSaved) {
       QuickReplaceInSelectionCommand.lastTarget = targets[0];
       QuickReplaceInSelectionCommand.lastReplacement = replacements[0];
     }
     if (targets[0] === '' && replacements[0] === '') {  // this special case is for clear history
-      return;
+      return null;
     }
 
     let editor = window.activeTextEditor;
     if (!editor) {
-      return;
+      return 'No editor';
     }
 
     let document = editor.document;
-    let selections = editor.selections;
+    let selections = editor.selections.slice();
     let numSelections = selections.length;
-    let isUseWholeDocumentSelection = numSelections <= 1 && (numSelections === 0 || editor.selections[0].isEmpty);
+    let isUseWholeDocumentSelection = numSelections <= 1 && (numSelections === 0 || selections[0].isEmpty);
     if (isUseWholeDocumentSelection) {
       selections = [this.getWholeDocumentSelection(document)];
     }
 
-    let ranges : Range[] = [];
+    let ranges : Range[] = selections;
     let texts : string[] = [];
-    this.computeReplacements(targets, replacements, escapesInReplace, document, selections, ranges, texts);
+    let error = this.prepareReplacements(targets, replacements, escapesInReplace, document, selections, texts);
 
     // do editor text replacements in a batch
-    if (ranges.length > 0) {
+    if (error === null) {
       this.replaceTexts(editor, ranges, texts)/* .then(() => {
         // select all text afterwards for empty selection
         if (isUseWholeDocumentSelection) {
@@ -70,6 +79,7 @@ export class QuickReplaceInSelectionCommand {
     }
 
     // window.showInformationMessage("Replaced from \"" + target + "\" to \"" + replacement + "\"");
+    return error;
   }
 
   public getWholeDocumentSelection(document: TextDocument) {
@@ -91,32 +101,42 @@ export class QuickReplaceInSelectionCommand {
     });
   }
 
-  public computeReplacements(targets : string[], replacements : string[], escapesInReplace : boolean, document : TextDocument, selections : Selection[], ranges : Range[], texts : string[]) {
+  public prepareReplacements(targets : string[], replacements : string[], escapesInReplace : boolean, document : TextDocument, selections : Selection[], texts : string[]) : string | null {
+    let numSelections = selections.length;
+    let isCRLF = document.eol === EndOfLine.CRLF;
+    return this.computeReplacements(targets, replacements, escapesInReplace, isCRLF, numSelections, (i: number) => document.getText(selections[i]), texts);
+  }
+
+  // for unit tests
+  public computeReplacementsWithExpressions(find: string, replace: string, isCRLF : boolean, numSelections : number, selectionGetter : (i: number) => string, texts? : string[]) : string | string[] {
+    texts = texts || [];
+    let error = this.computeReplacements([find], [replace], true, isCRLF, numSelections, selectionGetter, texts);
+    return error !== null ? error : texts;
+  }
+
+  public computeReplacements(targets : string[], replacements : string[], escapesInReplace : boolean, isCRLF : boolean, numSelections : number, selectionGetter : (i: number) => string, texts : string[]) : string | null {
+    if (targets.length !== replacements.length) {
+      return 'Invalid find/replace parameters';
+    }
     let regexps : RegExp[] = [];
     replacements = escapesInReplace ? replacements.slice() : replacements;
     let isOk = true;
-    targets.forEach((target, i) => {
+    for (let i = 0; i < targets.length; ++i) {
+      let target = targets[i];
       try {
         regexps.push(new RegExp(target, 'g'));
       }
       catch (e) {
-        let error = 'QuickReplaceInSelection: RegExp "' + target +'": ' + (e as Error).message;
-        window.showErrorMessage(error);
-        // console.log(error);
-        isOk = false;
+        let error = 'RegExp "' + target +'": ' + (e as Error).message;
+        return error;
       }
       if (escapesInReplace) {
         replacements[i] = this.unescapeReplacement(replacements[i]);
       }
-    });
-    if (!isOk) {
-      return;
     }
-    let numSelections = selections.length;
-    let isCRLF = document.eol === EndOfLine.CRLF;
+
     for (let i: number = 0; i < numSelections; i++) { // replace all selections or whole document
-      let sel = selections[i];
-      let text = document.getText(sel);
+      let text = selectionGetter(i);
       if (isCRLF) {
         text = text.replace(/\r\n/g, "\n"); // CRLF to LF, so that "\n" is normalized to represent the whole newlines
         for (let i = 0; i < regexps.length; ++i) {
@@ -128,9 +148,9 @@ export class QuickReplaceInSelectionCommand {
           text = text.replace(regexps[i], replacements[i]);
         }
       }
-      ranges.push(sel);
       texts.push(text);
     }
+    return null;
   }
 
   public replaceTexts(editor: TextEditor, ranges: Range[], texts: string[]) : Thenable<boolean> {

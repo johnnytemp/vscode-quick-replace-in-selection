@@ -4,12 +4,56 @@ import * as assert from 'assert';
 // as well as import your extension to test it
 import * as vscode from 'vscode';
 // import * as myExtension from '../../extension';
+import { QuickReplaceInSelectionModule } from '../../QuickReplaceInSelectionModule';
 
 suite('Extension Test Suite', () => {
-	vscode.window.showInformationMessage('Start all tests.');
+  vscode.window.showInformationMessage('Start all tests.');
 
-	test('Sample test', () => {
-		assert.equal(-1, [1, 2, 3].indexOf(5));
-		assert.equal(-1, [1, 2, 3].indexOf(0));
-	});
+  test('Test replaces correctly', () => {
+    let module = QuickReplaceInSelectionModule.getInstance();
+    let quickReplace = module.getQuickReplaceCommand();
+    let replaceByRule = module.getReplaceByRuleCommand();
+    let getIndex = function (this: any, i: number) { return this[i]; };
+    assert.equal(12, getIndex.bind([11, 12, 13])(1));
+    assert.deepEqual(['\u00a0'], replaceByRule.computeReplacementsWithRule("Decode basic html entities (incomplete)", false, 1, getIndex.bind(['&nbsp;'])));
+    assert.deepEqual(['&quot;&lt;&gt;\u00a0'], replaceByRule.computeReplacementsWithRule("Encode html entities (minimal)", false, 1, getIndex.bind(['"<>\u00a0'])));
+
+    let sourceTexts = [
+      '"(<a>/&amp;\') \n\\n\\\\n"', // `"(<a>/&amp;') {LF}\n\\n"`
+    ];
+    assert.deepEqual(['"(<a>/&amp;\') \n\\\\n\\\\\\\\n"'],
+      quickReplace.computeReplacementsWithExpressions('\\\\', '\\\\\\\\',                                     false, sourceTexts.length, getIndex.bind(sourceTexts)));
+    assert.deepEqual(['"(<a>/&amp;\') \n\n\\\n"'],
+      quickReplace.computeReplacementsWithExpressions('\\\\n', '\\n',                                         false, sourceTexts.length, getIndex.bind(sourceTexts)));
+    assert.deepEqual(['"(<aa>/&aamp;\') \n\\n\\\\n"'],
+      quickReplace.computeReplacementsWithExpressions('a', '$&$&',                                            false, sourceTexts.length, getIndex.bind(sourceTexts)));
+    assert.deepEqual(['"(<a>/&\') \n\\n\\\\n"'],
+      replaceByRule.computeReplacementsWithRule("Decode basic html entities (incomplete)",                    false, sourceTexts.length, getIndex.bind(sourceTexts)));
+    assert.deepEqual(['"\\(<a>/&amp;\'\\) \n\\\\n\\\\\\\\n"'],
+      replaceByRule.computeReplacementsWithRule("Escape literal string for PCRE/extended regular expression", false, sourceTexts.length, getIndex.bind(sourceTexts)));
+    assert.deepEqual(['"\\"(<a>/&amp;\') \\n\\\\n\\\\\\\\n\\""'],
+      replaceByRule.computeReplacementsWithRule("Json stringify",                                             false, sourceTexts.length, getIndex.bind(sourceTexts)));
+    assert.deepEqual(['"\\"(<a>\\/&amp;\') \\n\\\\n\\\\\\\\n\\""'],
+      replaceByRule.computeReplacementsWithRule("Json stringify (also escape '/')",                           false, sourceTexts.length, getIndex.bind(sourceTexts)));
+    assert.deepEqual(['"\\"(\\u003ca\\u003e/\\u0026amp;\') \\n\\\\n\\\\\\\\n\\""'],
+      replaceByRule.computeReplacementsWithRule("Json stringify (also escape '<', '>', '&')",                 false, sourceTexts.length, getIndex.bind(sourceTexts)));
+    assert.deepEqual(['(<a>/&amp;\') \n\n\\n'],
+      replaceByRule.computeReplacementsWithRule("Json-decode string (incomplete)",                            false, sourceTexts.length, getIndex.bind(sourceTexts)));
+
+    assert.deepEqual(['"\\"(<a>/&amp;\') \\n\\\\n\\\\\\\\n\\""'],
+      replaceByRule.computeReplacementsWithRule("Quote as C-string",                                          false, sourceTexts.length, getIndex.bind(sourceTexts)));
+    assert.deepEqual(['\'"(<a>/&amp;\\\') \n\\\\n\\\\\\\\n"\''],
+      replaceByRule.computeReplacementsWithRule("Quote as single-quoted string (only escape `\\`, `'`)",      false, sourceTexts.length, getIndex.bind(sourceTexts)));
+    assert.deepEqual(['"(<a>/&amp\n\') \n----\n\\n\\\\n"'],
+      replaceByRule.computeReplacementsWithRule("Split CSV/TSV into lines",                                   false, sourceTexts.length, getIndex.bind(sourceTexts)));
+
+    assert.deepEqual(['"(<a>/&amp;\')\n\\n\\\\n"'],
+      replaceByRule.computeReplacementsWithRule("Trim lines",                                                 false, sourceTexts.length, getIndex.bind(sourceTexts)));
+    assert.deepEqual(['"(<a>/&amp;\') , \\n\\\\n"'],
+      replaceByRule.computeReplacementsWithRule("Join lines by comma",                                        false, sourceTexts.length, getIndex.bind(sourceTexts)));
+    assert.deepEqual(['\'"(<a>/&amp;\') \', \'\\n\\\\n"\', '],
+      replaceByRule.computeReplacementsWithRule("Single-quote lines and join by comma",                       false, sourceTexts.length, getIndex.bind(sourceTexts)));
+    assert.deepEqual(['""(<a>/&amp;\') ", "\\n\\\\n"", '],
+      replaceByRule.computeReplacementsWithRule("Double-quote lines and join by comma",                       false, sourceTexts.length, getIndex.bind(sourceTexts)));
+  });
 });

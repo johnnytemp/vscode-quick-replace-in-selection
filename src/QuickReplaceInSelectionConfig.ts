@@ -1,6 +1,7 @@
 import { workspace, WorkspaceConfiguration } from 'vscode';
 
-type QuickReplaceRules = { [key: string]: { [key: string] : any } };
+export type QuickReplaceRule = { [key: string] : any };
+export type QuickReplaceRules = { [key: string]: QuickReplaceRule };
 type QuickReplaceRulesFalseAble = { [key: string]: { [key: string] : any } | false };
 
 
@@ -32,8 +33,9 @@ export class QuickReplaceInSelectionConfig {
     names.forEach(key => {
       let rule = configRules[key];
       // Remark: use `"Rule name": false` to delete a rule explicity
-      if (rule === false || (rule['find'] === undefined || rule['replace'] === undefined))
+      if (rule === false || (rule['find'] === undefined || rule['replace'] === undefined)) {
         return;
+      }
       if (typeof rule['find'] === 'string' && typeof rule['replace'] === 'string') {
         rule = Object.assign({}, rule, { find: [rule.find], replace: [rule.replace] });
       }

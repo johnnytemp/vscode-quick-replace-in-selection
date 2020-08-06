@@ -1,4 +1,5 @@
 import { QuickReplaceInSelectionModule } from './QuickReplaceInSelectionModule';
+import { QuickReplaceRule } from './QuickReplaceInSelectionConfig';
 import { QuickReplaceInSelectionCommand } from './QuickReplaceInSelectionCommand';
 import { window, QuickPickItem } from 'vscode';
 
@@ -33,14 +34,32 @@ export class QuickReplaceInSelectionByRuleCommand extends QuickReplaceInSelectio
       } else {
         QuickReplaceInSelectionByRuleCommand.lastRuleName = ruleName;
       }
-      this.performRule(ruleName);
+      this.handleError(this.performRule(ruleName));
     });
   }
 
-  public performRule(ruleName : string) {
+  private lookupRule(ruleName : string) : QuickReplaceRule | undefined {
     let rules = QuickReplaceInSelectionModule.getInstance().getConfig().getRules();
-    let rule = rules[ruleName];
-    this.performReplacement(rule.find || [], rule.replace || [], true, false);
+    return rules[ruleName];
+  }
+
+  public performRule(ruleName : string) : string | null {
+    let rule = this.lookupRule(ruleName);
+    if (!rule) {
+      return 'No such rule - ' + ruleName;
+    }
+    return this.performReplacement(rule.find || [], rule.replace || [], true, false);
+  }
+
+  // for unit tests
+  public computeReplacementsWithRule(ruleName: string, isCRLF : boolean, numSelections : number, selectionGetter : (i: number) => string, texts? : string[]) : string | string[] {
+    let rule = this.lookupRule(ruleName);
+    if (!rule) {
+      return 'No such rule - ' + ruleName;
+    }
+    texts = texts || [];
+    let error = this.computeReplacements(rule.find, rule.replace, false, isCRLF, numSelections, selectionGetter, texts);
+    return error !== null ? error : texts;
   }
 
   public clearHistory() {
