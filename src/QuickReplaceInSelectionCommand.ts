@@ -34,7 +34,7 @@ export class QuickReplaceInSelectionCommand {
     if (error === null) {
       return;
     }
-    error = 'QuickReplaceInSelection: ' + error;
+    // error = 'QuickReplaceInSelection: ' + error;
     window.showErrorMessage(error);
     // console.log(error);
   }
@@ -130,7 +130,7 @@ export class QuickReplaceInSelectionCommand {
         regexps.push(new RegExp(target, 'g' + flags));
       }
       catch (e) {
-        let error = 'RegExp "' + target +'": ' + (e as Error).message;
+        let error = '"' + target +'" -> ' + (e as Error).message; // e.message is like "Invalid regular expression /.../: ..."
         return error;
       }
       if (escapesInReplace) {
