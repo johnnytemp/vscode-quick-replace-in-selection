@@ -18,7 +18,7 @@ export class QuickReplaceInSelectionCommand {
           value: QuickReplaceInSelectionCommand.lastReplacement
         }).then((replacement: string | undefined) => {
           if (replacement !== undefined) {
-            this.handleError(this.performReplacement([target], [replacement], false, true));
+            this.handleError(this.performReplacement([target], [replacement], false, true, ''));
           }
         });
       }
@@ -39,7 +39,7 @@ export class QuickReplaceInSelectionCommand {
     // console.log(error);
   }
 
-  public performReplacement(targets: string[], replacements: string[], isSaved : boolean, escapesInReplace : boolean) : string | null {
+  public performReplacement(targets: string[], replacements: string[], isSaved : boolean, escapesInReplace : boolean, flags: string) : string | null {
     if (targets.length === 0 || targets.length !== replacements.length) {
       return 'Invalid find/replace parameters';
     }
@@ -66,7 +66,7 @@ export class QuickReplaceInSelectionCommand {
 
     let ranges : Range[] = selections;
     let texts : string[] = [];
-    let error = this.prepareReplacements(targets, replacements, escapesInReplace, document, selections, texts);
+    let error = this.prepareReplacements(targets, replacements, escapesInReplace, document, selections, texts, flags);
 
     // do editor text replacements in a batch
     if (error === null) {
@@ -101,22 +101,25 @@ export class QuickReplaceInSelectionCommand {
     });
   }
 
-  public prepareReplacements(targets : string[], replacements : string[], escapesInReplace : boolean, document : TextDocument, selections : Selection[], texts : string[]) : string | null {
+  public prepareReplacements(targets : string[], replacements : string[], escapesInReplace : boolean, document : TextDocument, selections : Selection[], texts : string[], flags? : string) : string | null {
     let numSelections = selections.length;
     let isCRLF = document.eol === EndOfLine.CRLF;
-    return this.computeReplacements(targets, replacements, escapesInReplace, isCRLF, numSelections, (i: number) => document.getText(selections[i]), texts);
+    return this.computeReplacements(targets, replacements, escapesInReplace, isCRLF, numSelections, (i: number) => document.getText(selections[i]), texts, flags);
   }
 
   // for unit tests
-  public computeReplacementsWithExpressions(find: string, replace: string, isCRLF : boolean, numSelections : number, selectionGetter : (i: number) => string, texts? : string[]) : string | string[] {
+  public computeReplacementsWithExpressions(find: string, replace: string, isCRLF : boolean, numSelections : number, selectionGetter : (i: number) => string, texts? : string[], flags? : string) : string | string[] {
     texts = texts || [];
-    let error = this.computeReplacements([find], [replace], true, isCRLF, numSelections, selectionGetter, texts);
+    let error = this.computeReplacements([find], [replace], true, isCRLF, numSelections, selectionGetter, texts, flags);
     return error !== null ? error : texts;
   }
 
-  public computeReplacements(targets : string[], replacements : string[], escapesInReplace : boolean, isCRLF : boolean, numSelections : number, selectionGetter : (i: number) => string, texts : string[]) : string | null {
+  public computeReplacements(targets : string[], replacements : string[], escapesInReplace : boolean, isCRLF : boolean, numSelections : number, selectionGetter : (i: number) => string, texts : string[], flags? : string | undefined) : string | null {
     if (targets.length !== replacements.length) {
       return 'Invalid find/replace parameters';
+    }
+    if (flags === undefined) {
+      flags = '';
     }
     let regexps : RegExp[] = [];
     replacements = escapesInReplace ? replacements.slice() : replacements;
@@ -124,7 +127,7 @@ export class QuickReplaceInSelectionCommand {
     for (let i = 0; i < targets.length; ++i) {
       let target = targets[i];
       try {
-        regexps.push(new RegExp(target, 'g'));
+        regexps.push(new RegExp(target, 'g' + flags));
       }
       catch (e) {
         let error = 'RegExp "' + target +'": ' + (e as Error).message;

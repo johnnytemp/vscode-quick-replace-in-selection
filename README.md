@@ -4,7 +4,7 @@ Quick Replace In Selection let you search and replace all occurrences by a regul
 
 It also support predefined rules to be used, and those rules allow multiple replacements in order at a time.
 
-All matches are case sensitive.
+All matches are case sensitive by default.
 
 ## Commands Demo
 
@@ -48,6 +48,8 @@ This extension contributes the following settings:
         }
     }
     ```
+
+    Remark: besides the keys `"find"` & `"replace"` above, also support the key `"flags"` for extra regular expression's modifiers. E.g. add `"flags": "i"` for case insensitive match.
 
 Hints:
 

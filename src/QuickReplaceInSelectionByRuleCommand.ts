@@ -48,17 +48,25 @@ export class QuickReplaceInSelectionByRuleCommand extends QuickReplaceInSelectio
     if (!rule) {
       return 'No such rule - ' + ruleName;
     }
-    return this.performReplacement(rule.find || [], rule.replace || [], true, false);
+    return this.performReplacement(rule.find || [], rule.replace || [], true, false, this.getFlagsFromRule(rule));
+  }
+
+  public getFlagsFromRule(rule : QuickReplaceRule) {
+    let flags = '';
+    if (rule.flags && rule.flags.match(/^[gimsuy]+$/) && rule.flags.length <= 6) {
+      return rule.flags;
+    }
+    return flags;
   }
 
   // for unit tests
-  public computeReplacementsWithRule(ruleName: string, isCRLF : boolean, numSelections : number, selectionGetter : (i: number) => string, texts? : string[]) : string | string[] {
+  public computeReplacementsWithRule(ruleName: string, isCRLF : boolean, numSelections : number, selectionGetter : (i: number) => string, texts? : string[], flags? : string) : string | string[] {
     let rule = this.lookupRule(ruleName);
     if (!rule) {
       return 'No such rule - ' + ruleName;
     }
     texts = texts || [];
-    let error = this.computeReplacements(rule.find, rule.replace, false, isCRLF, numSelections, selectionGetter, texts);
+    let error = this.computeReplacements(rule.find, rule.replace, false, isCRLF, numSelections, selectionGetter, texts, flags);
     return error !== null ? error : texts;
   }
 

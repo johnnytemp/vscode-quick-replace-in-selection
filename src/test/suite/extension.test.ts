@@ -21,14 +21,27 @@ suite('Extension Test Suite', () => {
     let sourceTexts = [
       '"(<a>/&amp;\') \n\\n\\\\n"', // `"(<a>/&amp;') {LF}\n\\n"`
     ];
+    // support "\\" in replacement
     assert.deepEqual(['"(<a>/&amp;\') \n\\\\n\\\\\\\\n"'],
       quickReplace.computeReplacementsWithExpressions('\\\\', '\\\\\\\\',                                     false, sourceTexts.length, getIndex.bind(sourceTexts)));
+    // support "\n" in replacement
     assert.deepEqual(['"(<a>/&amp;\') \n\n\\\n"'],
       quickReplace.computeReplacementsWithExpressions('\\\\n', '\\n',                                         false, sourceTexts.length, getIndex.bind(sourceTexts)));
+    // support "$&" back reference, and default replace all
     assert.deepEqual(['"(<aa>/&aamp;\') \n\\n\\\\n"'],
       quickReplace.computeReplacementsWithExpressions('a', '$&$&',                                            false, sourceTexts.length, getIndex.bind(sourceTexts)));
+    // default case sensitive
+    assert.deepEqual(['"(<a>/&amp;\') \n\\n\\\\n"'],
+      quickReplace.computeReplacementsWithExpressions('A', 'B',                                               false, sourceTexts.length, getIndex.bind(sourceTexts)));
+    // support 'i' flag for case insensitive
+    assert.deepEqual(['"(<B>/&Bmp;\') \n\\n\\\\n"'],
+      quickReplace.computeReplacementsWithExpressions('A', 'B',                                               false, sourceTexts.length, getIndex.bind(sourceTexts), [], 'i'));
+
+    // test default rules
     assert.deepEqual(['"(<a>/&\') \n\\n\\\\n"'],
       replaceByRule.computeReplacementsWithRule("Decode basic html entities (incomplete)",                    false, sourceTexts.length, getIndex.bind(sourceTexts)));
+    assert.deepEqual(['&quot;(&lt;a&gt;/&amp;amp;&apos;) \n\\n\\\\n&quot;'],
+      replaceByRule.computeReplacementsWithRule("Encode html entities (minimal)",                             false, sourceTexts.length, getIndex.bind(sourceTexts)));
     assert.deepEqual(['"\\(<a>/&amp;\'\\) \n\\\\n\\\\\\\\n"'],
       replaceByRule.computeReplacementsWithRule("Escape literal string for PCRE/extended regular expression", false, sourceTexts.length, getIndex.bind(sourceTexts)));
     assert.deepEqual(['"\\"(<a>/&amp;\') \\n\\\\n\\\\\\\\n\\""'],
