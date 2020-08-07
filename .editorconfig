@@ -9,11 +9,8 @@ insert_final_newline = true
 
 # Group 1 - indent_size: 2
 
-[*.{ts,js}]
+[*.{ts,js,json}]
 indent_style = space
-indent_size = 2
-
-[*.json]
 indent_size = 2
 
 # Group 2 - indent_size: 4
