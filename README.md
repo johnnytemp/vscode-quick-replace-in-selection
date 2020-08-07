@@ -28,6 +28,17 @@ For more information on regular expression, you may checkout:
 
 - https://medium.com/factory-mind/regex-tutorial-a-simple-cheatsheet-by-examples-649dc1c3f285
 
+## Major Use Case
+
+Sometimes you might want to replace some character(s) to another within current text selection (e.g. to delimit the text into lines).
+
+However, VS Code's builtin `Replace` may have these inconveniences:
+
+- too many steps: need to open dialog, enable the "Find in selection" option, some `Tab` keys or clicks, and need to press/trigger "Replace All"
+- it changes the last Find Target memory
+
+This extension solves them all.
+
 ## Requirements
 
 None.
