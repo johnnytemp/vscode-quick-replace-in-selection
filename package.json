@@ -52,7 +52,7 @@
           "description": "The rules for command Quick Replace In Selection (Use rule)...",
           "default": {
             "Decode basic html entities (incomplete)": {
-              "find": ["&lt;", "&gt;", "&quot;", "&apos;", "&nbsp;", "&amp;"],
+              "find": ["&lt;", "&gt;", "&quot;", "&(#0?39|apos);", "&nbsp;", "&amp;"],
               "replace": ["<", ">", "\"", "'", "\u00a0", "&"]
             },
             "Encode html entities (minimal)": {
