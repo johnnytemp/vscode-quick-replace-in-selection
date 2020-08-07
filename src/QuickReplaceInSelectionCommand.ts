@@ -126,6 +126,12 @@ export class QuickReplaceInSelectionCommand {
     let isOk = true;
     for (let i = 0; i < targets.length; ++i) {
       let target = targets[i];
+      let prefixMatch = target.match(/^(\+|\?[gimsuy]+ )/); // support either /^\+/ (equal the "m" flag) OR /^\?[gimsuy]+/ for flags
+      if (prefixMatch !== null) {
+        let prefix = prefixMatch[0];
+        target = target.substr(prefix.length);
+        flags += prefix === '+' ? 'm' : prefix.substr(1, prefix.length - 2);
+      }
       try {
         regexps.push(new RegExp(target, 'g' + flags));
       }

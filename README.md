@@ -4,7 +4,7 @@ Quick Replace In Selection let you search and replace all occurrences by a regul
 
 It also support *predefined rules* to be used, and those rules allow *multiple replacements* in order at a time.
 
-**Note**: By default, all matches are *case sensitive*, and `^`, `$`  match *text selection boundaries* instead of line boundaries.
+**Note**: By default, all matches are *case sensitive* [#1](#footnote1), and `^`, `$`  match *text selection boundaries* instead of line boundaries [#2](#footnote2).
 
 ## Commands Demo
 
@@ -92,3 +92,8 @@ See [CHANGELOG.md](CHANGELOG.md)
 ## License
 
 MIT - See [LICENSE](LICENSE)
+
+## Footnotes
+
+<a name="footnote1"></a>#1 - to do the opposite, type a leading "`?i `" before the regex in the input box (not a part of regex), or use `"flags"` in rules.  
+<a name="footnote2"></a>#2 - to do the opposite, type a leading "`+`" (preferred) or "`?m `" before the regex in the input box (not a part of regex), or use `"flags"` in rules.
