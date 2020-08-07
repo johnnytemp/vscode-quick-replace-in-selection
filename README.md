@@ -1,10 +1,10 @@
 # Quick Replace In Selection README
 
-Quick Replace In Selection let you search and replace all occurrences by a regular expression, within the current selection or the whole document.
+Quick Replace In Selection let you search and replace all occurrences by a regular expression (regex), within the current selection or the whole document.
 
-It also support predefined rules to be used, and those rules allow multiple replacements in order at a time.
+It also support *predefined rules* to be used, and those rules allow *multiple replacements* in order at a time.
 
-All matches are case sensitive by default.
+**Note**: By default, all matches are *case sensitive*, and `^`, `$`  match *text selection boundaries* instead of line boundaries.
 
 ## Commands Demo
 
@@ -20,7 +20,7 @@ All matches are case sensitive by default.
 
 This extension use the regular expression that JavaScript support for search and replace. In addition, a `$&` in the "Replace to" input box or `"replace"` values in the rules mean the whole match.
 
-The "Replace to" input box support extra escape sequence `\n`, `\r`, `\t`, `\\` as in regular expression. Other unrecognized sequences are preserved.
+The "Replace to" input box support extra escape sequence `\n`, `\r`, `\t`, `\\` as in regex. Other unrecognized sequences are preserved.
 
 E.g. "`.+` replace to `[$&]`" would mean replace any non-empty string (excluding newline characters), in the selected text(s), to be wrapped by `[]`.
 
@@ -47,7 +47,7 @@ None.
 
 This extension contributes the following settings:
 
-* `quick-replace.rules`: define the rules to be used by the command `Quick Replace In Selection (Use Rule)...`
+- `quick-replace.rules`: define the rules to be used by the command `Quick Replace In Selection (Use Rule)...`
 
     E.g. to define a rule which replaces newlines to `\n`, to this in your settings file:
 
@@ -60,11 +60,12 @@ This extension contributes the following settings:
     }
     ```
 
-    Remark: besides the keys `"find"` & `"replace"` above, also support the key `"flags"` for extra regular expression's modifiers. E.g. add `"flags": "i"` for case insensitive match.
+    Remark: Next to  `"find":` & `"replace":` above, can specify `"flags"` to add regular expression's modifiers.  
+    &nbsp; E.g. specify `"flags": "i"` for case insensitive match, or `"flags": "m"` to change `^`, `$` to match line boundaries instead.
 
 Hints:
 
-- For how to define rules in the configuration, you could look at the default rules as examples. (`Ctrl-Shift-P` to open command palette then enter "Open Default Settings (JSON)")
+- For how to define rules in the configuration, you could look at the default rules as examples. (`Ctrl-Shift-P` to open command palette, type "Open Default Settings (JSON)" & Enter, and search for `quick-replace.rules`)
 - You could make use of the default rules `Escape literal string for PCRE/extended regular expression` (optional) and then `Json stringify` and to put your regular expression in the `"find"` settings of `quick-replace.rules`.
 
 ## Default rules
