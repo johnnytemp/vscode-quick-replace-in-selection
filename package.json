@@ -3,12 +3,23 @@
   "displayName": "Quick Replace In Selection",
   "description": "Search and replace by some regular expressions in current selection with quick steps",
   "version": "1.0.0",
+  "publisher": "johnnywong",
+  "icon": "images/quick-replace-in-selection.png",
   "engines": {
     "vscode": "^1.47.0"
   },
   "categories": [
     "Other"
   ],
+  "bugs": {
+    "url": "https://github.com/johnnytemp/vscode-quick-replace-in-selection",
+    "email": "johnny_temp@yahoo.com.hk"
+  },
+  "homepage": "https://github.com/johnnytemp/vscode-quick-replace-in-selection",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/johnnytemp/vscode-quick-replace-in-selection.git"
+  },
   "activationEvents": [
     "onCommand:quick-replace-in-selection.replaceInSelection",
     "onCommand:quick-replace-in-selection.replaceInSelectionByRule"
