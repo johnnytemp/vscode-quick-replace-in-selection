@@ -4,7 +4,7 @@
   "description": "Search and replace by some regular expressions in current selection with quick steps",
   "version": "1.0.0",
   "publisher": "johnnywong",
-  "icon": "images/quick-replace-in-selection.png",
+  "icon": "images/quick-replace-in-selection-icon.png",
   "engines": {
     "vscode": "^1.47.0"
   },
