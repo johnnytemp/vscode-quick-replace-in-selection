@@ -77,9 +77,9 @@ Some default rules are listed here:
 - Join lines by comma
 - Json stringify
 - Quote as C-string
+- Single-quote lines and join by comma
 - Split CSV/TSV into lines
 - Trim lines
-- Single-quote lines and join by comma
 
 ## Known Issues
 

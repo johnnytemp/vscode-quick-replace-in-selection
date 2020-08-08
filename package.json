@@ -2,7 +2,7 @@
   "name": "quick-replace-in-selection",
   "displayName": "Quick Replace In Selection",
   "description": "Search and replace by some regular expressions in current selection with quick steps",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "publisher": "johnnywong",
   "icon": "images/quick-replace-in-selection-icon.png",
   "engines": {
@@ -16,7 +16,8 @@
     "regular expression",
     "regex",
     "encode",
-    "escape"
+    "escape",
+    "csv"
   ],
   "bugs": {
     "url": "https://github.com/johnnytemp/vscode-quick-replace-in-selection",

@@ -7,7 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-## [1.0.0] - 2020-08-06
+## [1.0.1] - 2020-08-08
+
+- Fix README markdown problems which show "?i" instead of "?i " wrongly.
+
+## [1.0.0] - 2020-08-07
 
 - Initial release
 - Support inputting "Target to replace" and "Replace to"
