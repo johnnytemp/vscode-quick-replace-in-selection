@@ -11,6 +11,13 @@
   "categories": [
     "Other"
   ],
+  "keywords": [
+    "replace",
+    "regular expression",
+    "regex",
+    "encode",
+    "escape"
+  ],
   "bugs": {
     "url": "https://github.com/johnnytemp/vscode-quick-replace-in-selection",
     "email": "johnny_temp@yahoo.com.hk"

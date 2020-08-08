@@ -95,5 +95,5 @@ MIT - See [LICENSE](LICENSE)
 
 ## Footnotes
 
-<a name="footnote1"></a>#1 - to do the opposite, type a leading "`?i `" before the regex in the input box (not a part of regex), or use `"flags"` in rules.  
-<a name="footnote2"></a>#2 - to do the opposite, type a leading "`+`" (preferred) or "`?m `" before the regex in the input box (not a part of regex), or use `"flags"` in rules.
+<a name="footnote1"></a>#1 - to do the opposite, type a leading "<code>?i </code>" before the regex in the input box (not a part of regex), or use `"flags"` in rules.  
+<a name="footnote2"></a>#2 - to do the opposite, type a leading "`+`" (preferred) or "<code>?m </code>" before the regex in the input box (not a part of regex), or use `"flags"` in rules.
