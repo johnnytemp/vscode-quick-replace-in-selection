@@ -30,7 +30,8 @@
   },
   "activationEvents": [
     "onCommand:quick-replace-in-selection.replaceInSelection",
-    "onCommand:quick-replace-in-selection.replaceInSelectionByRule"
+    "onCommand:quick-replace-in-selection.replaceInSelectionByRule",
+    "onCommand:quick-replace-in-selection.repeatLastReplace"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -42,6 +43,10 @@
       {
         "command": "quick-replace-in-selection.replaceInSelectionByRule",
         "title": "Quick Replace In Selection (Use rule)..."
+      },
+      {
+        "command": "quick-replace-in-selection.repeatLastReplace",
+        "title": "Quick Replace In Selection (Repeat Last)"
       }
     ],
     "keybindings": [

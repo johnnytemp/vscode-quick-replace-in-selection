@@ -32,6 +32,11 @@ export function activate(context: vscode.ExtensionContext) {
     module.getReplaceByRuleCommand().performCommand();
   });
   context.subscriptions.push(disposable);
+
+  disposable = vscode.commands.registerCommand('quick-replace-in-selection.repeatLastReplace', () => {
+    module.getRepeatLastCommand().performCommand();
+  });
+  context.subscriptions.push(disposable);
 }
 
 // this method is called when your extension is deactivated

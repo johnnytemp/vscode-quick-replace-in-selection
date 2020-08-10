@@ -1,11 +1,20 @@
 import { window, TextEditor, TextDocument, Selection, Position, Range, EndOfLine } from 'vscode';
+import { QuickReplaceInSelectionModule } from './QuickReplaceInSelectionModule';
 
 /**
- * QuickReplaceInSelectionCommand class
+ * QuickReplaceInSelectionCommand class -> should this be called QuickReplaceInSelectionInputCommand & "Quick Replace In Selection (Input)"?
  */
 export class QuickReplaceInSelectionCommand {
   static lastTarget : string = '';
   static lastReplacement : string = '';
+
+  public getCommandType() : string {
+    return 'input';
+  }
+
+  protected getModule() : QuickReplaceInSelectionModule {
+    return QuickReplaceInSelectionModule.getInstance();
+  }
 
   public performCommand() {
     window.showInputBox({
@@ -18,11 +27,16 @@ export class QuickReplaceInSelectionCommand {
           value: QuickReplaceInSelectionCommand.lastReplacement
         }).then((replacement: string | undefined) => {
           if (replacement !== undefined) {
+            this.getModule().setLastCommand(this);
             this.handleError(this.performReplacement([target], [replacement], false, true, ''));
           }
         });
       }
     });
+  }
+
+  public repeatCommand() {
+    this.handleError(this.performReplacement([QuickReplaceInSelectionCommand.lastTarget], [QuickReplaceInSelectionCommand.lastReplacement], false, true, ''));
   }
 
   public clearHistory() {

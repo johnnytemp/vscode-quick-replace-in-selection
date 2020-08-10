@@ -6,8 +6,12 @@ import { window, QuickPickItem } from 'vscode';
 export class QuickReplaceInSelectionByRuleCommand extends QuickReplaceInSelectionCommand {
   private static lastRuleName : string = '';
 
+  public getCommandType() : string {
+    return 'rule';
+  }
+
   public performCommand() {
-    let module = QuickReplaceInSelectionModule.getInstance();
+    let module = this.getModule();
 
     let rules = module.getConfig().getRules();
     let lastRuleName = QuickReplaceInSelectionByRuleCommand.getLastRuleName();
@@ -29,17 +33,23 @@ export class QuickReplaceInSelectionByRuleCommand extends QuickReplaceInSelectio
         ruleName = lastRuleName;
       } else if (ruleName === '( Input Expressions )') {
         QuickReplaceInSelectionByRuleCommand.lastRuleName = ''; // also clear last rule, so that '( Input Expressions )' is the first item for faster re-run.
+        module.setLastCommand(null);
         module.getQuickReplaceCommand().performCommand();
         return;
       } else {
         QuickReplaceInSelectionByRuleCommand.lastRuleName = ruleName;
       }
+      module.setLastCommand(this);
       this.handleError(this.performRule(ruleName));
     });
   }
 
+  public repeatCommand() {
+    this.handleError(this.performRule(QuickReplaceInSelectionByRuleCommand.lastRuleName));
+  }
+
   private lookupRule(ruleName : string) : QuickReplaceRule | undefined {
-    let rules = QuickReplaceInSelectionModule.getInstance().getConfig().getRules();
+    let rules = this.getModule().getConfig().getRules();
     return rules[ruleName];
   }
 
