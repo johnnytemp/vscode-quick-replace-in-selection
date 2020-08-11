@@ -29,29 +29,29 @@
     "url": "https://github.com/johnnytemp/vscode-quick-replace-in-selection.git"
   },
   "activationEvents": [
-    "onCommand:quick-replace-in-selection.replaceInSelection",
-    "onCommand:quick-replace-in-selection.replaceInSelectionByRule",
-    "onCommand:quick-replace-in-selection.repeatLastReplace"
+    "onCommand:quickReplaceInSelection.replaceInSelection",
+    "onCommand:quickReplaceInSelection.replaceInSelectionByRule",
+    "onCommand:quickReplaceInSelection.repeatLastReplace"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "quick-replace-in-selection.replaceInSelection",
+        "command": "quickReplaceInSelection.replaceInSelection",
         "title": "Quick Replace In Selection"
       },
       {
-        "command": "quick-replace-in-selection.replaceInSelectionByRule",
+        "command": "quickReplaceInSelection.replaceInSelectionByRule",
         "title": "Quick Replace In Selection (Use rule)..."
       },
       {
-        "command": "quick-replace-in-selection.repeatLastReplace",
+        "command": "quickReplaceInSelection.repeatLastReplace",
         "title": "Quick Replace In Selection (Repeat Last)"
       }
     ],
     "keybindings": [
       {
-        "command": "quick-replace-in-selection.replaceInSelectionByRule",
+        "command": "quickReplaceInSelection.replaceInSelectionByRule",
         "key": "ctrl+k ctrl+h",
         "mac": "cmd+k cmd+h",
         "when": "editorTextFocus"
@@ -60,7 +60,7 @@
     "configuration": {
       "title": "Quick Replace In Selection configurations",
       "properties": {
-        "quick-replace.rules": {
+        "quickReplaceInSelection.rules": {
           "type": "object",
           "description": "The rules for command Quick Replace In Selection (Use rule)...",
           "default": {

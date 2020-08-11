@@ -23,7 +23,7 @@ export class QuickReplaceInSelectionConfig {
   }
 
   public reloadConfig() : WorkspaceConfiguration {
-    let vsConfig = workspace.getConfiguration('quick-replace');
+    let vsConfig = workspace.getConfiguration('quickReplaceInSelection');
 
     let configRules: QuickReplaceRulesFalseAble = vsConfig.get("rules") || {};
     this._rules = {};

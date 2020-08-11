@@ -47,12 +47,12 @@ None.
 
 This extension contributes the following settings:
 
-- `quick-replace.rules`: define the rules to be used by the command `Quick Replace In Selection (Use Rule)...`
+- `quickReplaceInSelection.rules`: define the rules to be used by the command `Quick Replace In Selection (Use Rule)...`
 
     E.g. to define a rule which replaces newlines to `\n`, to this in your settings file:
 
     ```
-    "quick-replace.rules": {
+    "quickReplaceInSelection.rules": {
         "Test Rule's Name": {
             "find": ["\n"],
             "replace": ["\\n"]
@@ -65,8 +65,8 @@ This extension contributes the following settings:
 
 Hints:
 
-- For how to define rules in the configuration, you could look at the default rules as examples. (`Ctrl-Shift-P` to open command palette, type "Open Default Settings (JSON)" & Enter, and search for `quick-replace.rules`)
-- You could make use of the default rules `Escape literal string for PCRE/extended regular expression` (optional) and then `Json stringify` and to put your regular expression in the `"find"` settings of `quick-replace.rules`.
+- For how to define rules in the configuration, you could look at the default rules as examples. (`Ctrl-Shift-P` to open command palette, type "Open Default Settings (JSON)" & Enter, and search for `quickReplaceInSelection.rules`)
+- You could make use of the default rules `Escape literal string for PCRE/extended regular expression` (optional) and then `Json stringify` and to put your regular expression in the `"find"` settings of `quickReplaceInSelection.rules`.
 
 ## Default rules
 

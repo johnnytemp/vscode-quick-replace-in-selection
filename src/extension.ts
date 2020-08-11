@@ -19,7 +19,7 @@ export function activate(context: vscode.ExtensionContext) {
   // The command has been defined in the package.json file
   // Now provide the implementation of the command with registerCommand
   // The commandId parameter must match the command field in package.json
-  let disposable = vscode.commands.registerCommand('quick-replace-in-selection.replaceInSelection', () => {
+  let disposable = vscode.commands.registerCommand('quickReplaceInSelection.replaceInSelection', () => {
     // The code you place here will be executed every time your command is executed
 
     // // Display a message box to the user
@@ -28,12 +28,12 @@ export function activate(context: vscode.ExtensionContext) {
   });
   context.subscriptions.push(disposable);
 
-  disposable = vscode.commands.registerCommand('quick-replace-in-selection.replaceInSelectionByRule', () => {
+  disposable = vscode.commands.registerCommand('quickReplaceInSelection.replaceInSelectionByRule', () => {
     module.getReplaceByRuleCommand().performCommand();
   });
   context.subscriptions.push(disposable);
 
-  disposable = vscode.commands.registerCommand('quick-replace-in-selection.repeatLastReplace', () => {
+  disposable = vscode.commands.registerCommand('quickReplaceInSelection.repeatLastReplace', () => {
     module.getRepeatLastCommand().performCommand();
   });
   context.subscriptions.push(disposable);
