@@ -28,7 +28,7 @@ export class QuickReplaceInSelectionCommand {
         }).then((replacement: string | undefined) => {
           if (replacement !== undefined) {
             this.getModule().setLastCommand(this);
-            this.handleError(this.performReplacement([target], [replacement], false, true, ''));
+            this.handleError(this.performReplacement([target], [replacement], this.addDefaultFlags()));
           }
         });
       }
@@ -36,7 +36,7 @@ export class QuickReplaceInSelectionCommand {
   }
 
   public repeatCommand() {
-    this.handleError(this.performReplacement([QuickReplaceInSelectionCommand.lastTarget], [QuickReplaceInSelectionCommand.lastReplacement], false, true, ''));
+    this.handleError(this.performReplacement([QuickReplaceInSelectionCommand.lastTarget], [QuickReplaceInSelectionCommand.lastReplacement], this.addDefaultFlags()));
   }
 
   public clearHistory() {
@@ -53,11 +53,37 @@ export class QuickReplaceInSelectionCommand {
     // console.log(error);
   }
 
-  public performReplacement(targets: string[], replacements: string[], isSaved : boolean, escapesInReplace : boolean, flags: string) : string | null {
+  //==== implementation methods ====
+
+  public haveEscapesInReplace() : boolean {
+    return true;
+  }
+
+  protected addDefaultFlags(flags? : string | undefined, noGlobalFlag? : boolean | undefined) {
+    // Remark: the default flags is only global flag. Likely won't change.
+    let defaultFlags = noGlobalFlag ? '' : 'g';
+    flags = flags !== undefined ? flags : '';
+    return defaultFlags + flags;
+  }
+
+  public getFlagsFromFlagsString(flagsString : string) {
+    let matches = null;
+    if (flagsString.length > 0 && flagsString.length <= 6) {
+      matches = flagsString.match(/^[gimsuy]+$/);
+    }
+    let flags = '';
+    if (matches !== null) {
+      flags = flagsString;
+    }
+    return this.addDefaultFlags(flags);
+  }
+
+  /// @param flags won't further add default flags 'g'
+  public performReplacement(targets: string[], replacements: string[], flags?: string) : string | null {
     if (targets.length === 0 || targets.length !== replacements.length) {
       return 'Invalid find/replace parameters';
     }
-    if (!isSaved) {
+    if (this.getCommandType() === 'input') {
       QuickReplaceInSelectionCommand.lastTarget = targets[0];
       QuickReplaceInSelectionCommand.lastReplacement = replacements[0];
     }
@@ -80,7 +106,7 @@ export class QuickReplaceInSelectionCommand {
 
     let ranges : Range[] = selections;
     let texts : string[] = [];
-    let error = this.prepareReplacements(targets, replacements, escapesInReplace, document, selections, texts, flags);
+    let error = this.prepareReplacements(targets, replacements, document, selections, texts, flags);
 
     // do editor text replacements in a batch
     if (error === null) {
@@ -115,20 +141,22 @@ export class QuickReplaceInSelectionCommand {
     });
   }
 
-  public prepareReplacements(targets : string[], replacements : string[], escapesInReplace : boolean, document : TextDocument, selections : Selection[], texts : string[], flags? : string) : string | null {
+  private prepareReplacements(targets : string[], replacements : string[], document : TextDocument, selections : Selection[], texts : string[], flags : string | undefined) : string | null {
     let numSelections = selections.length;
     let isCRLF = document.eol === EndOfLine.CRLF;
-    return this.computeReplacements(targets, replacements, escapesInReplace, isCRLF, numSelections, (i: number) => document.getText(selections[i]), texts, flags);
+    return this.computeReplacements(targets, replacements, isCRLF, numSelections, (i: number) => document.getText(selections[i]), texts, flags);
   }
 
   // for unit tests
-  public computeReplacementsWithExpressions(find: string, replace: string, isCRLF : boolean, numSelections : number, selectionGetter : (i: number) => string, texts? : string[], flags? : string) : string | string[] {
+  public computeReplacementsWithExpressions(find: string, replace: string, isCRLF : boolean, numSelections : number, selectionGetter : (i: number) => string, texts? : string[], flags? : string, noGlobalFlag? : boolean) : string | string[] {
     texts = texts || [];
-    let error = this.computeReplacements([find], [replace], true, isCRLF, numSelections, selectionGetter, texts, flags);
+    let error = this.computeReplacements([find], [replace], isCRLF, numSelections, selectionGetter, texts, this.addDefaultFlags(flags, noGlobalFlag));
     return error !== null ? error : texts;
   }
 
-  public computeReplacements(targets : string[], replacements : string[], escapesInReplace : boolean, isCRLF : boolean, numSelections : number, selectionGetter : (i: number) => string, texts : string[], flags? : string | undefined) : string | null {
+  public computeReplacements(targets : string[], replacements : string[], isCRLF : boolean, numSelections : number, selectionGetter : (i: number) => string, texts : string[], flags : string | undefined) : string | null {
+    let escapesInReplace = this.haveEscapesInReplace();
+    let isInputCommand = this.getCommandType() === 'input';
     if (targets.length !== replacements.length) {
       return 'Invalid find/replace parameters';
     }
@@ -140,14 +168,19 @@ export class QuickReplaceInSelectionCommand {
     let isOk = true;
     for (let i = 0; i < targets.length; ++i) {
       let target = targets[i];
-      let prefixMatch = target.match(/^(\+|\?[gimsuy]+ )/); // support either /^\+/ (equal the "m" flag) OR /^\?[gimsuy]+/ for flags
-      if (prefixMatch !== null) {
-        let prefix = prefixMatch[0];
-        target = target.substr(prefix.length);
-        flags += prefix === '+' ? 'm' : prefix.substr(1, prefix.length - 2);
+
+      if (isInputCommand) {
+        // Fix: this special prefix syntax is for "input expressions" command only
+        let prefixMatch = target.match(/^(\+|\?[gimsuy]+ )/); // support either /^\+/ (equal the "m" flag) OR /^\?[gimsuy]+/ for flags
+        if (prefixMatch !== null) {
+          let prefix = prefixMatch[0];
+          target = target.substr(prefix.length);
+          flags += prefix === '+' ? 'm' : prefix.substr(1, prefix.length - 2);
+        }
       }
+
       try {
-        regexps.push(new RegExp(target, 'g' + flags));
+        regexps.push(new RegExp(target, flags));
       }
       catch (e) {
         let error = '"' + target +'" -> ' + (e as Error).message; // e.message is like "Invalid regular expression /.../: ..."

@@ -48,6 +48,16 @@ export class QuickReplaceInSelectionByRuleCommand extends QuickReplaceInSelectio
     this.handleError(this.performRule(QuickReplaceInSelectionByRuleCommand.lastRuleName));
   }
 
+  //==== implementation methods ====
+
+  public haveEscapesInReplace() : boolean {
+    return false;
+  }
+
+  public getFlagsFromRule(rule : QuickReplaceRule) : string {
+    return this.getFlagsFromFlagsString(rule.flags || '');
+  }
+
   private lookupRule(ruleName : string) : QuickReplaceRule | undefined {
     let rules = this.getModule().getConfig().getRules();
     return rules[ruleName];
@@ -58,25 +68,17 @@ export class QuickReplaceInSelectionByRuleCommand extends QuickReplaceInSelectio
     if (!rule) {
       return 'No such rule - ' + ruleName;
     }
-    return this.performReplacement(rule.find || [], rule.replace || [], true, false, this.getFlagsFromRule(rule));
-  }
-
-  public getFlagsFromRule(rule : QuickReplaceRule) {
-    let flags = '';
-    if (rule.flags && rule.flags.match(/^[gimsuy]+$/) && rule.flags.length <= 6) {
-      return rule.flags;
-    }
-    return flags;
+    return this.performReplacement(rule.find || [], rule.replace || [], this.getFlagsFromRule(rule));
   }
 
   // for unit tests
-  public computeReplacementsWithRule(ruleName: string, isCRLF : boolean, numSelections : number, selectionGetter : (i: number) => string, texts? : string[], flags? : string) : string | string[] {
+  public computeReplacementsWithRule(ruleName: string, isCRLF : boolean, numSelections : number, selectionGetter : (i: number) => string, texts? : string[]) : string | string[] {
     let rule = this.lookupRule(ruleName);
     if (!rule) {
       return 'No such rule - ' + ruleName;
     }
     texts = texts || [];
-    let error = this.computeReplacements(rule.find, rule.replace, false, isCRLF, numSelections, selectionGetter, texts, flags);
+    let error = this.computeReplacements(rule.find, rule.replace, isCRLF, numSelections, selectionGetter, texts, this.getFlagsFromRule(rule));
     return error !== null ? error : texts;
   }
 
