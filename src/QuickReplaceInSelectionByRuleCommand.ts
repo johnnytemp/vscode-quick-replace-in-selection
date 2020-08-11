@@ -10,6 +10,14 @@ export class QuickReplaceInSelectionByRuleCommand extends QuickReplaceInSelectio
     return 'rule';
   }
 
+  public performCommandWithArgs(args : any) {
+    if (typeof args === 'object' && args.ruleName !== undefined) {
+      this.performRule(args.ruleName);
+    } else {
+      this.performCommand();
+    }
+  }
+
   public performCommand() {
     let module = this.getModule();
 

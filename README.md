@@ -81,6 +81,21 @@ Some default rules are listed here:
 - Split CSV/TSV into lines
 - Trim lines
 
+## Keyboard shortcuts
+
+- You could also define custom keyboard shortcuts for each rule:
+
+```
+{
+    "key": "alt+j",
+    "command": "quickReplaceInSelection.replaceInSelectionByRule",
+    "when": "editorTextFocus",
+    "args": {
+        "ruleName": "Json stringify"
+    }
+}
+```
+
 ## Known Issues
 
 None.

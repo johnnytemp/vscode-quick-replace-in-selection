@@ -28,8 +28,8 @@ export function activate(context: vscode.ExtensionContext) {
   });
   context.subscriptions.push(disposable);
 
-  disposable = vscode.commands.registerCommand('quickReplaceInSelection.replaceInSelectionByRule', () => {
-    module.getReplaceByRuleCommand().performCommand();
+  disposable = vscode.commands.registerCommand('quickReplaceInSelection.replaceInSelectionByRule', (args?: {}) => {
+    module.getReplaceByRuleCommand().performCommandWithArgs(args);
   });
   context.subscriptions.push(disposable);
 
