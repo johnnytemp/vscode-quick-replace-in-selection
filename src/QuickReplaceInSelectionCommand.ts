@@ -68,14 +68,16 @@ export class QuickReplaceInSelectionCommand {
 
   public getFlagsFromFlagsString(flagsString : string) {
     let matches = null;
-    if (flagsString.length > 0 && flagsString.length <= 6) {
-      matches = flagsString.match(/^[gimsuy]+$/);
+    if (flagsString.length > 0 && flagsString.length <= 8) {
+      matches = flagsString.match(/^([gimsuy]+)?(-g)?$/);
     }
     let flags = '';
+    let noGlobalFlag = false;
     if (matches !== null) {
-      flags = flagsString;
+      flags = (matches[1] || '').replace('g', '');
+      noGlobalFlag = matches[2] === '-g';
     }
-    return this.addDefaultFlags(flags);
+    return this.addDefaultFlags(flags, noGlobalFlag);
   }
 
   /// @param flags won't further add default flags 'g'
@@ -171,11 +173,18 @@ export class QuickReplaceInSelectionCommand {
 
       if (isInputCommand) {
         // Fix: this special prefix syntax is for "input expressions" command only
-        let prefixMatch = target.match(/^(\+|\?[gimsuy]+ )/); // support either /^\+/ (equal the "m" flag) OR /^\?[gimsuy]+/ for flags
+        let prefixMatch = target.match(/^(?:\+|\?(?=[gimsuy-])([gimsuy]+)?(-g)? )/); // support either /^\+/ (equal the "m" flag) OR /^\?[gimsuy]*(-g)? / for flags
         if (prefixMatch !== null) {
           let prefix = prefixMatch[0];
           target = target.substr(prefix.length);
-          flags += prefix === '+' ? 'm' : prefix.substr(1, prefix.length - 2);
+          if (prefix === '+') {
+            flags += 'm';
+          } else {
+            flags += prefixMatch[1] || '';
+            if (prefixMatch[2] === '-g') {
+              flags = flags.replace(/g/g, '');
+            }
+          }
         }
       }
 
