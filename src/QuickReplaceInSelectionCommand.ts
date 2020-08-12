@@ -156,20 +156,18 @@ export class QuickReplaceInSelectionCommand {
     return error !== null ? error : texts;
   }
 
-  public computeReplacements(targets : string[], replacements : string[], isCRLF : boolean, numSelections : number, selectionGetter : (i: number) => string, texts : string[], flags : string | undefined) : string | null {
+  protected buildRegexes(regexps : RegExp[], targets : string[], inOutReplacements : { ref: string[] }, flags: string | undefined) : string | null {
     let escapesInReplace = this.haveEscapesInReplace();
     let isInputCommand = this.getCommandType() === 'input';
-    if (targets.length !== replacements.length) {
+    if (targets.length !== inOutReplacements.ref.length) {
       return 'Invalid find/replace parameters';
     }
-    if (flags === undefined) {
-      flags = '';
-    }
-    let regexps : RegExp[] = [];
-    replacements = escapesInReplace ? replacements.slice() : replacements;
+    var initialFlags = flags === undefined ? '' : flags;
+    let replacements = inOutReplacements.ref = escapesInReplace ? inOutReplacements.ref.slice() : inOutReplacements.ref;
     let isOk = true;
     for (let i = 0; i < targets.length; ++i) {
       let target = targets[i];
+      let flags = initialFlags;
 
       if (isInputCommand) {
         // Fix: this special prefix syntax is for "input expressions" command only
@@ -198,6 +196,17 @@ export class QuickReplaceInSelectionCommand {
       if (escapesInReplace) {
         replacements[i] = this.unescapeReplacement(replacements[i]);
       }
+    }
+    return null;
+  }
+
+  public computeReplacements(targets : string[], replacements : string[], isCRLF : boolean, numSelections : number, selectionGetter : (i: number) => string, texts : string[], flags : string | undefined) : string | null {
+    let regexps : RegExp[] = [];
+    let inOutReplacements = { ref: replacements };
+    var err = this.buildRegexes(regexps, targets, inOutReplacements, flags);
+    replacements = inOutReplacements.ref;
+    if (err !== null) {
+      return err;
     }
 
     for (let i: number = 0; i < numSelections; i++) { // replace all selections or whole document
