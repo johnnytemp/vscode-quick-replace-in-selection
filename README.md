@@ -6,7 +6,7 @@ It also support *predefined rules* to be used, and those rules allow *multiple r
 
 **Note**: By default, all matches are *case sensitive* [#1](#footnote1), and `^`, `$`  match *text selection boundaries* instead of line boundaries [#2](#footnote2).
 
-## Commands Demo
+## Commands & Demo
 
 ### Quick Replace In Selection
 
@@ -15,6 +15,10 @@ It also support *predefined rules* to be used, and those rules allow *multiple r
 ### Quick Replace In Selection (Use Rule)... (Shortcut: `Ctrl-K Ctrl-H`)
 
 ![Quick Replace In Selection (Use Rule)...](https://github.com/johnnytemp/vscode-quick-replace-in-selection/raw/master/images/replaceInSelectionByRule.gif)
+
+### Quick Replace In Selection (Repeat Last)
+
+Repeat the last replace action which use either input expressions, or a rule.
 
 ## Features
 
@@ -67,6 +71,7 @@ Hints:
 
 - For how to define rules in the configuration, you could look at the default rules as examples. (`Ctrl-Shift-P` to open command palette, type "Open Default Settings (JSON)" & Enter, and search for `quickReplaceInSelection.rules`)
 - You could make use of the default rules `Escape literal string for PCRE/extended regular expression` (optional) and then `Json stringify` and to put your regular expression in the `"find"` settings of `quickReplaceInSelection.rules`.
+- An experimental feature: to only replace the first match (instead of all matches) in each selection, put a trailing `-g` in the `"flags"` of the rule, or a leading "<code>?-g </code>" in regex input box.
 
 ## Default rules
 
