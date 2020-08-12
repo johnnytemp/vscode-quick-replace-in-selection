@@ -33,9 +33,23 @@ suite('Extension Test Suite', () => {
     // default case sensitive
     assert.deepEqual(['"(<a>/&amp;\') \n\\n\\\\n"'],
       quickReplace.computeReplacementsWithExpressions('A', 'B',                                               false, sourceTexts.length, getIndex.bind(sourceTexts)));
-    // support 'i' flag for case insensitive
+    // support 'i' flag for case insensitive, global flag should still be enabled
     assert.deepEqual(['"(<B>/&Bmp;\') \n\\n\\\\n"'],
       quickReplace.computeReplacementsWithExpressions('A', 'B',                                               false, sourceTexts.length, getIndex.bind(sourceTexts), [], 'i'));
+
+    // ?i etc and no-global-flag related tests
+    // support '?im-g' for case insensitive, ^$ means line boundary, and no global replace
+    assert.deepEqual(['"(<a>/&am*p;\') \n\\n\\\\n"'],
+      quickReplace.computeReplacementsWithExpressions('?im-g [A-Z]\\W*$', '*$&',                              false, sourceTexts.length, getIndex.bind(sourceTexts)));
+    // same test as above but with global flag
+    assert.deepEqual(['"(<a>/&am*p;\') \n\\n\\\\*n"'],
+      quickReplace.computeReplacementsWithExpressions('?im [A-Z]\\W*$', '*$&',                                false, sourceTexts.length, getIndex.bind(sourceTexts)));
+    // use-rule command may use flags and with "-g" like
+    assert.deepEqual(['"(<a>/&am*p;\') \n\\n\\\\n"'],
+      replaceByRule.computeReplacementsWithExpressions('[A-Z]\\W*$', '*$&',                                   false, sourceTexts.length, getIndex.bind(sourceTexts), [], 'im', true /* -g */));
+    // use-rule command shouldn't allow "?i "
+    assert.deepEqual('"?i A" -> Invalid regular expression: /?i A/: Nothing to repeat',
+      replaceByRule.computeReplacementsWithExpressions('?i A', 'B',                                           false, sourceTexts.length, getIndex.bind(sourceTexts)));
 
     // test default rules
     assert.deepEqual(['"(<a>/&\') \n\\n\\\\n"'],
