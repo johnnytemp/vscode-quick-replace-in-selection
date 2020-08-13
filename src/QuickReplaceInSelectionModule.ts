@@ -53,5 +53,6 @@ export class QuickReplaceInSelectionModule {
   public clearHistory() {
     this.getQuickReplaceCommand().clearHistory();
     this.getReplaceByRuleCommand().clearHistory();
+    this.setLastCommand(null);
   }
 }
