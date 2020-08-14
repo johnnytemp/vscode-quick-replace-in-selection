@@ -2,7 +2,7 @@
   "name": "quick-replace-in-selection",
   "displayName": "Quick Replace In Selection",
   "description": "Search and replace by some regular expressions in current selection with quick steps",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "publisher": "johnnywong",
   "icon": "images/quick-replace-in-selection-icon.png",
   "engines": {

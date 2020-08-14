@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.2.0] - 2020-08-14
+
+### Added
+- Support regex input box to start with "*" to mean the expression which follows is a literal string instead of regex, and so is the replace-to expression. (i.e. the backslash escape and "$&" just match literally)  
+Remark: rules are predefined and so no need to be able to replace instantly, so they may use the "Escape literal string for PCRE/extended regular expression" rule to escape a string to be matched literally.
+
 ## [1.1.0] - 2020-08-12
 
 ### Added
