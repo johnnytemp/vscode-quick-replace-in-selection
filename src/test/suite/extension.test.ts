@@ -51,6 +51,10 @@ suite('Extension Test Suite', () => {
     assert.deepEqual('"?i A" -> Invalid regular expression: /?i A/: Nothing to repeat',
       replaceByRule.computeReplacementsWithExpressions('?i A', 'B',                                           false, sourceTexts.length, getIndex.bind(sourceTexts)));
 
+    // search with literal string by a leading "*", replacement string don't have special meaning for "$&" and "$$"
+    assert.deepEqual(['"(<a>/&amp;\') \n$$\\$$"'],
+      quickReplace.computeReplacementsWithExpressions('*\\n', '$$',                                           false, sourceTexts.length, getIndex.bind(sourceTexts)));
+
     // test default rules
     assert.deepEqual(['"(<a>/&\') \n\\n\\\\n"'],
       replaceByRule.computeReplacementsWithRule("Decode basic html entities (incomplete)",                    false, sourceTexts.length, getIndex.bind(sourceTexts)));

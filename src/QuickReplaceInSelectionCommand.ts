@@ -156,7 +156,7 @@ export class QuickReplaceInSelectionCommand {
     return error !== null ? error : texts;
   }
 
-  protected buildRegexes(regexps : RegExp[], targets : string[], inOutReplacements : { ref: string[] }, flags: string | undefined) : string | null {
+  protected buildRegexes(regexps : (RegExp|string)[], targets : string[], inOutReplacements : { ref: string[] }, flags: string | undefined) : string | null {
     let escapesInReplace = this.haveEscapesInReplace();
     let isInputCommand = this.getCommandType() === 'input';
     if (targets.length !== inOutReplacements.ref.length) {
@@ -183,6 +183,10 @@ export class QuickReplaceInSelectionCommand {
               flags = flags.replace(/g/g, '');
             }
           }
+        } else if (target.startsWith("*")) {
+          // use literal string instead of "new RegExp", and always skip unescapeReplacement() for this item ("$&" also lose its special meaning)
+          regexps.push(target.substr(1));
+          continue;
         }
       }
 
@@ -201,7 +205,7 @@ export class QuickReplaceInSelectionCommand {
   }
 
   public computeReplacements(targets : string[], replacements : string[], isCRLF : boolean, numSelections : number, selectionGetter : (i: number) => string, texts : string[], flags : string | undefined) : string | null {
-    let regexps : RegExp[] = [];
+    let regexps : (RegExp|string)[] = [];
     let inOutReplacements = { ref: replacements };
     var err = this.buildRegexes(regexps, targets, inOutReplacements, flags);
     replacements = inOutReplacements.ref;
@@ -214,12 +218,14 @@ export class QuickReplaceInSelectionCommand {
       if (isCRLF) {
         text = text.replace(/\r\n/g, "\n"); // CRLF to LF, so that "\n" is normalized to represent the whole newlines
         for (let i = 0; i < regexps.length; ++i) {
-          text = text.replace(regexps[i], replacements[i]);
+          let regexp = regexps[i];
+          text = typeof regexp === 'string' ? text.split(regexp).join(replacements[i]) : text.replace(regexp, replacements[i]);
         }
         text = text.replace(/\n/g, "\r\n"); // convert LF back to CRLF
       } else {
         for (let i = 0; i < regexps.length; ++i) {
-          text = text.replace(regexps[i], replacements[i]);
+          let regexp = regexps[i];
+          text = typeof regexp === 'string' ? text.split(regexp).join(replacements[i]) : text.replace(regexp, replacements[i]);
         }
       }
       texts.push(text);

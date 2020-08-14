@@ -1,6 +1,6 @@
 # Quick Replace In Selection README
 
-Quick Replace In Selection let you search and replace all occurrences by a regular expression (regex), within the current selection or the whole document.
+Quick Replace In Selection let you search and replace all occurrences by a regular expression (regex) (or literal string[#3](#footnote3)), within the current selection or the whole document.
 
 It also support *predefined rules* to be used, and those rules allow *multiple replacements* in order at a time.
 
@@ -116,4 +116,5 @@ MIT - See [LICENSE](LICENSE)
 ## Footnotes
 
 <a name="footnote1"></a>#1 - to do the opposite, type a leading "<code>?i </code>" before the regex in the input box (not a part of regex), or use `"flags"` in rules.  
-<a name="footnote2"></a>#2 - to do the opposite, type a leading "`+`" (preferred) or "<code>?m </code>" before the regex in the input box (not a part of regex), or use `"flags"` in rules.
+<a name="footnote2"></a>#2 - to do the opposite, type a leading "`+`" (preferred) or "<code>?m </code>" before the regex in the input box (not a part of regex), or use `"flags"` in rules.  
+<a name="footnote3"></a>#3 - to search & replace with a *literal string*, add a leading "`*`" in the regex input box. This also disable backslash escape and `$&` in the "Replace to" input box. (this feature is not available to rules)
