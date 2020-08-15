@@ -2,6 +2,7 @@ import { QuickReplaceInSelectionConfig } from './QuickReplaceInSelectionConfig';
 import { QuickReplaceInSelectionCommand } from './QuickReplaceInSelectionCommand';
 import { QuickReplaceInSelectionByRuleCommand } from './QuickReplaceInSelectionByRuleCommand';
 import { QuickReplaceInSelectionRepeatLastCommand } from './QuickReplaceInSelectionRepeatLastCommand';
+import { QuickSelectInSelectionCommand } from './QuickSelectInSelectionCommand';
 
 export class QuickReplaceInSelectionModule {
   private _config : QuickReplaceInSelectionConfig;
@@ -9,6 +10,7 @@ export class QuickReplaceInSelectionModule {
   private _replaceByRuleCommand : QuickReplaceInSelectionByRuleCommand;
   private _repeatLastCommand : QuickReplaceInSelectionRepeatLastCommand;
   private _lastCommand : QuickReplaceInSelectionCommand | null = null;
+  private _quickSelectCommand : QuickSelectInSelectionCommand;
 
   private static _instance : QuickReplaceInSelectionModule | undefined;
 
@@ -24,6 +26,7 @@ export class QuickReplaceInSelectionModule {
     this._quickReplaceCommand = new QuickReplaceInSelectionCommand();
     this._replaceByRuleCommand = new QuickReplaceInSelectionByRuleCommand();
     this._repeatLastCommand = new QuickReplaceInSelectionRepeatLastCommand();
+    this._quickSelectCommand = new QuickSelectInSelectionCommand();
   }
 
   public getConfig() : QuickReplaceInSelectionConfig {
@@ -50,9 +53,14 @@ export class QuickReplaceInSelectionModule {
     this._lastCommand = command;
   }
 
+  public getQuickSelectCommand() : QuickSelectInSelectionCommand {
+    return this._quickSelectCommand;
+  }
+
   public clearHistory() {
     this.getQuickReplaceCommand().clearHistory();
     this.getReplaceByRuleCommand().clearHistory();
+    this.getQuickSelectCommand().clearHistory();
     this.setLastCommand(null);
   }
 }

@@ -31,7 +31,8 @@
   "activationEvents": [
     "onCommand:quickReplaceInSelection.replaceInSelection",
     "onCommand:quickReplaceInSelection.replaceInSelectionByRule",
-    "onCommand:quickReplaceInSelection.repeatLastReplace"
+    "onCommand:quickReplaceInSelection.repeatLastReplace",
+    "onCommand:quickReplaceInSelection.selectInSelection"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -47,6 +48,10 @@
       {
         "command": "quickReplaceInSelection.repeatLastReplace",
         "title": "Quick Replace In Selection (Repeat Last)"
+      },
+      {
+        "command": "quickReplaceInSelection.selectInSelection",
+        "title": "Quick Select In Selection"
       }
     ],
     "keybindings": [
@@ -73,8 +78,8 @@
               "replace": ["&amp;", "&lt;", "&gt;", "&quot;", "&apos;"]
             },
             "Escape literal string for PCRE/extended regular expression": {
-              "find": ["\\\\", "[\\]{}(|)[.*+?^$]"],
-              "replace": ["\\\\", "\\$&"]
+              "find": ["[\\]\\\\{}(|)[.*+?^$]"],
+              "replace": ["\\$&"]
             },
             "Json stringify": {
               "find": ["\\\\", "\"", "\n", "\r", "\t", "^", "$"],
