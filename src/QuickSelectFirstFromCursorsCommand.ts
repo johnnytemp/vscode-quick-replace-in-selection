@@ -20,7 +20,7 @@ export class QuickSelectFirstFromCursorsCommand extends QuickSelectInSelectionCo
     if (err !== null) {
       return err;
     }
-    // let hasGlobalFlag = (flags || '').match('g') !== null;
+    // let hasGlobalFlag = regexps[0].global;
     let regexp : RegExp = regexps[0];
     let document = editor.document;
     let selections = editor.selections;

@@ -59,7 +59,7 @@ export class QuickSelectInSelectionCommand extends SearchOrReplaceCommandBase {
     let newSelections: Selection[] = [];
     let error = this.computeSelection(editor, newSelections, target, flags);
     if (error === null && newSelections.length > 0) {
-      console.log('Quick Select In Selection: ' + newSelections.length + " matches found in " + editor.selections.length + " selections.");
+      // console.log('Quick Select In Selection: ' + newSelections.length + " matches found in " + editor.selections.length + " selections.");
       editor.selections = newSelections;
       editor.revealRange(newSelections[0]);
     }
@@ -78,7 +78,7 @@ export class QuickSelectInSelectionCommand extends SearchOrReplaceCommandBase {
     if (err !== null) {
       return err;
     }
-    let hasGlobalFlag = (flags || '').match('g') !== null;
+    let hasGlobalFlag = regexps[0].global;
     let regexp : RegExp = regexps[0];
     let document = editor.document;
     let selections = editor.selections;
