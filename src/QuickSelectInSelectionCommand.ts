@@ -58,12 +58,17 @@ export class QuickSelectInSelectionCommand extends SearchOrReplaceCommandBase {
     }
     let newSelections: Selection[] = [];
     let error = this.computeSelection(editor, newSelections, target, flags);
-    if (error === null && newSelections.length > 0) {
+    if (error !== null) {
+      return error;
+    }
+    if (newSelections.length > 0) {
       // console.log('Quick Select In Selection: ' + newSelections.length + " matches found in " + editor.selections.length + " selections.");
       editor.selections = newSelections;
       editor.revealRange(newSelections[0]);
+    } else {
+      window.showInformationMessage('No matches found.');
     }
-    return error;
+    return null;
   }
 
   public computeSelection(editor: TextEditor, newSelections: Selection[], target: string, flags?: string) : string | null {
