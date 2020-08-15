@@ -29,6 +29,14 @@ export class QuickSelectInSelectionCommand extends SearchOrReplaceCommandBase {
     this.setLastSelectSearchTarget('');
   }
 
+  public performCommandWithArgs(args : any) {
+    if (typeof args === 'object' && args.target !== undefined) {
+      this.handleError(this.performSelection(args.target, this.addDefaultFlags(), true));
+    } else {
+      this.performCommand();
+    }
+  }
+
   public performCommand() {
     window.showInputBox({
       placeHolder: 'Target to select (regex)',
@@ -40,8 +48,8 @@ export class QuickSelectInSelectionCommand extends SearchOrReplaceCommandBase {
     });
   }
 
-  public performSelection(target: string, flags?: string) : string | null {
-    if (this.getCommandType() === 'input') {
+  public performSelection(target: string, flags?: string, isByArgs?: boolean) : string | null {
+    if (!isByArgs && this.getCommandType() === 'input') {
       this.setLastSelectSearchTarget(target);
     }
     let editor = window.activeTextEditor;

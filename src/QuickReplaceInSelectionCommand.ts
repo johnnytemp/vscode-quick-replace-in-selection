@@ -18,6 +18,14 @@ export class QuickReplaceInSelectionCommand extends SearchOrReplaceCommandBase {
     return QuickReplaceInSelectionModule.getInstance();
   }
 
+  public performCommandWithArgs(args : any) {
+    if (typeof args === 'object' && args.target !== undefined && args.replacement !== undefined) {
+      this.handleError(this.performReplacement([args.target], [args.replacement], this.addDefaultFlags(), true));
+    } else {
+      this.performCommand();
+    }
+  }
+
   public performCommand() {
     window.showInputBox({
       placeHolder: 'Target to replace (regex)',
@@ -53,11 +61,11 @@ export class QuickReplaceInSelectionCommand extends SearchOrReplaceCommandBase {
   }
 
   /// @param flags won't further add default flags 'g'
-  public performReplacement(targets: string[], replacements: string[], flags?: string) : string | null {
+  public performReplacement(targets: string[], replacements: string[], flags?: string, isByArgs?: boolean) : string | null {
     if (targets.length === 0 || targets.length !== replacements.length) {
       return 'Invalid find/replace parameters';
     }
-    if (this.getCommandType() === 'input') {
+    if (!isByArgs && this.getCommandType() === 'input') {
       QuickReplaceInSelectionCommand.lastTarget = targets[0];
       QuickReplaceInSelectionCommand.lastReplacement = replacements[0];
     }
