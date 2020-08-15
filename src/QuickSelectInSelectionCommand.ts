@@ -54,6 +54,9 @@ export class QuickSelectInSelectionCommand extends SearchOrReplaceCommandBase {
     if (target === '') {
       return null;
     }
+    let inOutTarget = { ref: target };
+    let groupsInfo = this.parseSkipGroupAndSelectGroupForSelectFromSearchTarget(inOutTarget);
+    target = inOutTarget.ref;
     let regexps: RegExp[] = [];
     let err = this.buildRegexes(regexps, [target], { ref: null}, flags, true);
     if (err !== null) {
@@ -72,12 +75,12 @@ export class QuickSelectInSelectionCommand extends SearchOrReplaceCommandBase {
     // let nMaxMatches = 50;
     for (let selection of selections) {
       let source = document.getText(selection);
-      let aMatch : RegExpExecArray | null;
+      let arrMatch : RegExpExecArray | null;
       let searchStart = regexp.lastIndex = 0;
       let n = 0;
-      while ((aMatch = regexp.exec(source))) {
-        let offsetStart = document.offsetAt(selection.start) + (aMatch.index || 0);
-        let offsetEnd = offsetStart + aMatch[0].length;
+      while ((arrMatch = regexp.exec(source))) {
+        let offsetStart = document.offsetAt(selection.start) + (arrMatch.index || 0) + this.getCaptureGroupLength(arrMatch, groupsInfo.skip);
+        let offsetEnd = offsetStart + this.getCaptureGroupLength(arrMatch, groupsInfo.select);
         let newSelection = new Selection(document.positionAt(offsetStart), document.positionAt(offsetEnd));
         newSelections.push(newSelection);
         if (!hasGlobalFlag /* || ++n >= nMaxMatches */) {
@@ -90,5 +93,29 @@ export class QuickSelectInSelectionCommand extends SearchOrReplaceCommandBase {
       }
     }
     return null;
+  }
+
+  /**
+   * prefix format is "?{<skip>,<select>}"
+   */
+  public parseSkipGroupAndSelectGroupForSelectFromSearchTarget(target: { ref: string }) : { skip: number | null, select: number } {
+    let ret : { skip: number | null, select: number } = { skip: null, select: 0 };
+    let groups = target.ref.match(/^\?\{(\d+),(\d+)\}/);
+    if (groups) {
+      ret.skip = parseInt(groups[1]);
+      ret.select = parseInt(groups[2]);
+      target.ref = target.ref.substr(groups[0].length);
+    }
+    return ret;
+  }
+
+  protected getCaptureGroupLength(arrMatch: RegExpExecArray, group: number | null) : number {
+    if (group !== null) {
+      let str = arrMatch[group];
+      if (str !== undefined) {
+        return str.length;
+      }
+    }
+    return 0;
   }
 }
