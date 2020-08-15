@@ -32,7 +32,8 @@
     "onCommand:quickReplaceInSelection.replaceInSelection",
     "onCommand:quickReplaceInSelection.replaceInSelectionByRule",
     "onCommand:quickReplaceInSelection.repeatLastReplace",
-    "onCommand:quickReplaceInSelection.selectInSelection"
+    "onCommand:quickReplaceInSelection.selectInSelection",
+    "onCommand:quickReplaceInSelection.selectFirstFromCursors"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -52,6 +53,10 @@
       {
         "command": "quickReplaceInSelection.selectInSelection",
         "title": "Quick Select In Selection"
+      },
+      {
+        "command": "quickReplaceInSelection.selectFirstFromCursors",
+        "title": "Quick Select First From Cursors"
       }
     ],
     "keybindings": [

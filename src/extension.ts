@@ -39,6 +39,9 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(vscode.commands.registerCommand('quickReplaceInSelection.selectInSelection', () => {
     module.getQuickSelectCommand().performCommand();
   }));
+  context.subscriptions.push(vscode.commands.registerCommand('quickReplaceInSelection.selectFirstFromCursors', () => {
+    module.getQuickSelectFromCursorsCommand().performCommand();
+  }));
 }
 
 // this method is called when your extension is deactivated
