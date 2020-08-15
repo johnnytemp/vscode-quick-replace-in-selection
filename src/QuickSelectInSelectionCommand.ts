@@ -1,4 +1,4 @@
-import { window, TextEditor, TextDocument, Selection, Position, Range, EndOfLine } from 'vscode';
+import { window, TextEditor, Selection } from 'vscode';
 import { QuickReplaceInSelectionModule } from './QuickReplaceInSelectionModule';
 import { SearchOrReplaceCommandBase } from './SearchOrReplaceCommandBase';
 import * as helper from './helper';

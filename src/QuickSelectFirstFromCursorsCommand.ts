@@ -1,7 +1,5 @@
-import { window, TextEditor, TextDocument, Selection, Position, Range, EndOfLine } from 'vscode';
-import { QuickReplaceInSelectionModule } from './QuickReplaceInSelectionModule';
+import { TextEditor, Selection } from 'vscode';
 import { QuickSelectInSelectionCommand } from './QuickSelectInSelectionCommand';
-import * as helper from './helper';
 
 /**
  * QuickSelectFirstFromCursorsCommand class
