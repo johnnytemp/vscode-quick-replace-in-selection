@@ -4,9 +4,9 @@ import { SearchOrReplaceCommandBase } from './SearchOrReplaceCommandBase';
 import * as helper from './helper';
 
 /**
- * QuickSelectInSelectionCommand class
+ * SelectInSelectionCommand class
  */
-export class QuickSelectInSelectionCommand extends SearchOrReplaceCommandBase {
+export class SelectInSelectionCommand extends SearchOrReplaceCommandBase {
   static lastTarget : string = '';
 
   public getCommandType() : string {
@@ -18,11 +18,11 @@ export class QuickSelectInSelectionCommand extends SearchOrReplaceCommandBase {
   }
 
   protected getLastSelectSearchTarget() {
-    return QuickSelectInSelectionCommand.lastTarget;
+    return SelectInSelectionCommand.lastTarget;
   }
 
   protected setLastSelectSearchTarget(target: string) {
-    QuickSelectInSelectionCommand.lastTarget = target;
+    SelectInSelectionCommand.lastTarget = target;
   }
 
   public clearHistory() {
@@ -62,7 +62,7 @@ export class QuickSelectInSelectionCommand extends SearchOrReplaceCommandBase {
       return error;
     }
     if (newSelections.length > 0) {
-      // console.log('Quick Select In Selection: ' + newSelections.length + " matches found in " + editor.selections.length + " selections.");
+      // console.log('QRIS: Select In Selection: ' + newSelections.length + " matches found in " + editor.selections.length + " selections.");
       editor.selections = newSelections;
       editor.revealRange(newSelections[0]);
     } else {

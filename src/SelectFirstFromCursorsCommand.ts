@@ -1,10 +1,10 @@
 import { TextEditor, Selection } from 'vscode';
-import { QuickSelectInSelectionCommand } from './QuickSelectInSelectionCommand';
+import { SelectInSelectionCommand } from './SelectInSelectionCommand';
 
 /**
- * QuickSelectFirstFromCursorsCommand class
+ * SelectFirstFromCursorsCommand class
  */
-export class QuickSelectFirstFromCursorsCommand extends QuickSelectInSelectionCommand {
+export class SelectFirstFromCursorsCommand extends SelectInSelectionCommand {
 
   public computeSelection(editor: TextEditor, newSelections: Selection[], target: string, flags?: string) : string | null {
     if (target === '') {

@@ -37,10 +37,10 @@ export function activate(context: vscode.ExtensionContext) {
     module.getRepeatLastCommand().performCommand();
   }));
   context.subscriptions.push(vscode.commands.registerCommand('quickReplaceInSelection.selectInSelection', (args?: {}) => {
-    module.getQuickSelectCommand().performCommandWithArgs(args);
+    module.getSelectInSelectionCommand().performCommandWithArgs(args);
   }));
   context.subscriptions.push(vscode.commands.registerCommand('quickReplaceInSelection.selectFirstFromCursors', (args?: {}) => {
-    module.getQuickSelectFromCursorsCommand().performCommandWithArgs(args);
+    module.getSelectFromCursorsCommand().performCommandWithArgs(args);
   }));
 }
 

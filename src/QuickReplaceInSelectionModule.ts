@@ -2,8 +2,8 @@ import { QuickReplaceInSelectionConfig } from './QuickReplaceInSelectionConfig';
 import { QuickReplaceInSelectionCommand } from './QuickReplaceInSelectionCommand';
 import { QuickReplaceInSelectionByRuleCommand } from './QuickReplaceInSelectionByRuleCommand';
 import { QuickReplaceInSelectionRepeatLastCommand } from './QuickReplaceInSelectionRepeatLastCommand';
-import { QuickSelectInSelectionCommand } from './QuickSelectInSelectionCommand';
-import { QuickSelectFirstFromCursorsCommand } from './QuickSelectFirstFromCursorsCommand';
+import { SelectInSelectionCommand } from './SelectInSelectionCommand';
+import { SelectFirstFromCursorsCommand } from './SelectFirstFromCursorsCommand';
 
 export class QuickReplaceInSelectionModule {
   private _config : QuickReplaceInSelectionConfig;
@@ -11,8 +11,8 @@ export class QuickReplaceInSelectionModule {
   private _replaceByRuleCommand : QuickReplaceInSelectionByRuleCommand;
   private _repeatLastCommand : QuickReplaceInSelectionRepeatLastCommand;
   private _lastCommand : QuickReplaceInSelectionCommand | null = null;
-  private _quickSelectCommand : QuickSelectInSelectionCommand;
-  private _quickSelectFromCursorsCommand : QuickSelectFirstFromCursorsCommand;
+  private _selectInSelectionCommand : SelectInSelectionCommand;
+  private _selectFromCursorsCommand : SelectFirstFromCursorsCommand;
 
   private static _instance : QuickReplaceInSelectionModule | undefined;
 
@@ -28,8 +28,8 @@ export class QuickReplaceInSelectionModule {
     this._quickReplaceCommand = new QuickReplaceInSelectionCommand();
     this._replaceByRuleCommand = new QuickReplaceInSelectionByRuleCommand();
     this._repeatLastCommand = new QuickReplaceInSelectionRepeatLastCommand();
-    this._quickSelectCommand = new QuickSelectInSelectionCommand();
-    this._quickSelectFromCursorsCommand = new QuickSelectFirstFromCursorsCommand();
+    this._selectInSelectionCommand = new SelectInSelectionCommand();
+    this._selectFromCursorsCommand = new SelectFirstFromCursorsCommand();
   }
 
   public getConfig() : QuickReplaceInSelectionConfig {
@@ -56,18 +56,18 @@ export class QuickReplaceInSelectionModule {
     this._lastCommand = command;
   }
 
-  public getQuickSelectCommand() : QuickSelectInSelectionCommand {
-    return this._quickSelectCommand;
+  public getSelectInSelectionCommand() : SelectInSelectionCommand {
+    return this._selectInSelectionCommand;
   }
 
-  public getQuickSelectFromCursorsCommand() : QuickSelectFirstFromCursorsCommand {
-    return this._quickSelectFromCursorsCommand;
+  public getSelectFromCursorsCommand() : SelectFirstFromCursorsCommand {
+    return this._selectFromCursorsCommand;
   }
 
   public clearHistory() {
     this.getQuickReplaceCommand().clearHistory();
     this.getReplaceByRuleCommand().clearHistory();
-    this.getQuickSelectCommand().clearHistory();
+    this.getSelectInSelectionCommand().clearHistory();
     this.setLastCommand(null);
   }
 }
