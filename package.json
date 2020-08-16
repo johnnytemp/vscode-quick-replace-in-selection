@@ -1,7 +1,7 @@
 {
   "name": "quick-replace-in-selection",
   "displayName": "Quick Replace In Selection",
-  "description": "Search and replace by some regular expressions in current selection with quick steps",
+  "description": "Search and replace by some regular expressions in current selection with quick steps. Can also search from cursors.",
   "version": "1.2.0",
   "publisher": "johnnywong",
   "icon": "images/quick-replace-in-selection-icon.png",
@@ -32,15 +32,16 @@
     "onCommand:quickReplaceInSelection.replaceInSelection",
     "onCommand:quickReplaceInSelection.replaceInSelectionByRule",
     "onCommand:quickReplaceInSelection.repeatLastReplace",
-    "onCommand:quickReplaceInSelection.selectInSelection",
-    "onCommand:quickReplaceInSelection.selectFirstFromCursors"
+    "onCommand:quickReplaceInSelection.selectExprInSelection",
+    "onCommand:quickReplaceInSelection.selectNextExprFromCursors",
+    "onCommand:quickReplaceInSelection.selectUpToNextExprFromCursors"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
         "command": "quickReplaceInSelection.replaceInSelection",
-        "title": "Quick Replace In Selection"
+        "title": "Quick Replace In Selection..."
       },
       {
         "command": "quickReplaceInSelection.replaceInSelectionByRule",
@@ -51,12 +52,16 @@
         "title": "Quick Replace In Selection (Repeat Last)"
       },
       {
-        "command": "quickReplaceInSelection.selectInSelection",
-        "title": "Select In Selection"
+        "command": "quickReplaceInSelection.selectExprInSelection",
+        "title": "Select Expression In Selection..."
       },
       {
-        "command": "quickReplaceInSelection.selectFirstFromCursors",
-        "title": "Select First From Cursors"
+        "command": "quickReplaceInSelection.selectNextExprFromCursors",
+        "title": "Select Next Expression From Cursors..."
+      },
+      {
+        "command": "quickReplaceInSelection.selectUpToNextExprFromCursors",
+        "title": "Select Up To Next Expression From Cursors..."
       }
     ],
     "keybindings": [

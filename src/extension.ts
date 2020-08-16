@@ -36,11 +36,14 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(vscode.commands.registerCommand('quickReplaceInSelection.repeatLastReplace', () => {
     module.getRepeatLastCommand().performCommand();
   }));
-  context.subscriptions.push(vscode.commands.registerCommand('quickReplaceInSelection.selectInSelection', (args?: {}) => {
+  context.subscriptions.push(vscode.commands.registerCommand('quickReplaceInSelection.selectExprInSelection', (args?: {}) => {
     module.getSelectInSelectionCommand().performCommandWithArgs(args);
   }));
-  context.subscriptions.push(vscode.commands.registerCommand('quickReplaceInSelection.selectFirstFromCursors', (args?: {}) => {
-    module.getSelectFromCursorsCommand().performCommandWithArgs(args);
+  context.subscriptions.push(vscode.commands.registerCommand('quickReplaceInSelection.selectNextExprFromCursors', (args?: {}) => {
+    module.getSelectNextExCommand().performCommandWithArgs(args);
+  }));
+  context.subscriptions.push(vscode.commands.registerCommand('quickReplaceInSelection.selectUpToNextExprFromCursors', (args?: {}) => {
+    module.getSelectUpToNextExCommand().performCommandWithArgs(args);
   }));
 }
 

@@ -1,10 +1,10 @@
 import { TextEditor, Selection } from 'vscode';
-import { SelectInSelectionCommand } from './SelectInSelectionCommand';
+import { SelectExprInSelectionCommand } from './SelectExprInSelectionCommand';
 
 /**
- * SelectFirstFromCursorsCommand class
+ * SelectUpToNextExprFromCursorsCommand class
  */
-export class SelectFirstFromCursorsCommand extends SelectInSelectionCommand {
+export class SelectUpToNextExprFromCursorsCommand extends SelectExprInSelectionCommand {
 
   public computeSelection(editor: TextEditor, newSelections: Selection[], target: string, outInfo: any, flags?: string) : string | null {
     if (target === '') {
@@ -37,7 +37,7 @@ export class SelectFirstFromCursorsCommand extends SelectInSelectionCommand {
       while ((arrMatch = regexp.exec(source))) {
         let offsetStart = (arrMatch.index || 0) + this.getCaptureGroupLength(arrMatch, groupsInfo.skip);
         let offsetEnd = offsetStart + this.getCaptureGroupLength(arrMatch, groupsInfo.select);
-        let newSelection = new Selection(document.positionAt(offsetStart), document.positionAt(offsetEnd));
+        let newSelection = new Selection(selection.start, document.positionAt(offsetEnd));
         newSelections.push(newSelection);
         break;
         /* if (!hasGlobalFlag) {

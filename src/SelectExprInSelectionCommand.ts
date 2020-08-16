@@ -4,9 +4,9 @@ import { SearchOrReplaceCommandBase } from './SearchOrReplaceCommandBase';
 import * as helper from './helper';
 
 /**
- * SelectInSelectionCommand class
+ * SelectExprInSelectionCommand class
  */
-export class SelectInSelectionCommand extends SearchOrReplaceCommandBase {
+export class SelectExprInSelectionCommand extends SearchOrReplaceCommandBase {
   static lastTarget : string = '';
 
   public getCommandType() : string {
@@ -18,11 +18,11 @@ export class SelectInSelectionCommand extends SearchOrReplaceCommandBase {
   }
 
   protected getLastSelectSearchTarget() {
-    return SelectInSelectionCommand.lastTarget;
+    return SelectExprInSelectionCommand.lastTarget;
   }
 
   protected setLastSelectSearchTarget(target: string) {
-    SelectInSelectionCommand.lastTarget = target;
+    SelectExprInSelectionCommand.lastTarget = target;
   }
 
   public clearHistory() {

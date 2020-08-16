@@ -6,7 +6,7 @@ import { window, workspace, Selection, Uri, TextDocument, Position } from 'vscod
 import * as vscode from 'vscode';
 // import * as myExtension from '../../extension';
 import { QuickReplaceInSelectionModule } from '../../QuickReplaceInSelectionModule';
-import { SelectFirstFromCursorsCommand } from '../../SelectFirstFromCursorsCommand';
+import { SelectNextExprFromCursorsCommand } from '../../SelectNextExprFromCursorsCommand';
 
 var editorContent = 'Hello world' + "\n" +
   '' + "\n" +
@@ -126,18 +126,22 @@ suite('Extension Test Suite', () => {
 
     let module = QuickReplaceInSelectionModule.getInstance();
     let selectInSelection = module.getSelectInSelectionCommand();
-    let selectFromCursors = module.getSelectFromCursorsCommand();
+    let selectNextEx = module.getSelectNextExCommand();
+    let selectUpToNextEx = module.getSelectUpToNextExCommand();
 
     assert.deepEqual([new Selection(0, 0, 0, 0), new Selection(2, 0, 2, 0)], // cursors at start of 1st & 3rd lines
       editor.selections, 'initial selections');
-    selectFromCursors.performCommandWithArgs({ target: "?i \\b[a-z]+.*" }); // select a word to line end --> selects "Hello..." and "a>..."
+    selectNextEx.performCommandWithArgs({ target: "?i \\b[a-z]+.*" }); // select a word to line end --> selects "Hello..." and "a>..."
     assert.deepEqual([new Selection(0, 0, 0, 11), new Selection(2, 5, 2, 16)],
-      editor.selections, 'selections after Select First From Cursors');
+      editor.selections, 'selections after Select Next Expression From Cursors...');
     selectInSelection.performCommandWithArgs({ target: "?{1,2}(&)([a-z]+);" }); // select between () in "&([a-z]+);" --> selects "amp"
     assert.deepEqual([new Selection(2, 9, 2, 12)],
-      editor.selections, 'selections after Select In Selection');
-    selectFromCursors.performCommandWithArgs({ target: "[a-z]" }); // select next letter --> selects "n" of "\n"
+      editor.selections, 'selections after Select Expression In Selection...');
+    selectNextEx.performCommandWithArgs({ target: "[a-z]" }); // select next letter --> selects "n" of "\n"
     assert.deepEqual([new Selection(3, 1, 3, 2)],
-      editor.selections, 'selections after Select First From Cursors');
+      editor.selections, 'selections after Select Next Expression From Cursors...');
+    selectUpToNextEx.performCommandWithArgs({ target: "[a-z]" }); // extends selection up to next letter --> selects "n\\n"
+    assert.deepEqual([new Selection(3, 1, 3, 5)],
+      editor.selections, 'selections after Select Up To Next Expression From Cursors...');
   });
 });
