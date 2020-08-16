@@ -63,7 +63,7 @@ export class SelectInSelectionCommand extends SearchOrReplaceCommandBase {
       return error;
     }
     if (newSelections.length > 0) {
-      // console.log('QRIS: Select In Selection: ' + newSelections.length + " matches found in " + editor.selections.length + " selections.");
+      // console.log('Select In Selection: ' + newSelections.length + " matches found in " + editor.selections.length + " selections.");
       editor.selections = newSelections;
       editor.revealRange(newSelections[0]);
     } else {
@@ -123,7 +123,7 @@ export class SelectInSelectionCommand extends SearchOrReplaceCommandBase {
    */
   public parseSkipGroupAndSelectGroupForSelectFromSearchTarget(target: { ref: string }) : { skip: number | null, select: number } {
     let ret : { skip: number | null, select: number } = { skip: null, select: 0 };
-    let groups = target.ref.match(/^\?\{(\d+),(\d+)\}/);
+    let groups = target.ref.match(/^\?\{(-1|\d+),(-1|\d+)\}/);
     if (groups) {
       ret.skip = parseInt(groups[1]);
       ret.select = parseInt(groups[2]);

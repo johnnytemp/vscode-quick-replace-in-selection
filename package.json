@@ -52,11 +52,11 @@
       },
       {
         "command": "quickReplaceInSelection.selectInSelection",
-        "title": "QRIS: Select In Selection"
+        "title": "Select In Selection"
       },
       {
         "command": "quickReplaceInSelection.selectFirstFromCursors",
-        "title": "QRIS: Select First From Cursors"
+        "title": "Select First From Cursors"
       }
     ],
     "keybindings": [
