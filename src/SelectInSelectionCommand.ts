@@ -57,7 +57,8 @@ export class SelectInSelectionCommand extends SearchOrReplaceCommandBase {
       return 'No editor';
     }
     let newSelections: Selection[] = [];
-    let error = this.computeSelection(editor, newSelections, target, flags);
+    let outInfo : any = { regexp: {} };
+    let error = this.computeSelection(editor, newSelections, target, outInfo, flags);
     if (error !== null) {
       return error;
     }
@@ -66,12 +67,12 @@ export class SelectInSelectionCommand extends SearchOrReplaceCommandBase {
       editor.selections = newSelections;
       editor.revealRange(newSelections[0]);
     } else {
-      window.showInformationMessage('No matches found.');
+      return 'No matches found to select, for regex /' + outInfo.regexp.source + '/';
     }
     return null;
   }
 
-  public computeSelection(editor: TextEditor, newSelections: Selection[], target: string, flags?: string) : string | null {
+  public computeSelection(editor: TextEditor, newSelections: Selection[], target: string, outInfo: any, flags?: string) : string | null {
     if (target === '') {
       return null;
     }
@@ -85,6 +86,7 @@ export class SelectInSelectionCommand extends SearchOrReplaceCommandBase {
     }
     let hasGlobalFlag = regexps[0].global;
     let regexp : RegExp = regexps[0];
+    outInfo.regexp = regexp;
     let document = editor.document;
     let selections = editor.selections;
     let numSelections = selections.length;

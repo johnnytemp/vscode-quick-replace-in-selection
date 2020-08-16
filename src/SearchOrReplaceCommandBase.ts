@@ -53,7 +53,7 @@ export class SearchOrReplaceCommandBase {
       escapesInReplace = false;
     } else {
       if (targets.length !== inOutReplacements.ref.length) {
-        return 'Invalid find/replace parameters';
+        return 'Invalid count of find/replace parameters';
       }
       replacements = inOutReplacements.ref = escapesInReplace ? inOutReplacements.ref.slice() : inOutReplacements.ref;
     }

@@ -63,7 +63,7 @@ export class QuickReplaceInSelectionCommand extends SearchOrReplaceCommandBase {
   /// @param flags won't further add default flags 'g'
   public performReplacement(targets: string[], replacements: string[], flags?: string, isByArgs?: boolean) : string | null {
     if (targets.length === 0 || targets.length !== replacements.length) {
-      return 'Invalid find/replace parameters';
+      return 'Invalid count of find/replace parameters';
     }
     if (!isByArgs && this.getCommandType() === 'input') {
       QuickReplaceInSelectionCommand.lastTarget = targets[0];

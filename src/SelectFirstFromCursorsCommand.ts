@@ -6,7 +6,7 @@ import { SelectInSelectionCommand } from './SelectInSelectionCommand';
  */
 export class SelectFirstFromCursorsCommand extends SelectInSelectionCommand {
 
-  public computeSelection(editor: TextEditor, newSelections: Selection[], target: string, flags?: string) : string | null {
+  public computeSelection(editor: TextEditor, newSelections: Selection[], target: string, outInfo: any, flags?: string) : string | null {
     if (target === '') {
       return null;
     }
@@ -20,6 +20,7 @@ export class SelectFirstFromCursorsCommand extends SelectInSelectionCommand {
     }
     // let hasGlobalFlag = regexps[0].global;
     let regexp : RegExp = regexps[0];
+    outInfo.regexp = regexp;
     let document = editor.document;
     let selections = editor.selections;
     /* let numSelections = selections.length;
