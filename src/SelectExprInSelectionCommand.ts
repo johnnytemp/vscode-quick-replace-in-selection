@@ -52,6 +52,9 @@ export class SelectExprInSelectionCommand extends SearchOrReplaceCommandBase {
     if (!isByArgs && this.getCommandType() === 'input') {
       this.setLastSelectSearchTarget(target);
     }
+    if (target === '') { // this special case is for clear history
+      return null;
+    }
     let editor = window.activeTextEditor;
     if (!editor) {
       return 'No editor';
@@ -73,9 +76,6 @@ export class SelectExprInSelectionCommand extends SearchOrReplaceCommandBase {
   }
 
   public computeSelection(editor: TextEditor, newSelections: Selection[], target: string, outInfo: any, flags?: string) : string | null {
-    if (target === '') {
-      return null;
-    }
     let inOutTarget = { ref: target };
     let groupsInfo = this.parseSkipGroupAndSelectGroupForSelectFromSearchTarget(inOutTarget);
     target = inOutTarget.ref;
