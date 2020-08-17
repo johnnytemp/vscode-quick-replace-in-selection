@@ -75,20 +75,28 @@ export class SelectExprInSelectionCommand extends SearchOrReplaceCommandBase {
     return null;
   }
 
-  public computeSelection(editor: TextEditor, newSelections: Selection[], target: string, outInfo: any, flags?: string) : string | null {
+  protected parseGroupsInfoAndBuildRegexes(editor: TextEditor, target: string, outInfo: any, flags: string | undefined) {
     let inOutTarget = { ref: target };
     let groupsInfo = this.parseSkipGroupAndSelectGroupForSelectFromSearchTarget(inOutTarget);
     target = inOutTarget.ref;
+    let regexp : RegExp | null = null;
     let regexps: RegExp[] = [];
-    let err = this.buildRegexes(regexps, [target], { ref: null}, flags, true);
-    if (err !== null) {
-      return err;
+    let error = this.buildRegexes(regexps, [target], { ref: null}, flags, true);
+    if (error === null) {
+      regexp = regexps[0];
+      outInfo.regexp = regexp;
     }
-    let hasGlobalFlag = regexps[0].global;
-    let regexp : RegExp = regexps[0];
-    outInfo.regexp = regexp;
     let document = editor.document;
     let selections = editor.selections;
+    return { error, groupsInfo, regexp, document, selections };
+  }
+
+  public computeSelection(editor: TextEditor, newSelections: Selection[], target: string, outInfo: any, flags?: string) : string | null {
+    let { error, groupsInfo, regexp, document, selections } = this.parseGroupsInfoAndBuildRegexes(editor, target, outInfo, flags);
+    if (error || !regexp) {
+      return error;
+    }
+    let hasGlobalFlag = regexp.global;
     let numSelections = selections.length;
     let isUseWholeDocumentSelection = numSelections <= 1 && (numSelections === 0 || selections[0].isEmpty);
     if (isUseWholeDocumentSelection) {

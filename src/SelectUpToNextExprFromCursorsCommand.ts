@@ -7,22 +7,11 @@ import { SelectExprInSelectionCommand } from './SelectExprInSelectionCommand';
 export class SelectUpToNextExprFromCursorsCommand extends SelectExprInSelectionCommand {
 
   public computeSelection(editor: TextEditor, newSelections: Selection[], target: string, outInfo: any, flags?: string) : string | null {
-    if (target === '') {
-      return null;
+    let { error, groupsInfo, regexp, document, selections } = this.parseGroupsInfoAndBuildRegexes(editor, target, outInfo, flags);
+    if (error || !regexp) {
+      return error;
     }
-    let inOutTarget = { ref: target };
-    let groupsInfo = this.parseSkipGroupAndSelectGroupForSelectFromSearchTarget(inOutTarget);
-    target = inOutTarget.ref;
-    let regexps: RegExp[] = [];
-    let err = this.buildRegexes(regexps, [target], { ref: null}, flags, true);
-    if (err !== null) {
-      return err;
-    }
-    // let hasGlobalFlag = regexps[0].global;
-    let regexp : RegExp = regexps[0];
-    outInfo.regexp = regexp;
-    let document = editor.document;
-    let selections = editor.selections;
+    // let hasGlobalFlag = regexp.global;
     /* let numSelections = selections.length;
     let isUseWholeDocumentSelection = numSelections <= 1 && (numSelections === 0 || selections[0].isEmpty);
     if (isUseWholeDocumentSelection) {
