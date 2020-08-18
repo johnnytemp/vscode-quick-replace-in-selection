@@ -60,7 +60,7 @@ export class SelectExprInSelectionCommand extends SearchOrReplaceCommandBase {
       return 'No editor';
     }
     let newSelections: Selection[] = [];
-    let outInfo : any = { regexp: {} };
+    let outInfo : any = { options: {}, regexp: {} };
     let error = this.computeSelection(editor, newSelections, target, outInfo, flags);
     if (error !== null) {
       return error;
@@ -75,10 +75,11 @@ export class SelectExprInSelectionCommand extends SearchOrReplaceCommandBase {
     return null;
   }
 
-  protected parseGroupsInfoAndBuildRegexes(editor: TextEditor, target: string, outInfo: any, flags: string | undefined) {
+  protected parseOptionsAndBuildRegexes(editor: TextEditor, target: string, outInfo: any, flags: string | undefined) {
     let inOutTarget = { ref: target };
-    let groupsInfo = this.parseSkipGroupAndSelectGroupForSelectFromSearchTarget(inOutTarget);
+    let options = this.parseOptionsFromSearchTarget(inOutTarget);
     target = inOutTarget.ref;
+    outInfo.options = options;
     let regexp : RegExp | null = null;
     let regexps: RegExp[] = [];
     let error = this.buildRegexes(regexps, [target], { ref: null}, flags, true);
@@ -88,11 +89,11 @@ export class SelectExprInSelectionCommand extends SearchOrReplaceCommandBase {
     }
     let document = editor.document;
     let selections = editor.selections;
-    return { error, groupsInfo, regexp, document, selections };
+    return { error, options, regexp, document, selections };
   }
 
   public computeSelection(editor: TextEditor, newSelections: Selection[], target: string, outInfo: any, flags?: string) : string | null {
-    let { error, groupsInfo, regexp, document, selections } = this.parseGroupsInfoAndBuildRegexes(editor, target, outInfo, flags);
+    let { error, options, regexp, document, selections } = this.parseOptionsAndBuildRegexes(editor, target, outInfo, flags);
     if (error || !regexp) {
       return error;
     }
@@ -110,8 +111,8 @@ export class SelectExprInSelectionCommand extends SearchOrReplaceCommandBase {
       let searchStart = regexp.lastIndex = 0;
       let n = 0;
       while ((arrMatch = regexp.exec(source))) {
-        let offsetStart = document.offsetAt(selection.start) + (arrMatch.index || 0) + this.getCaptureGroupLength(arrMatch, groupsInfo.skip);
-        let offsetEnd = offsetStart + this.getCaptureGroupLength(arrMatch, groupsInfo.select);
+        let offsetStart = document.offsetAt(selection.start) + (arrMatch.index || 0) + this.getCaptureGroupLength(arrMatch, options.skipGroup);
+        let offsetEnd = offsetStart + this.getCaptureGroupLength(arrMatch, options.selectGroup);
         let newSelection = new Selection(document.positionAt(offsetStart), document.positionAt(offsetEnd));
         newSelections.push(newSelection);
         if (!hasGlobalFlag /* || ++n >= nMaxMatches */) {
@@ -127,15 +128,29 @@ export class SelectExprInSelectionCommand extends SearchOrReplaceCommandBase {
   }
 
   /**
-   * prefix format is "?{<skip>,<select>}"
+   * prefix format is "?{<skipGroup>,<selectGroup>}", "?{optionFlags}" OR "?{optionFlags|<skipGroup>,<selectGroup>}"
    */
-  public parseSkipGroupAndSelectGroupForSelectFromSearchTarget(target: { ref: string }) : { skip: number | null, select: number } {
-    let ret : { skip: number | null, select: number } = { skip: null, select: 0 };
-    let groups = target.ref.match(/^\?\{(-1|\d+),(-1|\d+)\}/);
-    if (groups) {
-      ret.skip = parseInt(groups[1]);
-      ret.select = parseInt(groups[2]);
-      target.ref = target.ref.substr(groups[0].length);
+  public parseOptionsFromSearchTarget(target: { ref: string }) : { optionFlags : string, skipGroup: number | null, selectGroup: number } {
+    let ret : { optionFlags : string, skipGroup: number | null, selectGroup: number } = {
+      optionFlags: '',
+      skipGroup: null,
+      selectGroup: 0
+    };
+    let bracesMatch = target.ref.match(/^\?\{([^{}]*)\}/);
+    if (bracesMatch) {
+      let center = bracesMatch[1];
+      let front = center;
+      let lastDigitPairMatch = center.match(/^([a-zA-Z,=]+\|)*(-1|\d+),(-1|\d+)$/); // e.g. ?{1,2} OR ?{e} OR ?{e|1,2}
+      if (lastDigitPairMatch) {
+        ret.skipGroup = parseInt(lastDigitPairMatch[2]);
+        ret.selectGroup = parseInt(lastDigitPairMatch[3]);
+        front = center.substr(0, (lastDigitPairMatch[1] || '').length > 1 ? lastDigitPairMatch[1].length - 1 : 0);
+      }
+      let leadingLettersMatch = front.match(/^([a-zA-Z]+)(\||$)/);
+      if (leadingLettersMatch) {
+        ret.optionFlags = leadingLettersMatch[1];
+      }
+      target.ref = target.ref.substr(bracesMatch[0].length);
     }
     return ret;
   }

@@ -7,7 +7,7 @@ import { SelectExprInSelectionCommand } from './SelectExprInSelectionCommand';
 export class SelectUpToNextExprFromCursorsCommand extends SelectExprInSelectionCommand {
 
   public computeSelection(editor: TextEditor, newSelections: Selection[], target: string, outInfo: any, flags?: string) : string | null {
-    let { error, groupsInfo, regexp, document, selections } = this.parseGroupsInfoAndBuildRegexes(editor, target, outInfo, flags);
+    let { error, options, regexp, document, selections } = this.parseOptionsAndBuildRegexes(editor, target, outInfo, flags);
     if (error || !regexp) {
       return error;
     }
@@ -24,8 +24,8 @@ export class SelectUpToNextExprFromCursorsCommand extends SelectExprInSelectionC
       let searchStart = regexp.lastIndex = document.offsetAt(selection.end);
       let n = 0;
       while ((arrMatch = regexp.exec(source))) {
-        let offsetStart = (arrMatch.index || 0) + this.getCaptureGroupLength(arrMatch, groupsInfo.skip);
-        let offsetEnd = offsetStart + this.getCaptureGroupLength(arrMatch, groupsInfo.select);
+        let offsetStart = (arrMatch.index || 0) + this.getCaptureGroupLength(arrMatch, options.skipGroup);
+        let offsetEnd = offsetStart + this.getCaptureGroupLength(arrMatch, options.selectGroup);
         let newSelection = new Selection(selection.start, document.positionAt(offsetEnd));
         newSelections.push(newSelection);
         break;
