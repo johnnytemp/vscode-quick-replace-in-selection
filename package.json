@@ -53,15 +53,15 @@
       },
       {
         "command": "quickReplaceInSelection.selectExprInSelection",
-        "title": "Select Expression In Selection..."
+        "title": "Select All Matches In Selection..."
       },
       {
         "command": "quickReplaceInSelection.selectNextExprFromCursors",
-        "title": "Select Next Expression From Cursors..."
+        "title": "Select Next Matches From Cursors..."
       },
       {
         "command": "quickReplaceInSelection.selectUpToNextExprFromCursors",
-        "title": "Select Up To Next Expression From Cursors..."
+        "title": "Select Up To Next Matches From Cursors..."
       }
     ],
     "keybindings": [

@@ -22,11 +22,11 @@ Besides, it also includes a few basic commands to Find And Select a regex In-Sel
 
 Repeat the last replace action which use either input expressions, or a rule.
 
-### "Select Expression In Selection...", "Select Next Expression From Cursors..." and "Select Up To Next Expression From Cursors..."
+### "Select All Matches In Selection...", "Select Next Matches From Cursors..." and "Select Up To Next Matches From Cursors..."
 
-![Select Expression In Selection or From Cursors](https://github.com/johnnytemp/vscode-quick-replace-in-selection/raw/master/images/selectInSelectionOrFromCursors.gif)
+![Select Matches In Selection or From Cursors](https://github.com/johnnytemp/vscode-quick-replace-in-selection/raw/master/images/selectInSelectionOrFromCursors.gif)
 
-Remark: "Select Expression In Selection..." also serve the purpose of "Find All In Selection".
+Remark: "Select All Matches In Selection..." also serve the purpose of "Find All In Selection".
 
 ## Features
 
@@ -40,7 +40,7 @@ For more information on regular expression, you may checkout:
 
 - https://medium.com/factory-mind/regex-tutorial-a-simple-cheatsheet-by-examples-649dc1c3f285
 
-For the "Select Expression" commands, you could also select only a substring of the match with a leading "`?{<skip group no.>,<select group no.>}`" pattern.  
+For the "Select Matches" commands, you could also select only a substring of the match with a leading "`?{<skip group no.>,<select group no.>}`" pattern.  
   E.g. An input "`?{1,2}(<)(.*?)>`" will only select the text in-between a `< >` pair. Groups refer to regex's capture group. The "skip group" must start from the start and immediately followed by the "select group", otherwise the behavior is undefined.
 
 ## Major Use Case
