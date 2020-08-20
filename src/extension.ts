@@ -19,31 +19,24 @@ export function activate(context: vscode.ExtensionContext) {
   // The command has been defined in the package.json file
   // Now provide the implementation of the command with registerCommand
   // The commandId parameter must match the command field in package.json
-  let disposable = vscode.commands.registerCommand('quickReplaceInSelection.replaceInSelection', (args?: {}) => {
-    // The code you place here will be executed every time your command is executed
-
-    // // Display a message box to the user
-    // vscode.window.showInformationMessage('Hello World from Quick Replace In Selection!');
-    module.getQuickReplaceCommand().performCommandWithArgs(args);
-  });
-  context.subscriptions.push(disposable);
-
-  disposable = vscode.commands.registerCommand('quickReplaceInSelection.replaceInSelectionByRule', (args?: {}) => {
-    module.getReplaceByRuleCommand().performCommandWithArgs(args);
-  });
-  context.subscriptions.push(disposable);
-
-  context.subscriptions.push(vscode.commands.registerCommand('quickReplaceInSelection.repeatLastReplace', () => {
-    module.getRepeatLastCommand().performCommand();
-  }));
-  context.subscriptions.push(vscode.commands.registerCommand('quickReplaceInSelection.selectExprInSelection', (args?: {}) => {
+  context.subscriptions.push(vscode.commands.registerCommand('selectMatchesOrAdjustSelection.selectMatchesInSelection', (args?: {}) => {
     module.getSelectInSelectionCommand().performCommandWithArgs(args);
   }));
-  context.subscriptions.push(vscode.commands.registerCommand('quickReplaceInSelection.selectNextExprFromCursors', (args?: {}) => {
+  context.subscriptions.push(vscode.commands.registerCommand('selectMatchesOrAdjustSelection.selectNextMatchesFromCursors', (args?: {}) => {
     module.getSelectNextExCommand().performCommandWithArgs(args);
   }));
-  context.subscriptions.push(vscode.commands.registerCommand('quickReplaceInSelection.selectUpToNextExprFromCursors', (args?: {}) => {
+  context.subscriptions.push(vscode.commands.registerCommand('selectMatchesOrAdjustSelection.selectUpToNextMatchesFromCursors', (args?: {}) => {
     module.getSelectUpToNextExCommand().performCommandWithArgs(args);
+  }));
+  context.subscriptions.push(vscode.commands.registerCommand('selectMatchesOrAdjustSelection.unselectSurroundingWhitespaces', () => {
+    module.getSelectInSelectionCommand().performCommandWithArgs({
+      target: "\\S+(\\s+\\S+)*"
+    });
+  }));
+  context.subscriptions.push(vscode.commands.registerCommand('selectMatchesOrAdjustSelection.normalizeSelection', () => {
+    module.getSelectInSelectionCommand().performCommandWithArgs({
+      target: "?{1,2}?s-g (\\s*)(.*\\S)?"
+    });
   }));
 }
 

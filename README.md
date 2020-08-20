@@ -1,26 +1,12 @@
-# Quick Replace In Selection README
+# Select Matches/Adjust Selection Using Regex Or Rules README
 
-Quick Replace In Selection let you search and replace all occurrences by a regular expression (regex) (or literal string[#3](#footnote3)), within the current selection or the whole document.
+This extension let you search and select the matches by a regular expression (regex) (or literal string[#3](#footnote3)), within the current selection, the whole document, or after cursors.
 
-It also support *predefined rules* to be used, and those rules allow *multiple replacements* in order at a time.
+It also let you adjust selection by some *predefined rules* to be used. E.g. you could "Unselect Surrounding Whitespaces" and "Normalize Selection".
 
-**Note**: By default, all matches are *case sensitive* [#1](#footnote1), and `^`, `$`  match *text selection boundaries* instead of line boundaries [#2](#footnote2).
-
-Besides, it also includes a few basic commands to Find And Select a regex In-Selection/From-Cursors.
+**Note**: By default, all matches in the regex are *case sensitive* [#1](#footnote1), and `^`, `$`  match *text selection boundaries* instead of line boundaries [#2](#footnote2).
 
 ## Commands & Demo
-
-### Quick Replace In Selection
-
-![Quick Replace In Selection](https://github.com/johnnytemp/vscode-quick-replace-in-selection/raw/master/images/replaceInSelection.gif)
-
-### Quick Replace In Selection (Use Rule)... (Shortcut: `Ctrl-K Ctrl-H`)
-
-![Quick Replace In Selection (Use Rule)...](https://github.com/johnnytemp/vscode-quick-replace-in-selection/raw/master/images/replaceInSelectionByRule.gif)
-
-### Quick Replace In Selection (Repeat Last)
-
-Repeat the last replace action which use either input expressions, or a rule.
 
 ### "Select All Matches In Selection...", "Select Next Matches From Cursors..." and "Select Up To Next Matches From Cursors..."
 
@@ -30,9 +16,7 @@ Remark: "Select All Matches In Selection..." also serve the purpose of "Find All
 
 ## Features
 
-This extension use the regular expression that JavaScript support for search and replace. In addition, a `$&` in the "Replace to" input box or `"replace"` values in the rules mean the whole match.
-
-The "Replace to" input box support extra escape sequence `\n`, `\r`, `\t`, `\\` as in regex. Other unrecognized sequences are preserved.
+This extension use the regular expression that JavaScript support for search.
 
 E.g. "`.+` replace to `[$&]`" would mean replace any non-empty string (excluding newline characters), in the selected text(s), to be wrapped by `[]`.
 
@@ -40,19 +24,8 @@ For more information on regular expression, you may checkout:
 
 - https://medium.com/factory-mind/regex-tutorial-a-simple-cheatsheet-by-examples-649dc1c3f285
 
-For the "Select Matches" commands, you could also select only a substring of the match with a leading "`?{<skip group no.>,<select group no.>}`" pattern.  
+You could also select only a substring of the match with a leading "`?{<skip group no.>,<select group no.>}`" in the regex input/parameter.  
   E.g. An input "`?{1,2}(<)(.*?)>`" will only select the text in-between a `< >` pair. Groups refer to regex's capture group. The "skip group" must start from the start and immediately followed by the "select group", otherwise the behavior is undefined.
-
-## Major Use Case
-
-Sometimes you might want to replace some character(s) to another within current text selection (e.g. to delimit the text into lines).
-
-However, VS Code's builtin `Replace` may have these inconveniences:
-
-- too many steps: need to open dialog, enable the "Find in selection" option, some `Tab` keys or clicks, and need to press/trigger "Replace All"
-- it changes the last Find Target memory
-
-This extension solves them all.
 
 ## Requirements
 
@@ -88,26 +61,19 @@ Hints:
 
 Some default rules are listed here:
 
-- Encode html entities (minimal)
-- Escape literal string for PCRE/extended regular expression
-- Join lines by comma
-- Json stringify
-- Quote as C-string
-- Single-quote lines and join by comma
-- Split CSV/TSV into lines
-- Trim lines
+- TODO: rule 1
 
 ## Keyboard shortcuts
 
-- You could also define custom keyboard shortcuts for each rule:
+- You could also define custom keyboard shortcuts for each command, e.g.:
 
 ```
 {
-    "key": "alt+j",
-    "command": "quickReplaceInSelection.replaceInSelectionByRule",
+    "key": "alt+m",
+    "command": "selectMatchesOrAdjustSelection.selectMatchesInSelection,
     "when": "editorTextFocus",
     "args": {
-        "ruleName": "Json stringify"
+        "target": "'[^'\\r\\n]*'"
     }
 }
 ```

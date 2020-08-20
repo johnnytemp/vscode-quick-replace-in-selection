@@ -1,10 +1,10 @@
 {
-  "name": "quick-replace-in-selection",
-  "displayName": "Quick Replace In Selection",
-  "description": "Search and replace by some regular expressions in current selection with quick steps. Can also search from cursors.",
-  "version": "1.2.0",
+  "name": "select-matches-or-adjust-selection",
+  "displayName": "Select Matches/Adjust Selection Using Regex Or Rules",
+  "description": "Using regular expression (regex) searching or preset rules, perform commands like \"Select All Matches In Selection...\", \"Select Next Matches From Cursors...\", \"Unselect Surrounding Whitespaces\" and \"Normalize Selection\"",
+  "version": "1.0.0",
   "publisher": "johnnywong",
-  "icon": "images/quick-replace-in-selection-icon.png",
+  "icon": "images/select-matches-or-adjust-selection-icon.png",
   "engines": {
     "vscode": "^1.47.0"
   },
@@ -12,130 +12,85 @@
     "Other"
   ],
   "keywords": [
-    "replace",
+    "selection",
+    "cursor",
     "regular expression",
     "regex",
-    "encode",
-    "escape",
-    "csv"
+    "find",
+    "search",
+    "adjust"
   ],
   "bugs": {
-    "url": "https://github.com/johnnytemp/vscode-quick-replace-in-selection",
+    "url": "https://github.com/johnnytemp/vscode-select-matches-or-adjust-selection",
     "email": "johnny_temp@yahoo.com.hk"
   },
-  "homepage": "https://github.com/johnnytemp/vscode-quick-replace-in-selection",
+  "homepage": "https://github.com/johnnytemp/vscode-select-matches-or-adjust-selection",
   "repository": {
     "type": "git",
-    "url": "https://github.com/johnnytemp/vscode-quick-replace-in-selection.git"
+    "url": "https://github.com/johnnytemp/vscode-select-matches-or-adjust-selection.git"
   },
   "activationEvents": [
-    "onCommand:quickReplaceInSelection.replaceInSelection",
-    "onCommand:quickReplaceInSelection.replaceInSelectionByRule",
-    "onCommand:quickReplaceInSelection.repeatLastReplace",
-    "onCommand:quickReplaceInSelection.selectExprInSelection",
-    "onCommand:quickReplaceInSelection.selectNextExprFromCursors",
-    "onCommand:quickReplaceInSelection.selectUpToNextExprFromCursors"
+    "onCommand:selectMatchesOrAdjustSelection.selectMatchesInSelection",
+    "onCommand:selectMatchesOrAdjustSelection.selectNextMatchesFromCursors",
+    "onCommand:selectMatchesOrAdjustSelection.selectUpToNextMatchesFromCursors",
+    "onCommand:selectMatchesOrAdjustSelection.selectMatchesInSelectionByPattern",
+    "onCommand:selectMatchesOrAdjustSelection.selectNextMatchesFromCursorsByPattern",
+    "onCommand:selectMatchesOrAdjustSelection.selectUpToNextMatchesFromCursorsByPattern",
+    "onCommand:selectMatchesOrAdjustSelection.unselectSurroundingWhitespaces",
+    "onCommand:selectMatchesOrAdjustSelection.normalizeSelection"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "quickReplaceInSelection.replaceInSelection",
-        "title": "Quick Replace In Selection..."
-      },
-      {
-        "command": "quickReplaceInSelection.replaceInSelectionByRule",
-        "title": "Quick Replace In Selection (Use rule)..."
-      },
-      {
-        "command": "quickReplaceInSelection.repeatLastReplace",
-        "title": "Quick Replace In Selection (Repeat Last)"
-      },
-      {
-        "command": "quickReplaceInSelection.selectExprInSelection",
+        "command": "selectMatchesOrAdjustSelection.selectMatchesInSelection",
         "title": "Select All Matches In Selection..."
       },
       {
-        "command": "quickReplaceInSelection.selectNextExprFromCursors",
+        "command": "selectMatchesOrAdjustSelection.selectNextMatchesFromCursors",
         "title": "Select Next Matches From Cursors..."
       },
       {
-        "command": "quickReplaceInSelection.selectUpToNextExprFromCursors",
+        "command": "selectMatchesOrAdjustSelection.selectUpToNextMatchesFromCursors",
         "title": "Select Up To Next Matches From Cursors..."
+      },
+      {
+        "command": "selectMatchesOrAdjustSelection.selectMatchesInSelectionByPattern",
+        "title": "Select All Matches In Selection (Use pattern)..."
+      },
+      {
+        "command": "selectMatchesOrAdjustSelection.selectNextMatchesFromCursorsByPattern",
+        "title": "Select Next Matches From Cursors (Use pattern)..."
+      },
+      {
+        "command": "selectMatchesOrAdjustSelection.selectUpToNextMatchesFromCursorsByPattern",
+        "title": "Select Up To Next Matches From Cursors (Use pattern)..."
+      },
+      {
+        "command": "selectMatchesOrAdjustSelection.unselectSurroundingWhitespaces",
+        "title": "Unselect Surrounding Whitespaces"
+      },
+      {
+        "command": "selectMatchesOrAdjustSelection.normalizeSelection",
+        "title": "Normalize Selection"
       }
     ],
     "keybindings": [
       {
-        "command": "quickReplaceInSelection.replaceInSelectionByRule",
-        "key": "ctrl+k ctrl+h",
-        "mac": "cmd+k cmd+h",
+        "command": "selectMatchesOrAdjustSelection.normalizeSelection",
+        "key": "ctrl+shift+a",
+        "mac": "cmd+shift+a",
         "when": "editorTextFocus"
       }
     ],
     "configuration": {
       "title": "Quick Replace In Selection configurations",
       "properties": {
-        "quickReplaceInSelection.rules": {
+        "selectMatchesOrAdjustSelection.patterns": {
           "type": "object",
-          "description": "The rules for command Quick Replace In Selection (Use rule)...",
+          "description": "The patterns for the commands which contain \"(Use pattern)...\"",
           "default": {
-            "Decode basic html entities (incomplete)": {
-              "find": ["&lt;", "&gt;", "&quot;", "&(#0?39|apos);", "&nbsp;", "&amp;"],
-              "replace": ["<", ">", "\"", "'", "\u00a0", "&"]
-            },
-            "Encode html entities (minimal)": {
-              "find": ["&", "<", ">", "\"", "'"],
-              "replace": ["&amp;", "&lt;", "&gt;", "&quot;", "&apos;"]
-            },
-            "Escape literal string for PCRE/extended regular expression": {
-              "find": ["[\\]\\\\{}(|)[.*+?^$]"],
-              "replace": ["\\$&"]
-            },
-            "Json stringify": {
-              "find": ["\\\\", "\"", "\n", "\r", "\t", "^", "$"],
-              "replace": ["\\\\", "\\\"", "\\n", "\\r", "\\t", "\"", "\""]
-            },
-            "Json stringify (also escape '/')": {
-              "find": ["\\\\", "\"", "\n", "\r", "\t", "/", "^", "$"],
-              "replace": ["\\\\", "\\\"", "\\n", "\\r", "\\t", "\\/", "\"", "\""]
-            },
-            "Json stringify (also escape '<', '>', '&')": {
-              "find": ["\\\\", "\"", "\n", "\r", "\t", "<", ">", "&", "^", "$"],
-              "replace": ["\\\\", "\\\"", "\\n", "\\r", "\\t", "\\u003c", "\\u003e", "\\u0026", "\"", "\""]
-            },
-            "Json-decode string (incomplete)": {
-              "find": ["^\"", "\"$", "\\\\\\\\", "\\\\\"", "\\\\'", "\\\\n", "\\\\r", "\\\\t", "\\\\f", "\\\\b", "\\\\/", "\\\\u0026", "\\\\u003c", "\\\\u003e", "\u001f"],
-              "replace": ["", "", "\u001f", "\"", "'", "\n", "\r", "\t", "\f", "\b", "/", "&", "<", ">", "\\"]
-            },
-            "Quote as C-string": {
-              "find": ["\\\\", "\"", "\u0000", "\n", "^", "$"],
-              "replace": ["\\\\", "\\\"", "\\0", "\\n", "\"", "\""]
-            },
-            "Quote as single-quoted string (only escape `\\`, `'`)": {
-              "find": ["\\\\", "'", "^", "$"],
-              "replace": ["\\\\", "\\'", "'", "'"]
-            },
-            "Split CSV/TSV into lines": {
-              "find": ["\n", "[,:;|\t]"],
-              "replace": ["\n----\n", "\n"]
-            },
-
-            "Trim lines": {
-              "find": "[ \t]*(.*?)[ \t]*(\n|$)",
-              "replace": "$1$2"
-            },
-            "Join lines by comma": {
-              "find": "\n[ \t]*",
-              "replace": ", "
-            },
-            "Single-quote lines and join by comma": {
-              "find": "(.+|(?=\n))\n?[ \t]*",
-              "replace": "'$1', "
-            },
-            "Double-quote lines and join by comma": {
-              "find": "(.+|(?=\n))\n?[ \t]*",
-              "replace": "\"$1\", "
-            }
+            "No surrounding whitespaces": "\\S+(\\s+\\S+)*"
           }
         }
       }
