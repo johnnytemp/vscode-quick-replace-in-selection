@@ -1,10 +1,10 @@
 import { TextEditor, Selection } from 'vscode';
-import { SelectExprInSelectionCommand } from './SelectExprInSelectionCommand';
+import { SelectMatchesCommandBase } from './SelectMatchesCommandBase';
 
 /**
  * SelectUpToNextExprFromCursorsCommand class
  */
-export class SelectUpToNextExprFromCursorsCommand extends SelectExprInSelectionCommand {
+export class SelectUpToNextExprFromCursorsCommand extends SelectMatchesCommandBase {
 
   public computeSelection(editor: TextEditor, newSelections: Selection[], target: string, outInfo: any, flags?: string) : string | null {
     let { error, options, regexp, document, selections } = this.parseOptionsAndBuildRegexes(editor, target, outInfo, flags);

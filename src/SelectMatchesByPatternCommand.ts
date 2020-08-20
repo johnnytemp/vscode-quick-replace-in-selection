@@ -1,12 +1,22 @@
 import { window } from 'vscode';
 import { SelectRule } from './SelectMatchesOrAdjustSelectionConfig';
-import { SelectExprInSelectionCommand } from './SelectExprInSelectionCommand';
+import { SelectMatchesCommandBase } from './SelectMatchesCommandBase';
 
 /**
- * SelectExprInSelectionByPatternCommand class
+ * SelectMatchesByPatternCommand class
  */
-export class SelectExprInSelectionByPatternCommand extends SelectExprInSelectionCommand {
+export class SelectMatchesByPatternCommand extends SelectMatchesCommandBase {
   private static lastRuleName : string = '';
+  private _underlyingCommand : SelectMatchesCommandBase;
+
+  public constructor(command: SelectMatchesCommandBase) {
+    super();
+    this._underlyingCommand = command;
+  }
+
+  protected getSelectMatchesCommand() : SelectMatchesCommandBase {
+    return this._underlyingCommand;
+  }
 
   public getCommandType() : string {
     return 'rule';
@@ -17,11 +27,11 @@ export class SelectExprInSelectionByPatternCommand extends SelectExprInSelection
   }
 
   protected getLastSelectRuleName() {
-    return SelectExprInSelectionByPatternCommand.lastRuleName;
+    return SelectMatchesByPatternCommand.lastRuleName;
   }
 
   protected setLastSelectRuleName(name: string) {
-    SelectExprInSelectionByPatternCommand.lastRuleName = name;
+    SelectMatchesByPatternCommand.lastRuleName = name;
   }
 
   public clearHistory() {
@@ -29,8 +39,8 @@ export class SelectExprInSelectionByPatternCommand extends SelectExprInSelection
   }
 
   public performCommandWithArgs(args : any) {
-    if (typeof args === 'object' && args.pattern !== undefined) {
-      this.handleError(this.performSelection(args.pattern, this.addDefaultFlags(), true));
+    if (typeof args === 'object' && args.patternName !== undefined) {
+      this.handleError(this.getSelectMatchesCommand().performSelection(args.patternName, this.addDefaultFlags(), true));
     } else {
       this.performCommand();
     }
@@ -60,7 +70,7 @@ export class SelectExprInSelectionByPatternCommand extends SelectExprInSelection
       } else if (ruleName === '( Input Expressions )') {
         this.setLastSelectRuleName(''); // also clear last rule, so that '( Input Expressions )' is the first item for faster re-run.
         module.setLastSelectCommand(null);
-        module.getSelectInSelectionCommand().performCommand();
+        this.getSelectMatchesCommand().performCommand();
         return;
       } else {
         this.setLastSelectRuleName(ruleName);
@@ -75,7 +85,7 @@ export class SelectExprInSelectionByPatternCommand extends SelectExprInSelection
     if (!rule) {
       return 'No such pattern - ' + patternName;
     }
-    return this.performSelection(rule.find || '', this.getFlagsFromRule(rule), isByArgs);
+    return this.getSelectMatchesCommand().performSelection(rule.find || '', this.getFlagsFromRule(rule), isByArgs);
   }
 
   protected getFlagsFromRule(rule : SelectRule) : string {

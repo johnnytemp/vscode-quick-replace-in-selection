@@ -2,7 +2,7 @@ import { SelectMatchesOrAdjustSelectionConfig } from './SelectMatchesOrAdjustSel
 import { SelectExprInSelectionCommand } from './SelectExprInSelectionCommand';
 import { SelectNextExprFromCursorsCommand } from './SelectNextExprFromCursorsCommand';
 import { SelectUpToNextExprFromCursorsCommand } from './SelectUpToNextExprFromCursorsCommand';
-import { SelectExprInSelectionByPatternCommand } from './SelectExprInSelectionByPatternCommand';
+import { SelectMatchesByPatternCommand } from './SelectMatchesByPatternCommand';
 
 export class SelectMatchesOrAdjustSelectionModule {
   private _config : SelectMatchesOrAdjustSelectionConfig;
@@ -11,7 +11,7 @@ export class SelectMatchesOrAdjustSelectionModule {
   private _selectExprInSelectionCommand : SelectExprInSelectionCommand;
   private _selectNextExprFromCursorsCommand : SelectNextExprFromCursorsCommand;
   private _selectUpToNextExprFromCursorsCommand : SelectUpToNextExprFromCursorsCommand;
-  private _selectExprInSelectionByPatternCommand : SelectExprInSelectionByPatternCommand;
+  private _selectMatchesByPatternCommands : { [id: string]: SelectMatchesByPatternCommand };
 
   private static _instance : SelectMatchesOrAdjustSelectionModule | undefined;
 
@@ -28,7 +28,10 @@ export class SelectMatchesOrAdjustSelectionModule {
     this._selectExprInSelectionCommand = new SelectExprInSelectionCommand();
     this._selectNextExprFromCursorsCommand = new SelectNextExprFromCursorsCommand();
     this._selectUpToNextExprFromCursorsCommand = new SelectUpToNextExprFromCursorsCommand();
-    this._selectExprInSelectionByPatternCommand = new SelectExprInSelectionByPatternCommand();
+    this._selectMatchesByPatternCommands = {};
+    this._selectMatchesByPatternCommands['selectMatchesInSelection'] = new SelectMatchesByPatternCommand(this._selectExprInSelectionCommand);
+    this._selectMatchesByPatternCommands['selectNextMatchesFromCursors'] = new SelectMatchesByPatternCommand(this._selectNextExprFromCursorsCommand);
+    this._selectMatchesByPatternCommands['selectUpToNextMatchesFromCursors'] = new SelectMatchesByPatternCommand(this._selectUpToNextExprFromCursorsCommand);
   }
 
   public getConfig() : SelectMatchesOrAdjustSelectionConfig {
@@ -59,8 +62,8 @@ export class SelectMatchesOrAdjustSelectionModule {
     return this._selectUpToNextExprFromCursorsCommand;
   }
 
-  public getSelectInSelectionByPatternCommand() : SelectExprInSelectionCommand {
-    return this._selectExprInSelectionByPatternCommand;
+  public getSelectMatchesByPatternCommand(commandId: string) : SelectMatchesByPatternCommand {
+    return this._selectMatchesByPatternCommands[commandId];
   }
 
   public clearHistory() {
