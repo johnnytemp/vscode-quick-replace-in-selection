@@ -7,7 +7,7 @@ export class QuickReplaceInSelectionRepeatLastCommand extends QuickReplaceInSele
     if (lastCommand) {
       lastCommand.repeatCommand();
     } else {
-      window.showInformationMessage('No last command');
+      window.showInformationMessage('No last command to repeat');
     }
   }
 }

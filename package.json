@@ -1,7 +1,7 @@
 {
   "name": "quick-replace-in-selection",
   "displayName": "Quick Replace In Selection",
-  "description": "Search and replace by some regular expressions in current selection with quick steps",
+  "description": "Search and replace by some regular expressions in current selection with quick steps. Can also search from cursors.",
   "version": "1.2.0",
   "publisher": "johnnywong",
   "icon": "images/quick-replace-in-selection-icon.png",
@@ -31,14 +31,17 @@
   "activationEvents": [
     "onCommand:quickReplaceInSelection.replaceInSelection",
     "onCommand:quickReplaceInSelection.replaceInSelectionByRule",
-    "onCommand:quickReplaceInSelection.repeatLastReplace"
+    "onCommand:quickReplaceInSelection.repeatLastReplace",
+    "onCommand:quickReplaceInSelection.selectExprInSelection",
+    "onCommand:quickReplaceInSelection.selectNextExprFromCursors",
+    "onCommand:quickReplaceInSelection.selectUpToNextExprFromCursors"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
         "command": "quickReplaceInSelection.replaceInSelection",
-        "title": "Quick Replace In Selection"
+        "title": "Quick Replace In Selection..."
       },
       {
         "command": "quickReplaceInSelection.replaceInSelectionByRule",
@@ -47,6 +50,18 @@
       {
         "command": "quickReplaceInSelection.repeatLastReplace",
         "title": "Quick Replace In Selection (Repeat Last)"
+      },
+      {
+        "command": "quickReplaceInSelection.selectExprInSelection",
+        "title": "Select All Matches In Selection..."
+      },
+      {
+        "command": "quickReplaceInSelection.selectNextExprFromCursors",
+        "title": "Select Next Matches From Cursors..."
+      },
+      {
+        "command": "quickReplaceInSelection.selectUpToNextExprFromCursors",
+        "title": "Select Up To Next Matches From Cursors..."
       }
     ],
     "keybindings": [
@@ -73,8 +88,8 @@
               "replace": ["&amp;", "&lt;", "&gt;", "&quot;", "&apos;"]
             },
             "Escape literal string for PCRE/extended regular expression": {
-              "find": ["\\\\", "[\\]{}(|)[.*+?^$]"],
-              "replace": ["\\\\", "\\$&"]
+              "find": ["[\\]\\\\{}(|)[.*+?^$]"],
+              "replace": ["\\$&"]
             },
             "Json stringify": {
               "find": ["\\\\", "\"", "\n", "\r", "\t", "^", "$"],

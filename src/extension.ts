@@ -19,12 +19,12 @@ export function activate(context: vscode.ExtensionContext) {
   // The command has been defined in the package.json file
   // Now provide the implementation of the command with registerCommand
   // The commandId parameter must match the command field in package.json
-  let disposable = vscode.commands.registerCommand('quickReplaceInSelection.replaceInSelection', () => {
+  let disposable = vscode.commands.registerCommand('quickReplaceInSelection.replaceInSelection', (args?: {}) => {
     // The code you place here will be executed every time your command is executed
 
     // // Display a message box to the user
     // vscode.window.showInformationMessage('Hello World from Quick Replace In Selection!');
-    module.getQuickReplaceCommand().performCommand();
+    module.getQuickReplaceCommand().performCommandWithArgs(args);
   });
   context.subscriptions.push(disposable);
 
@@ -33,10 +33,18 @@ export function activate(context: vscode.ExtensionContext) {
   });
   context.subscriptions.push(disposable);
 
-  disposable = vscode.commands.registerCommand('quickReplaceInSelection.repeatLastReplace', () => {
+  context.subscriptions.push(vscode.commands.registerCommand('quickReplaceInSelection.repeatLastReplace', () => {
     module.getRepeatLastCommand().performCommand();
-  });
-  context.subscriptions.push(disposable);
+  }));
+  context.subscriptions.push(vscode.commands.registerCommand('quickReplaceInSelection.selectExprInSelection', (args?: {}) => {
+    module.getSelectInSelectionCommand().performCommandWithArgs(args);
+  }));
+  context.subscriptions.push(vscode.commands.registerCommand('quickReplaceInSelection.selectNextExprFromCursors', (args?: {}) => {
+    module.getSelectNextExCommand().performCommandWithArgs(args);
+  }));
+  context.subscriptions.push(vscode.commands.registerCommand('quickReplaceInSelection.selectUpToNextExprFromCursors', (args?: {}) => {
+    module.getSelectUpToNextExCommand().performCommandWithArgs(args);
+  }));
 }
 
 // this method is called when your extension is deactivated

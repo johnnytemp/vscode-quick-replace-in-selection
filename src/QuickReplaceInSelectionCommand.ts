@@ -1,10 +1,12 @@
-import { window, TextEditor, TextDocument, Selection, Position, Range, EndOfLine } from 'vscode';
+import { window, TextEditor, TextDocument, Selection, Range, EndOfLine } from 'vscode';
 import { QuickReplaceInSelectionModule } from './QuickReplaceInSelectionModule';
+import { SearchOrReplaceCommandBase } from './SearchOrReplaceCommandBase';
+import * as helper from './helper';
 
 /**
  * QuickReplaceInSelectionCommand class -> should this be called QuickReplaceInSelectionInputCommand & "Quick Replace In Selection (Input)"?
  */
-export class QuickReplaceInSelectionCommand {
+export class QuickReplaceInSelectionCommand extends SearchOrReplaceCommandBase {
   static lastTarget : string = '';
   static lastReplacement : string = '';
 
@@ -14,6 +16,14 @@ export class QuickReplaceInSelectionCommand {
 
   protected getModule() : QuickReplaceInSelectionModule {
     return QuickReplaceInSelectionModule.getInstance();
+  }
+
+  public performCommandWithArgs(args : any) {
+    if (typeof args === 'object' && args.target !== undefined && args.replacement !== undefined) {
+      this.handleError(this.performReplacement([args.target], [args.replacement], this.addDefaultFlags(), true));
+    } else {
+      this.performCommand();
+    }
   }
 
   public performCommand() {
@@ -44,48 +54,18 @@ export class QuickReplaceInSelectionCommand {
     QuickReplaceInSelectionCommand.lastReplacement = '';
   }
 
-  public handleError(error : string | null) {
-    if (error === null) {
-      return;
-    }
-    // error = 'QuickReplaceInSelection: ' + error;
-    window.showErrorMessage(error);
-    // console.log(error);
-  }
-
   //==== implementation methods ====
 
   public haveEscapesInReplace() : boolean {
     return true;
   }
 
-  protected addDefaultFlags(flags? : string | undefined, noGlobalFlag? : boolean | undefined) {
-    // Remark: the default flags is only global flag. Likely won't change.
-    let defaultFlags = noGlobalFlag ? '' : 'g';
-    flags = flags !== undefined ? flags : '';
-    return defaultFlags + flags;
-  }
-
-  public getFlagsFromFlagsString(flagsString : string) {
-    let matches = null;
-    if (flagsString.length > 0 && flagsString.length <= 8) {
-      matches = flagsString.match(/^([gimsuy]+)?(-g)?$/);
-    }
-    let flags = '';
-    let noGlobalFlag = false;
-    if (matches !== null) {
-      flags = (matches[1] || '').replace('g', '');
-      noGlobalFlag = matches[2] === '-g';
-    }
-    return this.addDefaultFlags(flags, noGlobalFlag);
-  }
-
   /// @param flags won't further add default flags 'g'
-  public performReplacement(targets: string[], replacements: string[], flags?: string) : string | null {
+  public performReplacement(targets: string[], replacements: string[], flags?: string, isByArgs?: boolean) : string | null {
     if (targets.length === 0 || targets.length !== replacements.length) {
-      return 'Invalid find/replace parameters';
+      return 'Invalid count of find/replace parameters';
     }
-    if (this.getCommandType() === 'input') {
+    if (!isByArgs && this.getCommandType() === 'input') {
       QuickReplaceInSelectionCommand.lastTarget = targets[0];
       QuickReplaceInSelectionCommand.lastReplacement = replacements[0];
     }
@@ -103,7 +83,7 @@ export class QuickReplaceInSelectionCommand {
     let numSelections = selections.length;
     let isUseWholeDocumentSelection = numSelections <= 1 && (numSelections === 0 || selections[0].isEmpty);
     if (isUseWholeDocumentSelection) {
-      selections = [this.getWholeDocumentSelection(document)];
+      selections = [helper.getWholeDocumentSelection(document)];
     }
 
     let ranges : Range[] = selections;
@@ -124,25 +104,6 @@ export class QuickReplaceInSelectionCommand {
     return error;
   }
 
-  public getWholeDocumentSelection(document: TextDocument) {
-    let documentLastPosition = document.lineAt(document.lineCount - 1).rangeIncludingLineBreak.end;
-    return new Selection(new Position(0, 0), documentLastPosition);
-  }
-
-  /// treat `\n` as newline and `\\` as `\`. However, unknown sequence `\?` will be preserved, instead of escaped.
-  public unescapeReplacement(replacement : string) : string {
-    return replacement.replace(/\\./g, (text) => {
-      switch (text[1]) {
-        case 'n': return "\n";
-        case 'r': return "\r";
-        case 't': return "\t";
-        case '\\': return "\\";
-        default:
-          return text;
-      }
-    });
-  }
-
   private prepareReplacements(targets : string[], replacements : string[], document : TextDocument, selections : Selection[], texts : string[], flags : string | undefined) : string | null {
     let numSelections = selections.length;
     let isCRLF = document.eol === EndOfLine.CRLF;
@@ -154,54 +115,6 @@ export class QuickReplaceInSelectionCommand {
     texts = texts || [];
     let error = this.computeReplacements([find], [replace], isCRLF, numSelections, selectionGetter, texts, this.addDefaultFlags(flags, noGlobalFlag));
     return error !== null ? error : texts;
-  }
-
-  protected buildRegexes(regexps : (RegExp|string)[], targets : string[], inOutReplacements : { ref: string[] }, flags: string | undefined) : string | null {
-    let escapesInReplace = this.haveEscapesInReplace();
-    let isInputCommand = this.getCommandType() === 'input';
-    if (targets.length !== inOutReplacements.ref.length) {
-      return 'Invalid find/replace parameters';
-    }
-    var initialFlags = flags === undefined ? '' : flags;
-    let replacements = inOutReplacements.ref = escapesInReplace ? inOutReplacements.ref.slice() : inOutReplacements.ref;
-    let isOk = true;
-    for (let i = 0; i < targets.length; ++i) {
-      let target = targets[i];
-      let flags = initialFlags;
-
-      if (isInputCommand) {
-        // Fix: this special prefix syntax is for "input expressions" command only
-        let prefixMatch = target.match(/^(?:\+|\?(?=[gimsuy-])([gimsuy]+)?(-g)? )/); // support either /^\+/ (equal the "m" flag) OR /^\?[gimsuy]*(-g)? / for flags
-        if (prefixMatch !== null) {
-          let prefix = prefixMatch[0];
-          target = target.substr(prefix.length);
-          if (prefix === '+') {
-            flags += 'm';
-          } else {
-            flags += prefixMatch[1] || '';
-            if (prefixMatch[2] === '-g') {
-              flags = flags.replace(/g/g, '');
-            }
-          }
-        } else if (target.startsWith("*")) {
-          // use literal string instead of "new RegExp", and always skip unescapeReplacement() for this item ("$&" also lose its special meaning)
-          regexps.push(target.substr(1));
-          continue;
-        }
-      }
-
-      try {
-        regexps.push(new RegExp(target, flags));
-      }
-      catch (e) {
-        let error = '"' + target +'" -> ' + (e as Error).message; // e.message is like "Invalid regular expression /.../: ..."
-        return error;
-      }
-      if (escapesInReplace) {
-        replacements[i] = this.unescapeReplacement(replacements[i]);
-      }
-    }
-    return null;
   }
 
   public computeReplacements(targets : string[], replacements : string[], isCRLF : boolean, numSelections : number, selectionGetter : (i: number) => string, texts : string[], flags : string | undefined) : string | null {

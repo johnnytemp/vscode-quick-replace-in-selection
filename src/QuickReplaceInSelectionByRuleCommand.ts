@@ -1,7 +1,6 @@
-import { QuickReplaceInSelectionModule } from './QuickReplaceInSelectionModule';
 import { QuickReplaceRule } from './QuickReplaceInSelectionConfig';
 import { QuickReplaceInSelectionCommand } from './QuickReplaceInSelectionCommand';
-import { window, QuickPickItem } from 'vscode';
+import { window } from 'vscode';
 
 export class QuickReplaceInSelectionByRuleCommand extends QuickReplaceInSelectionCommand {
   private static lastRuleName : string = '';

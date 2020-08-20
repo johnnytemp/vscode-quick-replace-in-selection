@@ -6,6 +6,8 @@ It also support *predefined rules* to be used, and those rules allow *multiple r
 
 **Note**: By default, all matches are *case sensitive* [#1](#footnote1), and `^`, `$`  match *text selection boundaries* instead of line boundaries [#2](#footnote2).
 
+Besides, it also includes a few basic commands to Find And Select a regex In-Selection/From-Cursors.
+
 ## Commands & Demo
 
 ### Quick Replace In Selection
@@ -20,6 +22,12 @@ It also support *predefined rules* to be used, and those rules allow *multiple r
 
 Repeat the last replace action which use either input expressions, or a rule.
 
+### "Select All Matches In Selection...", "Select Next Matches From Cursors..." and "Select Up To Next Matches From Cursors..."
+
+![Select Matches In Selection or From Cursors](https://github.com/johnnytemp/vscode-quick-replace-in-selection/raw/master/images/selectInSelectionOrFromCursors.gif)
+
+Remark: "Select All Matches In Selection..." also serve the purpose of "Find All In Selection".
+
 ## Features
 
 This extension use the regular expression that JavaScript support for search and replace. In addition, a `$&` in the "Replace to" input box or `"replace"` values in the rules mean the whole match.
@@ -31,6 +39,9 @@ E.g. "`.+` replace to `[$&]`" would mean replace any non-empty string (excluding
 For more information on regular expression, you may checkout:
 
 - https://medium.com/factory-mind/regex-tutorial-a-simple-cheatsheet-by-examples-649dc1c3f285
+
+For the "Select Matches" commands, you could also select only a substring of the match with a leading "`?{<skip group no.>,<select group no.>}`" pattern.  
+  E.g. An input "`?{1,2}(<)(.*?)>`" will only select the text in-between a `< >` pair. Groups refer to regex's capture group. The "skip group" must start from the start and immediately followed by the "select group", otherwise the behavior is undefined.
 
 ## Major Use Case
 
