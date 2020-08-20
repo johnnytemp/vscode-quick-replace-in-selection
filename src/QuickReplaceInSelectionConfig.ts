@@ -24,7 +24,11 @@ export class QuickReplaceInSelectionConfig {
 
   public reloadConfig() : WorkspaceConfiguration {
     let vsConfig = workspace.getConfiguration('quickReplaceInSelection');
+    this.reloadReplaceRules(vsConfig);
+    return vsConfig;
+  }
 
+  protected reloadReplaceRules(vsConfig: WorkspaceConfiguration) {
     let configRules: QuickReplaceRulesFalseAble = vsConfig.get("rules") || {};
     this._rules = {};
     let names = Object.keys(configRules);
@@ -41,6 +45,5 @@ export class QuickReplaceInSelectionConfig {
       }
       this._rules[key] = rule;
     });
-    return vsConfig;
   }
 }

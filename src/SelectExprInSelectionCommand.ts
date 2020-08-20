@@ -1,5 +1,5 @@
 import { window, TextEditor, Selection } from 'vscode';
-import { QuickReplaceInSelectionModule } from './QuickReplaceInSelectionModule';
+import { SelectMatchesOrAdjustSelectionModule } from './SelectMatchesOrAdjustSelectionModule';
 import { SearchOrReplaceCommandBase } from './SearchOrReplaceCommandBase';
 import * as helper from './helper';
 
@@ -13,8 +13,8 @@ export class SelectExprInSelectionCommand extends SearchOrReplaceCommandBase {
     return 'input';
   }
 
-  protected getModule() : QuickReplaceInSelectionModule {
-    return QuickReplaceInSelectionModule.getInstance();
+  protected getModule() : SelectMatchesOrAdjustSelectionModule {
+    return SelectMatchesOrAdjustSelectionModule.getInstance();
   }
 
   protected getLastSelectSearchTarget() {

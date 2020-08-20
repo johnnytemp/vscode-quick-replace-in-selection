@@ -40,13 +40,17 @@ export class SearchOrReplaceCommandBase {
     return ''; // unknown type
   }
 
+  protected allowSpecialPrefixInRegex() {
+    return this.getCommandType() === 'input';
+  }
+
   public haveEscapesInReplace() : boolean {
     return false;
   }
 
   protected buildRegexes(regexps : (RegExp|string)[], targets : string[], inOutReplacements : { ref: string[] | null }, flags: string | undefined, wantAllRegex?: boolean) : string | null {
     let escapesInReplace = this.haveEscapesInReplace();
-    let isInputCommand = this.getCommandType() === 'input';
+    let isAllowSpecialPrefix = this.allowSpecialPrefixInRegex();
     var initialFlags = flags === undefined ? '' : flags;
     let replacements: string[] = [];
     if (inOutReplacements.ref === null) { // i.e. build just search regex, no replacements
@@ -62,7 +66,7 @@ export class SearchOrReplaceCommandBase {
       let target = targets[i];
       let flags = initialFlags;
 
-      if (isInputCommand) {
+      if (isAllowSpecialPrefix) {
         // Fix: this special prefix syntax is for "input expressions" command only
         let prefixMatch = target.match(/^(?:\+|\?(?=[gimsuy-])([gimsuy]+)?(-g)? )/); // support either /^\+/ (equal the "m" flag) OR /^\?[gimsuy]*(-g)? / for flags
         if (prefixMatch !== null) {

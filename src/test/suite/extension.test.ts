@@ -6,6 +6,7 @@ import { window, workspace, Selection, Uri, TextDocument, Position } from 'vscod
 import * as vscode from 'vscode';
 // import * as myExtension from '../../extension';
 import { QuickReplaceInSelectionModule } from '../../QuickReplaceInSelectionModule';
+import { SelectMatchesOrAdjustSelectionModule } from '../../SelectMatchesOrAdjustSelectionModule';
 import { SelectNextExprFromCursorsCommand } from '../../SelectNextExprFromCursorsCommand';
 
 var editorContent = 'Hello world' + "\n" +
@@ -124,7 +125,7 @@ suite('Extension Test Suite', () => {
 
     assert.equal(editorContent, document.getText());
 
-    let module = QuickReplaceInSelectionModule.getInstance();
+    let module = SelectMatchesOrAdjustSelectionModule.getInstance();
     let selectInSelection = module.getSelectInSelectionCommand();
     let selectNextEx = module.getSelectNextExCommand();
     let selectUpToNextEx = module.getSelectUpToNextExCommand();

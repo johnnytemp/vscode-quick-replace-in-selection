@@ -1,9 +1,9 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
-import { QuickReplaceInSelectionModule } from './QuickReplaceInSelectionModule';
+import { SelectMatchesOrAdjustSelectionModule } from './SelectMatchesOrAdjustSelectionModule';
 
-var module = QuickReplaceInSelectionModule.getInstance();
+var module = SelectMatchesOrAdjustSelectionModule.getInstance();
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -37,6 +37,10 @@ export function activate(context: vscode.ExtensionContext) {
     module.getSelectInSelectionCommand().performCommandWithArgs({
       target: "?{1,2}?s-g (\\s*)(.*\\S)?"
     });
+  }));
+
+  context.subscriptions.push(vscode.commands.registerCommand('selectMatchesOrAdjustSelection.selectMatchesInSelectionByPattern', (args?: {}) => {
+    module.getSelectInSelectionByPatternCommand().performCommandWithArgs(args);
   }));
 }
 

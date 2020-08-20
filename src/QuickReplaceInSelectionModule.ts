@@ -59,7 +59,7 @@ export class QuickReplaceInSelectionModule {
     this._lastCommand = command;
   }
 
-  public getSelectInSelectionCommand() : SelectExprInSelectionCommand {
+  /* public getSelectInSelectionCommand() : SelectExprInSelectionCommand {
     return this._selectExprInSelectionCommand;
   }
 
@@ -69,12 +69,12 @@ export class QuickReplaceInSelectionModule {
 
   public getSelectUpToNextExCommand() : SelectUpToNextExprFromCursorsCommand {
     return this._selectUpToNextExprFromCursorsCommand;
-  }
+  } */
 
   public clearHistory() {
     this.getQuickReplaceCommand().clearHistory();
     this.getReplaceByRuleCommand().clearHistory();
-    this.getSelectInSelectionCommand().clearHistory();
+    // this.getSelectInSelectionCommand().clearHistory();
     this.setLastCommand(null);
   }
 }
