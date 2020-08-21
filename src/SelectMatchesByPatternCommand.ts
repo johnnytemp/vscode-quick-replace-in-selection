@@ -1,7 +1,6 @@
 import { window } from 'vscode';
 import { SelectRule } from './SelectMatchesOrAdjustSelectionConfig';
 import { SelectMatchesCommandBase } from './SelectMatchesCommandBase';
-import { SelectExprInSelectionCommand } from './SelectExprInSelectionCommand';
 
 /**
  * SelectMatchesByPatternCommand class

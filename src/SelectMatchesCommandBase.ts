@@ -1,8 +1,6 @@
 import { window, TextEditor, Selection } from 'vscode';
-import { SelectMatchesOrAdjustSelectionModule } from './SelectMatchesOrAdjustSelectionModule';
 import { SearchOrReplaceCommandBase } from './SearchOrReplaceCommandBase';
-import * as helper from './helper';
-import { SelectExprInSelectionCommand } from './SelectExprInSelectionCommand';
+import { SelectMatchesOrAdjustSelectionModule } from './SelectMatchesOrAdjustSelectionModule';
 
 /**
  * SelectMatchesCommandBase class

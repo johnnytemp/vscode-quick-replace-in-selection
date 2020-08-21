@@ -66,6 +66,7 @@ export class SelectMatchesOrAdjustSelectionModule {
 
   public clearHistory() {
     this.getSelectInSelectionCommand().clearHistory();
+    this.getSelectMatchesByPatternCommand().clearHistory();
     this.setLastSelectCommand(null);
   }
 }

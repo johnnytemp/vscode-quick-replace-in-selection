@@ -2,9 +2,6 @@ import { QuickReplaceInSelectionConfig } from './QuickReplaceInSelectionConfig';
 import { QuickReplaceInSelectionCommand } from './QuickReplaceInSelectionCommand';
 import { QuickReplaceInSelectionByRuleCommand } from './QuickReplaceInSelectionByRuleCommand';
 import { QuickReplaceInSelectionRepeatLastCommand } from './QuickReplaceInSelectionRepeatLastCommand';
-import { SelectExprInSelectionCommand } from './SelectExprInSelectionCommand';
-import { SelectNextExprFromCursorsCommand } from './SelectNextExprFromCursorsCommand';
-import { SelectUpToNextExprFromCursorsCommand } from './SelectUpToNextExprFromCursorsCommand';
 
 export class QuickReplaceInSelectionModule {
   private _config : QuickReplaceInSelectionConfig;
@@ -12,9 +9,6 @@ export class QuickReplaceInSelectionModule {
   private _replaceByRuleCommand : QuickReplaceInSelectionByRuleCommand;
   private _repeatLastCommand : QuickReplaceInSelectionRepeatLastCommand;
   private _lastCommand : QuickReplaceInSelectionCommand | null = null;
-  private _selectExprInSelectionCommand : SelectExprInSelectionCommand;
-  private _selectNextExprFromCursorsCommand : SelectNextExprFromCursorsCommand;
-  private _selectUpToNextExprFromCursorsCommand : SelectUpToNextExprFromCursorsCommand;
 
   private static _instance : QuickReplaceInSelectionModule | undefined;
 
@@ -30,9 +24,6 @@ export class QuickReplaceInSelectionModule {
     this._quickReplaceCommand = new QuickReplaceInSelectionCommand();
     this._replaceByRuleCommand = new QuickReplaceInSelectionByRuleCommand();
     this._repeatLastCommand = new QuickReplaceInSelectionRepeatLastCommand();
-    this._selectExprInSelectionCommand = new SelectExprInSelectionCommand();
-    this._selectNextExprFromCursorsCommand = new SelectNextExprFromCursorsCommand();
-    this._selectUpToNextExprFromCursorsCommand = new SelectUpToNextExprFromCursorsCommand();
   }
 
   public getConfig() : QuickReplaceInSelectionConfig {
@@ -59,22 +50,9 @@ export class QuickReplaceInSelectionModule {
     this._lastCommand = command;
   }
 
-  /* public getSelectInSelectionCommand() : SelectExprInSelectionCommand {
-    return this._selectExprInSelectionCommand;
-  }
-
-  public getSelectNextExCommand() : SelectNextExprFromCursorsCommand {
-    return this._selectNextExprFromCursorsCommand;
-  }
-
-  public getSelectUpToNextExCommand() : SelectUpToNextExprFromCursorsCommand {
-    return this._selectUpToNextExprFromCursorsCommand;
-  } */
-
   public clearHistory() {
     this.getQuickReplaceCommand().clearHistory();
     this.getReplaceByRuleCommand().clearHistory();
-    // this.getSelectInSelectionCommand().clearHistory();
     this.setLastCommand(null);
   }
 }
