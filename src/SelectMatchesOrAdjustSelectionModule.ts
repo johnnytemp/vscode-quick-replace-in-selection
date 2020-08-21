@@ -3,11 +3,12 @@ import { SelectExprInSelectionCommand } from './SelectExprInSelectionCommand';
 import { SelectNextExprFromCursorsCommand } from './SelectNextExprFromCursorsCommand';
 import { SelectUpToNextExprFromCursorsCommand } from './SelectUpToNextExprFromCursorsCommand';
 import { SelectMatchesByPatternCommand } from './SelectMatchesByPatternCommand';
+import { SelectMatchesCommandBase } from './SelectMatchesCommandBase';
 
 export class SelectMatchesOrAdjustSelectionModule {
   private _config : SelectMatchesOrAdjustSelectionConfig;
   // private _repeatLastCommand : QuickReplaceInSelectionRepeatLastCommand;
-  private _lastSelectCommand : SelectExprInSelectionCommand | null = null;
+  private _lastSelectCommand : SelectMatchesCommandBase | null = null;
   private _selectExprInSelectionCommand : SelectExprInSelectionCommand;
   private _selectNextExprFromCursorsCommand : SelectNextExprFromCursorsCommand;
   private _selectUpToNextExprFromCursorsCommand : SelectUpToNextExprFromCursorsCommand;
@@ -39,11 +40,11 @@ export class SelectMatchesOrAdjustSelectionModule {
     return this._repeatLastCommand;
   } */
 
-  public getLastSelectCommand() : SelectExprInSelectionCommand | null {
+  public getLastSelectCommand() : SelectMatchesCommandBase | null {
     return this._lastSelectCommand;
   }
 
-  public setLastSelectCommand(command : SelectExprInSelectionCommand | null) {
+  public setLastSelectCommand(command : SelectMatchesCommandBase | null) {
     this._lastSelectCommand = command;
   }
 
