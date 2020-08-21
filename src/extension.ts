@@ -42,15 +42,6 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(vscode.commands.registerCommand('selectMatchesOrAdjustSelection.selectMatchesByPattern', (args?: {}) => {
     module.getSelectMatchesByPatternCommand().performCommandWithArgs(args);
   }));
-  context.subscriptions.push(vscode.commands.registerCommand('selectMatchesOrAdjustSelection.selectMatchesInSelectionByPattern', (args?: {}) => {
-    module.getSelectMatchesByPatternCommand('selectMatchesInSelection').performCommandWithArgs(args);
-  }));
-  context.subscriptions.push(vscode.commands.registerCommand('selectMatchesOrAdjustSelection.selectNextMatchesFromCursorsByPattern', (args?: {}) => {
-    module.getSelectMatchesByPatternCommand('selectNextMatchesFromCursors').performCommandWithArgs(args);
-  }));
-  context.subscriptions.push(vscode.commands.registerCommand('selectMatchesOrAdjustSelection.selectUpToNextMatchesFromCursorsByPattern', (args?: {}) => {
-    module.getSelectMatchesByPatternCommand('selectUpToNextMatchesFromCursors').performCommandWithArgs(args);
-  }));
 }
 
 // this method is called when your extension is deactivated

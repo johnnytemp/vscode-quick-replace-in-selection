@@ -21,7 +21,15 @@ export class SelectMatchesByPatternCommand extends SelectMatchesCommandBase {
     if (this._underlyingCommand) {
       return this._underlyingCommand;
     }
-    return this.getModule().getSelectInSelectionCommand();
+    let module = this.getModule();
+    if (args.selectScope !== undefined) {
+      switch (args.selectScope) {
+        case 'selectMatchesInSelection': return module.getSelectInSelectionCommand();
+        case 'selectNextMatchesFromCursors': return module.getSelectNextExCommand();
+        case 'selectUpToNextMatchesFromCursors': return module.getSelectUpToNextExCommand();
+      }
+    }
+    return module.getSelectInSelectionCommand();
   }
 
   public getCommandType() : string {
@@ -65,16 +73,15 @@ export class SelectMatchesByPatternCommand extends SelectMatchesCommandBase {
   public performCommandWithArgs(args : any) {
     if (typeof args === 'object' && args.patternName !== undefined) {
       this.handleError(this.getSelectMatchesCommand(args).performSelection(args.patternName, this.addDefaultFlags(), true));
-    } else {
-      this.performCommand();
+      return;
     }
+    this.performCommand();
   }
 
   public performCommand() {
     if (this._underlyingCommand !== undefined) {
       return this.performCommandWithSelectCommand(this._underlyingCommand);
     }
-    // let selectMatchesCommand = this.getSelectMatchesCommand();
     let selectCommands = this.getAvailableInputAndSelectCommands();
     let lastSelectCommand = this.getLastPatternSelectMethod();
     if (lastSelectCommand) {

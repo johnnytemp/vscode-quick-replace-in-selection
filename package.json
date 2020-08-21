@@ -63,18 +63,6 @@
         "title": "Select Matches Using Pattern (or input)..."
       },
       {
-        "command": "selectMatchesOrAdjustSelection.selectMatchesInSelectionByPattern",
-        "title": "Select All Matches In Selection (Use pattern)..."
-      },
-      {
-        "command": "selectMatchesOrAdjustSelection.selectNextMatchesFromCursorsByPattern",
-        "title": "Select Next Matches From Cursors (Use pattern)..."
-      },
-      {
-        "command": "selectMatchesOrAdjustSelection.selectUpToNextMatchesFromCursorsByPattern",
-        "title": "Select Up To Next Matches From Cursors (Use pattern)..."
-      },
-      {
         "command": "selectMatchesOrAdjustSelection.unselectSurroundingWhitespaces",
         "title": "Unselect Surrounding Whitespaces"
       },
