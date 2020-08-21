@@ -14,11 +14,14 @@
   "keywords": [
     "selection",
     "cursor",
+    "adjust",
+    "extend",
+    "expand",
+    "shrink",
     "regular expression",
     "regex",
     "find",
-    "search",
-    "adjust"
+    "search"
   ],
   "bugs": {
     "url": "https://github.com/johnnytemp/vscode-select-matches-or-adjust-selection",
@@ -33,6 +36,7 @@
     "onCommand:selectMatchesOrAdjustSelection.selectMatchesInSelection",
     "onCommand:selectMatchesOrAdjustSelection.selectNextMatchesFromCursors",
     "onCommand:selectMatchesOrAdjustSelection.selectUpToNextMatchesFromCursors",
+    "onCommand:selectMatchesOrAdjustSelection.selectMatchesByPattern",
     "onCommand:selectMatchesOrAdjustSelection.selectMatchesInSelectionByPattern",
     "onCommand:selectMatchesOrAdjustSelection.selectNextMatchesFromCursorsByPattern",
     "onCommand:selectMatchesOrAdjustSelection.selectUpToNextMatchesFromCursorsByPattern",
@@ -53,6 +57,10 @@
       {
         "command": "selectMatchesOrAdjustSelection.selectUpToNextMatchesFromCursors",
         "title": "Select Up To Next Matches From Cursors..."
+      },
+      {
+        "command": "selectMatchesOrAdjustSelection.selectMatchesByPattern",
+        "title": "Select Matches Using Pattern (or input)..."
       },
       {
         "command": "selectMatchesOrAdjustSelection.selectMatchesInSelectionByPattern",

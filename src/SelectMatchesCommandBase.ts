@@ -14,6 +14,10 @@ export class SelectMatchesCommandBase extends SearchOrReplaceCommandBase {
     return 'input';
   }
 
+  public getMethodName() : string {
+    return 'Unknown Method';
+  }
+
   protected getModule() : SelectMatchesOrAdjustSelectionModule {
     return SelectMatchesOrAdjustSelectionModule.getInstance();
   }
@@ -44,6 +48,7 @@ export class SelectMatchesCommandBase extends SearchOrReplaceCommandBase {
       value: this.getLastSelectSearchTarget()
     }).then((target: string | undefined) => {
       if (target !== undefined) {
+        this.getModule().setLastSelectCommand(this);
         this.handleError(this.performSelection(target, this.addDefaultFlags()));
       }
     });
@@ -77,7 +82,7 @@ export class SelectMatchesCommandBase extends SearchOrReplaceCommandBase {
   }
 
   public computeSelection(editor: TextEditor, newSelections: Selection[], target: string, outInfo: any, flags?: string) : string | null {
-    return null;
+    return null; // to be overridden
   }
 
   public parseOptionsAndBuildRegexes(editor: TextEditor, target: string, outInfo: any, flags: string | undefined) {

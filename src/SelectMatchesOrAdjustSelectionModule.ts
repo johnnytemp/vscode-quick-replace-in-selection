@@ -11,6 +11,7 @@ export class SelectMatchesOrAdjustSelectionModule {
   private _selectExprInSelectionCommand : SelectExprInSelectionCommand;
   private _selectNextExprFromCursorsCommand : SelectNextExprFromCursorsCommand;
   private _selectUpToNextExprFromCursorsCommand : SelectUpToNextExprFromCursorsCommand;
+  private _selectMatchesByPatternCommand : SelectMatchesByPatternCommand;
   private _selectMatchesByPatternCommands : { [id: string]: SelectMatchesByPatternCommand };
 
   private static _instance : SelectMatchesOrAdjustSelectionModule | undefined;
@@ -28,6 +29,7 @@ export class SelectMatchesOrAdjustSelectionModule {
     this._selectExprInSelectionCommand = new SelectExprInSelectionCommand();
     this._selectNextExprFromCursorsCommand = new SelectNextExprFromCursorsCommand();
     this._selectUpToNextExprFromCursorsCommand = new SelectUpToNextExprFromCursorsCommand();
+    this._selectMatchesByPatternCommand = new SelectMatchesByPatternCommand();
     this._selectMatchesByPatternCommands = {};
     this._selectMatchesByPatternCommands['selectMatchesInSelection'] = new SelectMatchesByPatternCommand(this._selectExprInSelectionCommand);
     this._selectMatchesByPatternCommands['selectNextMatchesFromCursors'] = new SelectMatchesByPatternCommand(this._selectNextExprFromCursorsCommand);
@@ -62,8 +64,11 @@ export class SelectMatchesOrAdjustSelectionModule {
     return this._selectUpToNextExprFromCursorsCommand;
   }
 
-  public getSelectMatchesByPatternCommand(commandId: string) : SelectMatchesByPatternCommand {
-    return this._selectMatchesByPatternCommands[commandId];
+  public getSelectMatchesByPatternCommand(commandId?: string) : SelectMatchesByPatternCommand {
+    if (commandId !== undefined) {
+      return this._selectMatchesByPatternCommands[commandId];
+    }
+    return this._selectMatchesByPatternCommand;
   }
 
   public clearHistory() {

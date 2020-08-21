@@ -6,6 +6,10 @@ import { SelectMatchesCommandBase } from './SelectMatchesCommandBase';
  */
 export class SelectNextExprFromCursorsCommand extends SelectMatchesCommandBase {
 
+  public getMethodName() : string {
+    return 'Select Next Matches From Cursors';
+  }
+
   public computeSelection(editor: TextEditor, newSelections: Selection[], target: string, outInfo: any, flags?: string) : string | null {
     let { error, options, regexp, document, selections } = this.parseOptionsAndBuildRegexes(editor, target, outInfo, flags);
     if (error || !regexp) {
