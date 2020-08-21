@@ -7,7 +7,7 @@ import { SelectMatchesCommandBase } from './SelectMatchesCommandBase';
 export class SelectNextExprFromCursorsCommand extends SelectMatchesCommandBase {
 
   public getMethodName() : string {
-    return 'Select Next Matches From Cursors';
+    return 'Next Matches From Cursors';
   }
 
   public computeSelection(editor: TextEditor, newSelections: Selection[], target: string, outInfo: any, flags?: string) : string | null {

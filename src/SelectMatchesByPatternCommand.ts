@@ -94,7 +94,7 @@ export class SelectMatchesByPatternCommand extends SelectMatchesCommandBase {
     }
 
     window.showQuickPick(methodNames, {
-      placeHolder: 'Choose Select Method or Esc to cancel...'
+      placeHolder: 'Choose Select Scope or Esc to cancel...'
     }).then((methodName : string | undefined) => {
       if (methodName === undefined) {
         return;

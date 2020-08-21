@@ -9,7 +9,7 @@ import { SelectMatchesCommandBase } from './SelectMatchesCommandBase';
 export class SelectExprInSelectionCommand extends SelectMatchesCommandBase {
 
   public getMethodName() : string {
-    return 'Select Matches In Selection';
+    return 'Matches In Selection';
   }
 
   public computeSelection(editor: TextEditor, newSelections: Selection[], target: string, outInfo: any, flags?: string) : string | null {
