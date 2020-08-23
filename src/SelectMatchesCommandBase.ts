@@ -101,7 +101,7 @@ export class SelectMatchesCommandBase extends SearchOrReplaceCommandBase {
   }
 
   /**
-   * prefix format is "?{<skipGroup>,<selectGroup>}", "?{optionFlags}" OR "?{optionFlags|<skipGroup>,<selectGroup>}"
+   * prefix format is "?<skipGroup>,<selectGroup>;", "?optionFlags;" OR "?optionFlags|<skipGroup>,<selectGroup>;"
    */
   protected parseOptionsFromSearchTarget(target: { ref: string }) : { optionFlags : string, skipGroup: number | null, selectGroup: number } {
     let ret : { optionFlags : string, skipGroup: number | null, selectGroup: number } = {
@@ -109,11 +109,11 @@ export class SelectMatchesCommandBase extends SearchOrReplaceCommandBase {
       skipGroup: null,
       selectGroup: 0
     };
-    let bracesMatch = target.ref.match(/^\?\{([^{}]*)\}/);
+    let bracesMatch = target.ref.match(/^\?([-,=|_A-Za-z0-9]*);/);
     if (bracesMatch) {
       let center = bracesMatch[1];
       let front = center;
-      let lastDigitPairMatch = center.match(/^([0-9a-zA-Z,=]+\|)*(-1|\d+),(-1|\d+)$/); // e.g. ?{1,2} OR ?{e} OR ?{e|1,2}
+      let lastDigitPairMatch = center.match(/^([0-9a-zA-Z,=]+\|)*(-1|\d+),(-1|\d+)$/); // e.g. "?1,2;" OR "?e;" OR "?e|1,2;"
       if (lastDigitPairMatch) {
         ret.skipGroup = parseInt(lastDigitPairMatch[2]);
         ret.selectGroup = parseInt(lastDigitPairMatch[3]);
