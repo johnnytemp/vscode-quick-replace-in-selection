@@ -113,13 +113,13 @@ export class SelectMatchesCommandBase extends SearchOrReplaceCommandBase {
     if (bracesMatch) {
       let center = bracesMatch[1];
       let front = center;
-      let lastDigitPairMatch = center.match(/^([a-zA-Z,=]+\|)*(-1|\d+),(-1|\d+)$/); // e.g. ?{1,2} OR ?{e} OR ?{e|1,2}
+      let lastDigitPairMatch = center.match(/^([0-9a-zA-Z,=]+\|)*(-1|\d+),(-1|\d+)$/); // e.g. ?{1,2} OR ?{e} OR ?{e|1,2}
       if (lastDigitPairMatch) {
         ret.skipGroup = parseInt(lastDigitPairMatch[2]);
         ret.selectGroup = parseInt(lastDigitPairMatch[3]);
         front = center.substr(0, (lastDigitPairMatch[1] || '').length > 1 ? lastDigitPairMatch[1].length - 1 : 0);
       }
-      let leadingLettersMatch = front.match(/^([a-zA-Z]+)(\||$)/);
+      let leadingLettersMatch = front.match(/^([0-9]*[a-zA-Z]*)(\||$)/);
       if (leadingLettersMatch) {
         ret.optionFlags = leadingLettersMatch[1];
       }

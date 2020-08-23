@@ -16,6 +16,7 @@ export class SelectNextExprFromCursorsCommand extends SelectMatchesCommandBase {
       return error;
     }
     let shouldExtendsIfNonEmptyAndContiguous = options.optionFlags.indexOf('e') !== -1;
+    let nthOccurrence = parseInt(options.optionFlags);
     // let hasGlobalFlag = regexp.global;
     /* let numSelections = selections.length;
     let isUseWholeDocumentSelection = numSelections <= 1 && (numSelections === 0 || selections[0].isEmpty);
@@ -28,7 +29,11 @@ export class SelectNextExprFromCursorsCommand extends SelectMatchesCommandBase {
       let arrMatch : RegExpExecArray | null;
       let searchStart = regexp.lastIndex = document.offsetAt(selection.end);
       let n = 0;
+      let count = nthOccurrence;
       while ((arrMatch = regexp.exec(source))) {
+        if (count > 0 && --count > 0) {
+          continue;
+        }
         let offsetStart = (arrMatch.index || 0) + this.getCaptureGroupLength(arrMatch, options.skipGroup);
         let shouldExtends = shouldExtendsIfNonEmptyAndContiguous && selection.start.isBefore(selection.end) && arrMatch.index === searchStart;
         let offsetEnd = offsetStart + this.getCaptureGroupLength(arrMatch, options.selectGroup);
