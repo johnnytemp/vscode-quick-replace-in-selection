@@ -26,16 +26,19 @@ export class SelectNextExprFromCursorsCommand extends SelectMatchesCommandBase {
     } */
     let source = document.getText();
     for (let selection of selections) {
+      let shouldExtends = shouldExtendsIfNonEmptyAndContiguous && selection.start.isBefore(selection.end);
       let arrMatch : RegExpExecArray | null;
-      let searchStart = regexp.lastIndex = document.offsetAt(selection.end);
+      regexp.lastIndex = document.offsetAt(selection.end);
+      let searchStart = regexp.lastIndex;
       let n = 0;
       let count = nthOccurrence;
       while ((arrMatch = regexp.exec(source))) {
+        shouldExtends = shouldExtends && arrMatch.index === searchStart;
         if (count > 0 && --count > 0) {
+          searchStart = regexp.lastIndex;
           continue;
         }
         let offsetStart = (arrMatch.index || 0) + this.getCaptureGroupLength(arrMatch, options.skipGroup);
-        let shouldExtends = shouldExtendsIfNonEmptyAndContiguous && selection.start.isBefore(selection.end) && arrMatch.index === searchStart;
         let offsetEnd = offsetStart + this.getCaptureGroupLength(arrMatch, options.selectGroup);
         let newSelection = new Selection(
           shouldExtends ? selection.start : document.positionAt(offsetStart),
