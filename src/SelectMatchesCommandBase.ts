@@ -71,11 +71,13 @@ export class SelectMatchesCommandBase extends SearchOrReplaceCommandBase {
     if (error !== null) {
       return error;
     }
-    let { deleteFlag } = this.extractCommonOptions(outInfo.options);
+    let { deleteFlag, alignFlag } = this.extractCommonOptions(outInfo.options);
     if (newSelections.length > 0) {
       // console.log('Select In Selection: ' + newSelections.length + " matches found in " + editor.selections.length + " selections.");
       if (deleteFlag) {
         this.replaceTexts(editor, newSelections, []);
+      } else if (alignFlag) {
+        this.alignSelections(editor, newSelections);
       } else {
         editor.selections = newSelections;
       }
@@ -86,15 +88,39 @@ export class SelectMatchesCommandBase extends SearchOrReplaceCommandBase {
     return null;
   }
 
+  public alignSelections(editor: TextEditor, newSelections: Selection[]) {
+    let maxColumn = 0;
+    for (let sel of newSelections) {
+      if (sel.start.character > maxColumn) {
+        maxColumn = sel.start.character;
+      }
+    }
+    let aligningSelections: Selection[] = [];
+    let alignTexts: string[] = [];
+    let alignedSelections: Selection[] = [];
+    for (let sel of newSelections) {
+      let start = sel.start;
+      let gapLength = maxColumn - start.character;
+      if (gapLength > 0) {
+        aligningSelections.push(new Selection(start.line, start.character, start.line, start.character));
+        alignTexts.push(''.padEnd(gapLength, ' '));
+      }
+      alignedSelections.push(new Selection(start.line, maxColumn, start.line, maxColumn));
+    }
+    this.replaceTexts(editor, aligningSelections, alignTexts);
+    editor.selections = alignedSelections;
+  }
+
   public computeSelection(editor: TextEditor, newSelections: Selection[], target: string, outInfo: any, flags?: string) : string | null {
     return null; // to be overridden
   }
 
-  protected extractCommonOptions(options: SelectMatchesOptions) : { nthOccurrence: number, deleteFlag: boolean } {
+  protected extractCommonOptions(options: SelectMatchesOptions) : { nthOccurrence: number, deleteFlag: boolean, alignFlag: boolean } {
     let nthOccurrence = parseInt(options.optionFlags);
     nthOccurrence = isNaN(nthOccurrence) ? 0 : nthOccurrence;
     let deleteFlag = options.optionFlags.indexOf('d') !== -1;
-    return { nthOccurrence, deleteFlag };
+    let alignFlag = options.optionFlags.indexOf('a') !== -1;
+    return { nthOccurrence, deleteFlag, alignFlag };
   }
 
   public parseOptionsAndBuildRegexes(editor: TextEditor, target: string, outInfo: any, flags: string | undefined) {
