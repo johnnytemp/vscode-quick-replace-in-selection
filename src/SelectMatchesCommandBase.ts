@@ -108,7 +108,7 @@ export class SelectMatchesCommandBase extends SearchOrReplaceCommandBase {
   }
 
   /**
-   * prefix format is "?<skipGroup>,<selectGroup>;", "?optionFlags;" OR "?optionFlags|<skipGroup>,<selectGroup>;"
+   * prefix format is "?<skipGroup>,<selectGroup>;", "?[nthOccurrence][optionFlags];" OR "?[nthOccurrence][optionFlags]|<skipGroup>,<selectGroup>;"
    */
   protected parseOptionsFromSearchTarget(target: { ref: string }) : SelectMatchesOptions {
     let ret : SelectMatchesOptions = {

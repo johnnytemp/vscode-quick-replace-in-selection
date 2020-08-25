@@ -135,7 +135,7 @@ suite('Extension Test Suite', () => {
     selectNextEx.performCommandWithArgs({ target: "?i \\b[a-z]+.*" }); // select a word to line end --> selects "Hello..." and "a>..."
     assert.deepEqual([new Selection(0, 0, 0, 11), new Selection(2, 5, 2, 16)],
       editor.selections, 'selections after Select Next Matches From Cursors...');
-    selectInSelection.performCommandWithArgs({ target: "?{1,2}(&)([a-z]+);" }); // select between () in "&([a-z]+);" --> selects "amp"
+    selectInSelection.performCommandWithArgs({ target: "?1,2;(&)([a-z]+);" }); // select between () in "&([a-z]+);" --> selects "amp"
     assert.deepEqual([new Selection(2, 9, 2, 12)],
       editor.selections, 'selections after Select All Matches In Selection...');
     selectNextEx.performCommandWithArgs({ target: "[a-z]" }); // select next letter --> selects "n" of "\n"

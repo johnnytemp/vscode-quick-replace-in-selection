@@ -95,7 +95,7 @@
               "find": "\\S+(\\s+\\S+)*"
             },
             "Whitespaces to non-whitespaces boundaries": {
-              "find": "?{1,2}(\\s+)()\\S"
+              "find": "?1,2;(\\s+)()\\S"
             }
           }
         }

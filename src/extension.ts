@@ -38,7 +38,7 @@ export function activate(context: vscode.ExtensionContext) {
   }));
   context.subscriptions.push(vscode.commands.registerCommand('selectMatchesOrAdjustSelection.normalizeSelection', () => {
     module.getSelectInSelectionCommand().performCommandWithArgs({
-      target: "?{1,2}?s-g (\\s*)(.*\\S)?"
+      target: "?1,2;?s-g (\\s*)(.*\\S)?"
     });
   }));
 

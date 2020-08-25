@@ -24,8 +24,8 @@ For more information on regular expression, you may checkout:
 
 - https://medium.com/factory-mind/regex-tutorial-a-simple-cheatsheet-by-examples-649dc1c3f285
 
-You could also select only a substring of the match with a leading "`?{<skip group no.>,<select group no.>}`" in the regex input/parameter.  
-  E.g. An input "`?{1,2}(<)(.*?)>`" will only select the text in-between a `< >` pair. Groups refer to regex's capture group. The "skip group" must start from the start and immediately followed by the "select group", otherwise the behavior is undefined.
+You could also select only a substring of the match with a leading "`?<skip group no.>,<select group no.>;`" in the regex input/parameter.  
+  E.g. An input "`?1,2;(<)(.*?)>`" will only select the text in-between a `< >` pair. Groups refer to regex's capture group. The "skip group" must start from the start and immediately followed by the "select group", otherwise the behavior is undefined.
 
 ## Requirements
 
