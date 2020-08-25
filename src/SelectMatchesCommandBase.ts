@@ -2,6 +2,8 @@ import { window, TextEditor, Selection } from 'vscode';
 import { SearchOrReplaceCommandBase } from './SearchOrReplaceCommandBase';
 import { SelectMatchesOrAdjustSelectionModule } from './SelectMatchesOrAdjustSelectionModule';
 
+export type SelectMatchesOptions = { optionFlags : string, skipGroup: number | null, selectGroup: number };
+
 /**
  * SelectMatchesCommandBase class
  */
@@ -83,6 +85,11 @@ export class SelectMatchesCommandBase extends SearchOrReplaceCommandBase {
     return null; // to be overridden
   }
 
+  protected getNthOccurrenceFromOptions(options: SelectMatchesOptions) : number {
+    let ret = parseInt(options.optionFlags);
+    return isNaN(ret) ? 0 : ret;
+  }
+
   public parseOptionsAndBuildRegexes(editor: TextEditor, target: string, outInfo: any, flags: string | undefined) {
     let inOutTarget = { ref: target };
     let options = this.parseOptionsFromSearchTarget(inOutTarget);
@@ -103,8 +110,8 @@ export class SelectMatchesCommandBase extends SearchOrReplaceCommandBase {
   /**
    * prefix format is "?<skipGroup>,<selectGroup>;", "?optionFlags;" OR "?optionFlags|<skipGroup>,<selectGroup>;"
    */
-  protected parseOptionsFromSearchTarget(target: { ref: string }) : { optionFlags : string, skipGroup: number | null, selectGroup: number } {
-    let ret : { optionFlags : string, skipGroup: number | null, selectGroup: number } = {
+  protected parseOptionsFromSearchTarget(target: { ref: string }) : SelectMatchesOptions {
+    let ret : SelectMatchesOptions = {
       optionFlags: '',
       skipGroup: null,
       selectGroup: 0

@@ -22,6 +22,9 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(vscode.commands.registerCommand('selectMatchesOrAdjustSelection.selectMatchesInSelection', (args?: {}) => {
     module.getSelectInSelectionCommand().performCommandWithArgs(args);
   }));
+  context.subscriptions.push(vscode.commands.registerCommand('selectMatchesOrAdjustSelection.selectMatchesInLineSelections', (args?: {}) => {
+    module.getSelectInLineSelectionsCommand().performCommandWithArgs(args);
+  }));
   context.subscriptions.push(vscode.commands.registerCommand('selectMatchesOrAdjustSelection.selectNextMatchesFromCursors', (args?: {}) => {
     module.getSelectNextExCommand().performCommandWithArgs(args);
   }));

@@ -1,14 +1,14 @@
-import { TextEditor, Selection } from 'vscode';
+import { TextEditor, TextDocument, Selection, Position } from 'vscode';
 import * as helper from './helper';
 import { SelectMatchesCommandBase } from './SelectMatchesCommandBase';
 
 /**
- * SelectExprInSelectionCommand class
+ * SelectExprInLineSelectionsCommand class
  */
-export class SelectExprInSelectionCommand extends SelectMatchesCommandBase {
+export class SelectExprInLineSelectionsCommand extends SelectMatchesCommandBase {
 
   public getMethodName() : string {
-    return 'Matches In Selection';
+    return 'Matches In Line Selections';
   }
 
   public computeSelection(editor: TextEditor, newSelections: Selection[], target: string, outInfo: any, flags?: string) : string | null {
@@ -25,7 +25,9 @@ export class SelectExprInSelectionCommand extends SelectMatchesCommandBase {
       numSelections = 1;
     }
     // let nMaxMatches = 50;
-    for (let selection of selections) {
+    let lineSelections: Selection[] = [];
+    helper.splitSelectionToLineSelections(document, selections, lineSelections);
+    for (let selection of lineSelections) {
       let source = document.getText(selection);
       let arrMatch : RegExpExecArray | null;
       regexp.lastIndex = 0;
@@ -53,5 +55,4 @@ export class SelectExprInSelectionCommand extends SelectMatchesCommandBase {
     }
     return null;
   }
-
 }

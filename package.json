@@ -34,12 +34,10 @@
   },
   "activationEvents": [
     "onCommand:selectMatchesOrAdjustSelection.selectMatchesInSelection",
+    "onCommand:selectMatchesOrAdjustSelection.selectMatchesInLineSelections",
     "onCommand:selectMatchesOrAdjustSelection.selectNextMatchesFromCursors",
     "onCommand:selectMatchesOrAdjustSelection.selectUpToNextMatchesFromCursors",
     "onCommand:selectMatchesOrAdjustSelection.selectMatchesByPattern",
-    "onCommand:selectMatchesOrAdjustSelection.selectMatchesInSelectionByPattern",
-    "onCommand:selectMatchesOrAdjustSelection.selectNextMatchesFromCursorsByPattern",
-    "onCommand:selectMatchesOrAdjustSelection.selectUpToNextMatchesFromCursorsByPattern",
     "onCommand:selectMatchesOrAdjustSelection.unselectSurroundingWhitespaces",
     "onCommand:selectMatchesOrAdjustSelection.normalizeSelection"
   ],
@@ -49,6 +47,10 @@
       {
         "command": "selectMatchesOrAdjustSelection.selectMatchesInSelection",
         "title": "Select All Matches In Selection..."
+      },
+      {
+        "command": "selectMatchesOrAdjustSelection.selectMatchesInLineSelections",
+        "title": "Select All Matches In Line Selections..."
       },
       {
         "command": "selectMatchesOrAdjustSelection.selectNextMatchesFromCursors",

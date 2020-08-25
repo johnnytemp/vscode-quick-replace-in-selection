@@ -21,14 +21,7 @@ export class SelectMatchesByPatternCommand extends SelectMatchesCommandBase {
       return this._underlyingCommand;
     }
     let module = this.getModule();
-    if (args.selectScope !== undefined) {
-      switch (args.selectScope) {
-        case 'selectMatchesInSelection': return module.getSelectInSelectionCommand();
-        case 'selectNextMatchesFromCursors': return module.getSelectNextExCommand();
-        case 'selectUpToNextMatchesFromCursors': return module.getSelectUpToNextExCommand();
-      }
-    }
-    return module.getSelectInSelectionCommand();
+    return module.getInputAndSelectCommandById(args.selectScope || '');
   }
 
   public getCommandType() : string {
@@ -55,15 +48,6 @@ export class SelectMatchesByPatternCommand extends SelectMatchesCommandBase {
     this._lastPatternSelectMethod = command;
   }
 
-  public getAvailableInputAndSelectCommands() : SelectMatchesCommandBase[] {
-    let module = this.getModule();
-    return [
-      module.getSelectInSelectionCommand(),
-      module.getSelectNextExCommand(),
-      module.getSelectUpToNextExCommand()
-    ];
-  }
-
   public clearHistory() {
     this.setLastSelectRuleName('');
     this.setLastPatternSelectMethod(null);
@@ -81,7 +65,7 @@ export class SelectMatchesByPatternCommand extends SelectMatchesCommandBase {
     if (this._underlyingCommand !== undefined) {
       return this.performCommandWithSelectCommand(this._underlyingCommand);
     }
-    let selectCommands = this.getAvailableInputAndSelectCommands();
+    let selectCommands = this.getModule().getAvailableInputAndSelectCommands();
     let lastSelectCommand = this.getLastPatternSelectMethod();
     if (lastSelectCommand) {
       let lastIndex = selectCommands.indexOf(lastSelectCommand);
