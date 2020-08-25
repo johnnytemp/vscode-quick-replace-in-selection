@@ -16,7 +16,7 @@ export class SelectExprInLineSelectionsCommand extends SelectMatchesCommandBase 
     if (error || !regexp) {
       return error;
     }
-    let nthOccurrence = this.getNthOccurrenceFromOptions(options);
+    let { nthOccurrence } = this.extractCommonOptions(options);
     let shouldMatchOnce = !regexp.global || nthOccurrence !== 0;
     let numSelections = selections.length;
     let isUseWholeDocumentSelection = numSelections <= 1 && (numSelections === 0 || selections[0].isEmpty);

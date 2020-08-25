@@ -1,5 +1,5 @@
 
-import { window } from 'vscode';
+import { window, TextEditor, Range } from 'vscode';
 import * as helper from './helper';
 
 export class SearchOrReplaceCommandBase {
@@ -113,6 +113,14 @@ export class SearchOrReplaceCommandBase {
         default:
           return text;
       }
+    });
+  }
+
+  public replaceTexts(editor: TextEditor, ranges: Range[], texts: string[]) : Thenable<boolean> {
+    return editor.edit(editBuilder => {
+      ranges.forEach((range, index) => {
+          editBuilder.replace(range, texts[index] || '');
+      });
     });
   }
 

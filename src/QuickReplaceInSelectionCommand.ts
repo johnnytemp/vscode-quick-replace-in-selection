@@ -1,4 +1,4 @@
-import { window, TextEditor, TextDocument, Selection, Range, EndOfLine } from 'vscode';
+import { window, TextDocument, Selection, Range, EndOfLine } from 'vscode';
 import { QuickReplaceInSelectionModule } from './QuickReplaceInSelectionModule';
 import { SearchOrReplaceCommandBase } from './SearchOrReplaceCommandBase';
 import * as helper from './helper';
@@ -144,13 +144,5 @@ export class QuickReplaceInSelectionCommand extends SearchOrReplaceCommandBase {
       texts.push(text);
     }
     return null;
-  }
-
-  public replaceTexts(editor: TextEditor, ranges: Range[], texts: string[]) : Thenable<boolean> {
-    return editor.edit(editBuilder => {
-      ranges.forEach((range, index) => {
-          editBuilder.replace(range, texts[index]);
-      });
-  });
   }
 }

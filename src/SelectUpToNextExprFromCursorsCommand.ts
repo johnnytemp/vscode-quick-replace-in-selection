@@ -15,7 +15,7 @@ export class SelectUpToNextExprFromCursorsCommand extends SelectMatchesCommandBa
     if (error || !regexp) {
       return error;
     }
-    let nthOccurrence = this.getNthOccurrenceFromOptions(options);
+    let { nthOccurrence } = this.extractCommonOptions(options);
     // let hasGlobalFlag = regexp.global;
     /* let numSelections = selections.length;
     let isUseWholeDocumentSelection = numSelections <= 1 && (numSelections === 0 || selections[0].isEmpty);
