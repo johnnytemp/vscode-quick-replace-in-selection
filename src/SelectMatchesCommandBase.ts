@@ -75,6 +75,7 @@ export class SelectMatchesCommandBase extends SearchOrReplaceCommandBase {
     if (newSelections.length > 0) {
       // console.log('Select In Selection: ' + newSelections.length + " matches found in " + editor.selections.length + " selections.");
       if (deleteFlag) {
+        editor.selections = newSelections;
         this.replaceTexts(editor, newSelections, []);
       } else if (alignFlag) {
         this.alignSelections(editor, newSelections);
@@ -97,18 +98,18 @@ export class SelectMatchesCommandBase extends SearchOrReplaceCommandBase {
     }
     let aligningSelections: Selection[] = [];
     let alignTexts: string[] = [];
-    let alignedSelections: Selection[] = [];
+    // let alignedSelections: Selection[] = [];
     for (let sel of newSelections) {
       let start = sel.start;
       let gapLength = maxColumn - start.character;
-      if (gapLength > 0) {
+      // if (gapLength > 0) {
         aligningSelections.push(new Selection(start.line, start.character, start.line, start.character));
         alignTexts.push(''.padEnd(gapLength, ' '));
-      }
-      alignedSelections.push(new Selection(start.line, maxColumn, start.line, maxColumn));
+      // }
+      // alignedSelections.push(new Selection(start.line, maxColumn, start.line, maxColumn));
     }
+    editor.selections = aligningSelections;
     this.replaceTexts(editor, aligningSelections, alignTexts);
-    editor.selections = alignedSelections;
   }
 
   public computeSelection(editor: TextEditor, newSelections: Selection[], target: string, outInfo: any, flags?: string) : string | null {
