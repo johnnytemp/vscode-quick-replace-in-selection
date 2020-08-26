@@ -55,7 +55,7 @@ export class SelectMatchesByPatternCommand extends SelectMatchesCommandBase {
 
   public performCommandWithArgs(args : any) {
     if (typeof args === 'object' && args.patternName !== undefined) {
-      this.handleError(this.getSelectMatchesCommand(args).performSelection(args.patternName, this.addDefaultFlags(), true));
+      this.handleError(this.performSelectionWithRule(args.patternName, this.getSelectMatchesCommand(args), true));
       return;
     }
     this.performCommand();
