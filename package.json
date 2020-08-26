@@ -88,14 +88,41 @@
           "type": "object",
           "description": "The patterns for the commands which contain \"(Use pattern)...\"",
           "default": {
+            "Chained identifiers": {
+              "find": "[$]?\\w+(([.]|->|::)\\w+)*"
+            },
+            "CSV/TSV cells": {
+              "find": "[^\r\n,:;|\t]+"
+            },
             "Lines": {
               "find": "(?!(?<=\\n)$).*"
+            },
+            "Lines Starts": {
+              "find": "?1,2;(^|\n(?!$))()"
             },
             "No surrounding whitespaces": {
               "find": "\\S+(\\s+\\S+)*"
             },
+            "Non-whitespaces": {
+              "find": "\\S+"
+            },
+            "Simple expressions": {
+              "find": "((!!? ?)?[$]?\\w+( ?\\( ?\\))?|'[^'\r\n\\\\]*'|\"([^\"\\\\]+|\\\\.)*\"|`[^`\\\\]*`)(\\s*([-+*/.&|^?:[]|\\|\\||&&|::|->|[<>]=?|[!=]==?)\\s*((!!? ?)?[$]?\\w+( ?\\( ?\\))?|'[^'\r\n\\\\]*'|\"([^\"\\\\]+|\\\\.)*\"|`[^`\\\\]*`)(\\s*\\])?)*"
+            },
+            "Simple expressions + optional comma": {
+              "find": "?e;((!!? ?)?[$]?\\w+( ?\\( ?\\))?|'[^'\r\n\\\\]*'|\"([^\"\\\\]+|\\\\.)*\"|`[^`\\\\]*`)(\\s*([-+*/.&|^?:[]|\\|\\||&&|::|->|[<>]=?|[!=]==?)\\s*((!!? ?)?[$]?\\w+( ?\\( ?\\))?|'[^'\r\n\\\\]*'|\"([^\"\\\\]+|\\\\.)*\"|`[^`\\\\]*`)(\\s*\\])?)*(\\s*,\\s*)?"
+            },
+            "Simple strings": {
+              "find": "'[^'\r\n\\\\]*'|\"([^\"\\\\]+|\\\\.)*\"|`[^`\\\\]*`"
+            },
             "Whitespaces to non-whitespaces boundaries": {
               "find": "?1,2;(\\s+)()\\S"
+            },
+            "Word": {
+              "find": "\\b\\w+\\b"
+            },
+            "Word or $word": {
+              "find": "[$]?\\b\\w+\\b"
             }
           }
         }
