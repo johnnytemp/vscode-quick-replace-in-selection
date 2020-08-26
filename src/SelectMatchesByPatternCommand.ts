@@ -56,7 +56,7 @@ export class SelectMatchesByPatternCommand extends SelectMatchesCommandBase {
 
   public performCommandWithArgs(args : any) {
     if (typeof args === 'object' && args.patternName !== undefined) {
-      this.handleError(this.performSelectionWithRule(args.patternName, this.getSelectMatchesCommand(args), true, args.extraOptions));
+      this.handleError(this.performSelectionWithRule(args.patternName, this.getSelectMatchesCommand(args), false, args.extraOptions));
       return;
     }
     this.performCommand();
@@ -151,14 +151,14 @@ export class SelectMatchesByPatternCommand extends SelectMatchesCommandBase {
         if (extraOptions === undefined) {
           return;
         }
-        this.handleError(this.performSelectionWithRule(ruleName || '', selectMatchesCommand, false, extraOptions));
+        this.handleError(this.performSelectionWithRule(ruleName || '', selectMatchesCommand, true, extraOptions));
       });
       return;
     }
-    this.handleError(this.performSelectionWithRule(ruleName, selectMatchesCommand));
+    this.handleError(this.performSelectionWithRule(ruleName, selectMatchesCommand, true));
   }
 
-  public performSelectionWithRule(patternName: string, selectMatchesCommand : SelectMatchesCommandBase, isByArgs?: boolean, extraOptions?: string | undefined) : string | null {
+  public performSelectionWithRule(patternName: string, selectMatchesCommand : SelectMatchesCommandBase, fromUserInput?: boolean, extraOptions?: string | undefined) : string | null {
     let rule = this.lookupRule(patternName);
     if (!rule) {
       return 'No such pattern - ' + patternName;
@@ -171,7 +171,7 @@ export class SelectMatchesByPatternCommand extends SelectMatchesCommandBase {
       }
       regex = '?' + extraOptions + (matches[1] || '') + (matches[2] || (matches[3] ? '|' : '')) + (matches[3] || '') + ';' + regex.substr(matches[0].length);
     }
-    return selectMatchesCommand.performSelection(regex, this.getFlagsFromRule(rule), true);
+    return selectMatchesCommand.performSelection(regex, this.getFlagsFromRule(rule));
   }
 
   protected getFlagsFromRule(rule : SelectRule) : string {

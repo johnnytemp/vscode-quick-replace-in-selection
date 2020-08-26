@@ -36,7 +36,7 @@ export class SelectMatchesCommandBase extends SearchOrReplaceCommandBase {
 
   public performCommandWithArgs(args : any) {
     if (typeof args === 'object' && args.target !== undefined) {
-      this.handleError(this.performSelection(args.target, this.addDefaultFlags(), true));
+      this.handleError(this.performSelection(args.target, this.addDefaultFlags()));
     } else {
       this.performCommand();
     }
@@ -49,13 +49,13 @@ export class SelectMatchesCommandBase extends SearchOrReplaceCommandBase {
     }).then((target: string | undefined) => {
       if (target !== undefined) {
         this.getModule().setLastSelectCommand(this);
-        this.handleError(this.performSelection(target, this.addDefaultFlags()));
+        this.handleError(this.performSelection(target, this.addDefaultFlags(), true));
       }
     });
   }
 
-  public performSelection(target: string, flags?: string, isByArgs?: boolean) : string | null {
-    if (!isByArgs && this.getCommandType() === 'input') {
+  public performSelection(target: string, flags?: string, fromUserInput?: boolean) : string | null {
+    if (fromUserInput && this.getCommandType() === 'input') {
       this.setLastSelectSearchTarget(target);
     }
     if (target === '') { // this special case is for clear history

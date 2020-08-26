@@ -20,7 +20,7 @@ export class QuickReplaceInSelectionCommand extends SearchOrReplaceCommandBase {
 
   public performCommandWithArgs(args : any) {
     if (typeof args === 'object' && args.target !== undefined && args.replacement !== undefined) {
-      this.handleError(this.performReplacement([args.target], [args.replacement], this.addDefaultFlags(), true));
+      this.handleError(this.performReplacement([args.target], [args.replacement], this.addDefaultFlags()));
     } else {
       this.performCommand();
     }
@@ -38,7 +38,7 @@ export class QuickReplaceInSelectionCommand extends SearchOrReplaceCommandBase {
         }).then((replacement: string | undefined) => {
           if (replacement !== undefined) {
             this.getModule().setLastCommand(this);
-            this.handleError(this.performReplacement([target], [replacement], this.addDefaultFlags()));
+            this.handleError(this.performReplacement([target], [replacement], this.addDefaultFlags(), true));
           }
         });
       }
@@ -61,11 +61,11 @@ export class QuickReplaceInSelectionCommand extends SearchOrReplaceCommandBase {
   }
 
   /// @param flags won't further add default flags 'g'
-  public performReplacement(targets: string[], replacements: string[], flags?: string, isByArgs?: boolean) : string | null {
+  public performReplacement(targets: string[], replacements: string[], flags?: string, fromUserInput?: boolean) : string | null {
     if (targets.length === 0 || targets.length !== replacements.length) {
       return 'Invalid count of find/replace parameters';
     }
-    if (!isByArgs && this.getCommandType() === 'input') {
+    if (fromUserInput && this.getCommandType() === 'input') {
       QuickReplaceInSelectionCommand.lastTarget = targets[0];
       QuickReplaceInSelectionCommand.lastReplacement = replacements[0];
     }
