@@ -1,6 +1,7 @@
 import { window } from 'vscode';
 import { SelectRule } from './SelectMatchesOrAdjustSelectionConfig';
 import { SelectMatchesCommandBase } from './SelectMatchesCommandBase';
+import { SelectMatchesOrAdjustSelectionModule } from './SelectMatchesOrAdjustSelectionModule';
 
 /**
  * SelectMatchesByPatternCommand class
@@ -55,7 +56,7 @@ export class SelectMatchesByPatternCommand extends SelectMatchesCommandBase {
 
   public performCommandWithArgs(args : any) {
     if (typeof args === 'object' && args.patternName !== undefined) {
-      this.handleError(this.performSelectionWithRule(args.patternName, this.getSelectMatchesCommand(args), true));
+      this.handleError(this.performSelectionWithRule(args.patternName, this.getSelectMatchesCommand(args), true, args.extraOptions));
       return;
     }
     this.performCommand();
@@ -97,44 +98,80 @@ export class SelectMatchesByPatternCommand extends SelectMatchesCommandBase {
 
   public performCommandWithSelectCommand(selectMatchesCommand: SelectMatchesCommandBase) {
     let module = this.getModule();
-
-    let rules = module.getConfig().getSelectRules();
     let lastRuleName = this.getLastSelectRuleName();
+    this.showRuleChooser(module, lastRuleName, false).then((ruleName : string | undefined) => {
+      if (ruleName === '( Additional Options for Pattern... )') {
+        this.showRuleChooser(module, lastRuleName, true).then((ruleName : string | undefined) => {
+          this.onRuleChosen(module, selectMatchesCommand, ruleName, lastRuleName, true);
+        });
+        return;
+      }
+      this.onRuleChosen(module, selectMatchesCommand, ruleName, lastRuleName, false);
+    });
+  }
+
+  protected showRuleChooser(module : SelectMatchesOrAdjustSelectionModule, lastRuleName : string, isAdditionalOptionsForPattern : boolean) : Thenable<string | undefined> {
+    let rules = module.getConfig().getSelectRules();
+    // let lastRuleName = this.getLastSelectRuleName();
 
     let ruleNames = [];
     if (lastRuleName !== '') {
       ruleNames.push('( Last Pattern: ' + lastRuleName + ' )');
     }
-    ruleNames.push('( Input Expressions )');
+    ruleNames.push('( Input Expressions... )');
+    if (!isAdditionalOptionsForPattern) {
+      ruleNames.push('( Additional Options for Pattern... )');
+    }
     ruleNames = ruleNames.concat(Object.keys(rules));
 
-    window.showQuickPick(ruleNames, {
+    return window.showQuickPick(ruleNames, {
       placeHolder: 'Choose Pattern to Select or Esc to cancel...'
-    }).then((ruleName : string | undefined) => {
-      if (ruleName === undefined) {
-        return;
-      }
-      if (ruleName.startsWith('( Last Pattern: ')) {
-        ruleName = lastRuleName;
-      } else if (ruleName === '( Input Expressions )') {
-        this.setLastSelectRuleName(''); // also clear last rule, so that '( Input Expressions )' is the first item for faster re-run.
-        module.setLastSelectCommand(null);
-        selectMatchesCommand.performCommand();
-        return;
-      } else {
-        this.setLastSelectRuleName(ruleName);
-      }
-      module.setLastSelectCommand(this);
-      this.handleError(this.performSelectionWithRule(ruleName, selectMatchesCommand));
     });
   }
 
-  public performSelectionWithRule(patternName: string, selectMatchesCommand : SelectMatchesCommandBase, isByArgs?: boolean) : string | null {
+  protected onRuleChosen(module : SelectMatchesOrAdjustSelectionModule, selectMatchesCommand : SelectMatchesCommandBase, ruleName : string | undefined, lastRuleName : string, isAdditionalOptionsForPattern : boolean) {
+    if (ruleName === undefined) {
+      return;
+    }
+    if (ruleName.startsWith('( Last Pattern: ')) {
+      ruleName = lastRuleName;
+    } else if (ruleName === '( Input Expressions... )') {
+      this.setLastSelectRuleName(''); // also clear last rule, so that '( Input Expressions... )' is the first item for faster re-run.
+      module.setLastSelectCommand(null);
+      selectMatchesCommand.performCommand();
+      return;
+    } else {
+      this.setLastSelectRuleName(ruleName);
+    }
+    module.setLastSelectCommand(this);
+    if (isAdditionalOptionsForPattern) {
+      window.showInputBox({
+        placeHolder: 'Additional options (e.g. "4d")',
+      }).then((extraOptions : string | undefined) => {
+        if (extraOptions === undefined) {
+          return;
+        }
+        this.handleError(this.performSelectionWithRule(ruleName || '', selectMatchesCommand, false, extraOptions));
+      });
+      return;
+    }
+    this.handleError(this.performSelectionWithRule(ruleName, selectMatchesCommand));
+  }
+
+  public performSelectionWithRule(patternName: string, selectMatchesCommand : SelectMatchesCommandBase, isByArgs?: boolean, extraOptions?: string | undefined) : string | null {
     let rule = this.lookupRule(patternName);
     if (!rule) {
       return 'No such pattern - ' + patternName;
     }
-    return selectMatchesCommand.performSelection(rule.find || '', this.getFlagsFromRule(rule), isByArgs);
+    let regex : string = rule.find || '';
+    if (extraOptions && extraOptions.length > 0 && extraOptions.match(/^[-,=|_A-Za-z0-9]+$/)) {
+      let matches = regex.match(/^\?([0-9a-zA-Z](?=[|;]))?([|])?([-,=|_A-Za-z0-9]*);/);
+      if (!matches) {
+        matches = [''];
+      }
+      regex = '?' + extraOptions + (matches[1] || '') + (matches[2] || (matches[3] ? '|' : '')) + (matches[3] || '') + ';' + regex.substr(matches[0].length);
+    }
+    return selectMatchesCommand.performSelection(regex, this.getFlagsFromRule(rule), true);
   }
 
   protected getFlagsFromRule(rule : SelectRule) : string {

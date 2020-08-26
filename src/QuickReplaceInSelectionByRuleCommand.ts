@@ -27,7 +27,7 @@ export class QuickReplaceInSelectionByRuleCommand extends QuickReplaceInSelectio
     if (lastRuleName !== '') {
       ruleNames.push('( Last Rule: ' + lastRuleName + ' )');
     }
-    ruleNames.push('( Input Expressions )');
+    ruleNames.push('( Input Expressions... )');
     ruleNames = ruleNames.concat(Object.keys(rules));
 
     window.showQuickPick(ruleNames, {
@@ -38,8 +38,8 @@ export class QuickReplaceInSelectionByRuleCommand extends QuickReplaceInSelectio
       }
       if (ruleName.startsWith('( Last Rule: ')) {
         ruleName = lastRuleName;
-      } else if (ruleName === '( Input Expressions )') {
-        QuickReplaceInSelectionByRuleCommand.lastRuleName = ''; // also clear last rule, so that '( Input Expressions )' is the first item for faster re-run.
+      } else if (ruleName === '( Input Expressions... )') {
+        QuickReplaceInSelectionByRuleCommand.lastRuleName = ''; // also clear last rule, so that '( Input Expressions... )' is the first item for faster re-run.
         module.setLastCommand(null);
         module.getQuickReplaceCommand().performCommand();
         return;
