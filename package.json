@@ -96,13 +96,13 @@
             "Chained identifiers": {
               "find": "[$]?\\w+(([.]|->|::)\\w+)*"
             },
-            "CSV/TSV cells": {
+            "CSV/TSV cell": {
               "find": "[^\r\n,:;|\t]+"
             },
-            "Lines": {
+            "Line": {
               "find": "(?<=^|\n)(?!(?<=\\n)$).*"
             },
-            "Lines Starts": {
+            "Line Start": {
               "find": "(?<=^|\n(?!$))"
             },
             "No surrounding whitespaces": {
@@ -111,16 +111,16 @@
             "Non-whitespaces": {
               "find": "\\S+"
             },
-            "Simple expressions": {
+            "Simple expression": {
               "find": "((!!? ?)?[$]?\\w+( ?\\( ?\\))?|'[^'\r\n\\\\]*'|\"([^\"\\\\]+|\\\\.)*\"|`[^`\\\\]*`)(\\s*([-+*/.&|^?:[]|\\|\\||&&|::|->|[<>]=?|[!=]==?)\\s*((!!? ?)?[$]?\\w+( ?\\( ?\\))?|'[^'\r\n\\\\]*'|\"([^\"\\\\]+|\\\\.)*\"|`[^`\\\\]*`)(\\s*\\])?)*"
             },
-            "Simple expressions + optional comma": {
+            "Simple expression + optional comma": {
               "find": "?e;((!!? ?)?[$]?\\w+( ?\\( ?\\))?|'[^'\r\n\\\\]*'|\"([^\"\\\\]+|\\\\.)*\"|`[^`\\\\]*`)(\\s*([-+*/.&|^?:[]|\\|\\||&&|::|->|[<>]=?|[!=]==?)\\s*((!!? ?)?[$]?\\w+( ?\\( ?\\))?|'[^'\r\n\\\\]*'|\"([^\"\\\\]+|\\\\.)*\"|`[^`\\\\]*`)(\\s*\\])?)*(\\s*,\\s*)?"
             },
-            "Simple strings": {
+            "Simple string": {
               "find": "'[^'\r\n\\\\]*'|\"([^\"\\\\]+|\\\\.)*\"|`[^`\\\\]*`"
             },
-            "Whitespaces to non-whitespaces boundaries": {
+            "Whitespaces to non-whitespaces boundary": {
               "find": "?1,2;(\\s+)()\\S"
             },
             "Word": {
