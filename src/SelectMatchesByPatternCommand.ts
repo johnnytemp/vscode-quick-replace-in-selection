@@ -117,9 +117,12 @@ export class SelectMatchesByPatternCommand extends SelectMatchesCommandBase {
     let ruleNames = [];
     if (lastRuleName !== '') {
       ruleNames.push('( Last Pattern: ' + lastRuleName + ' )');
-    }
-    ruleNames.push('( Input Expressions... )');
-    if (!isAdditionalOptionsForPattern) {
+      if (!isAdditionalOptionsForPattern) {
+        ruleNames.push('( Additional Options for Pattern... )'); // always second item for easy access with Down-Arrow, Enter
+        ruleNames.push('( Input Expressions... )'); // can access by typing "in", Enter. Input expressions alerady needs typing, so shouldn't be annoyed of typing "in".
+      }
+    } else if (!isAdditionalOptionsForPattern) {
+      ruleNames.push('( Input Expressions... )');
       ruleNames.push('( Additional Options for Pattern... )');
     }
     ruleNames = ruleNames.concat(Object.keys(rules));
@@ -146,7 +149,7 @@ export class SelectMatchesByPatternCommand extends SelectMatchesCommandBase {
     module.setLastSelectCommand(this);
     if (isAdditionalOptionsForPattern) {
       window.showInputBox({
-        placeHolder: 'Additional options (e.g. "4d")',
+        placeHolder: 'Additional options (e.g. "4" for 4th occurrence; "4d" to delete it)',
       }).then((extraOptions : string | undefined) => {
         if (extraOptions === undefined) {
           return;
