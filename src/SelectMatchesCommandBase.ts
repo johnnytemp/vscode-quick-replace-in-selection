@@ -116,12 +116,13 @@ export class SelectMatchesCommandBase extends SearchOrReplaceCommandBase {
     return null; // to be overridden
   }
 
-  protected extractCommonOptions(options: SelectMatchesOptions) : { nthOccurrence: number, deleteFlag: boolean, alignFlag: boolean } {
+  protected extractCommonOptions(options: SelectMatchesOptions) : { nthOccurrence: number, deleteFlag: boolean, alignFlag: boolean, movedNextFlag: boolean } {
     let nthOccurrence = parseInt(options.optionFlags);
     nthOccurrence = isNaN(nthOccurrence) ? 0 : nthOccurrence;
     let deleteFlag = options.optionFlags.indexOf('d') !== -1;
     let alignFlag = options.optionFlags.indexOf('a') !== -1;
-    return { nthOccurrence, deleteFlag, alignFlag };
+    let movedNextFlag = options.optionFlags.indexOf('M') !== -1;
+    return { nthOccurrence, deleteFlag, alignFlag, movedNextFlag };
   }
 
   public parseOptionsAndBuildRegexes(editor: TextEditor, target: string, outInfo: any, flags: string | undefined) {
