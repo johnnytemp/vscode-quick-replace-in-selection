@@ -1,3 +1,4 @@
+import { ExtensionContext, commands } from 'vscode';
 import { SelectMatchesOrAdjustSelectionConfig } from './SelectMatchesOrAdjustSelectionConfig';
 import { SelectExprInSelectionCommand } from './SelectExprInSelectionCommand';
 import { SelectNextExprFromCursorsCommand } from './SelectNextExprFromCursorsCommand';
@@ -105,5 +106,44 @@ export class SelectMatchesOrAdjustSelectionModule {
     this.getSelectInSelectionCommand().clearHistory();
     this.getSelectMatchesByPatternCommand().clearHistory();
     this.setLastSelectCommand(null);
+  }
+
+  public onActivateExtension(context: ExtensionContext) {
+    this.getConfig().reloadConfig();
+
+    context.subscriptions.push(commands.registerCommand('selectMatchesOrAdjustSelection.selectMatchesInSelection', (args?: {}) => {
+      this.getSelectInSelectionCommand().performCommandWithArgs(args);
+    }));
+    context.subscriptions.push(commands.registerCommand('selectMatchesOrAdjustSelection.selectMatchesInLineSelections', (args?: {}) => {
+      this.getSelectInLineSelectionsCommand().performCommandWithArgs(args);
+    }));
+    context.subscriptions.push(commands.registerCommand('selectMatchesOrAdjustSelection.selectNextMatchesFromCursors', (args?: {}) => {
+      this.getSelectNextExCommand().performCommandWithArgs(args);
+    }));
+    context.subscriptions.push(commands.registerCommand('selectMatchesOrAdjustSelection.selectUpToNextMatchesFromCursors', (args?: {}) => {
+      this.getSelectUpToNextExCommand().performCommandWithArgs(args);
+    }));
+
+    context.subscriptions.push(commands.registerCommand('selectMatchesOrAdjustSelection.selectMatchesByPattern', (args?: {}) => {
+      this.getSelectMatchesByPatternCommand().performCommandWithArgs(args);
+    }));
+    context.subscriptions.push(commands.registerCommand('selectMatchesOrAdjustSelection.repeatLastSelectMatches', () => {
+      this.getSelectMatchesRepeatLastCommand().performCommand();
+    }));
+
+    context.subscriptions.push(commands.registerCommand('selectMatchesOrAdjustSelection.unselectSurroundingWhitespaces', () => {
+      this.getSelectInSelectionCommand().performCommandWithArgs({
+        target: "\\S+(\\s+\\S+)*"
+      });
+    }));
+    context.subscriptions.push(commands.registerCommand('selectMatchesOrAdjustSelection.normalizeSelection', () => {
+      this.getSelectInSelectionCommand().performCommandWithArgs({
+        target: "?1,2;?s-g (\\s*)(.*\\S)?"
+      });
+    }));
+  }
+
+  public onDeactivateExtension() {
+    this.clearHistory();
   }
 }

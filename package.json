@@ -103,7 +103,7 @@
               "find": "(?<=^|\n)(?!(?<=\\n)$).*"
             },
             "Lines Starts": {
-              "find": "?1,2;(^|\n(?!$))()"
+              "find": "(?<=^|\n(?!$))"
             },
             "No surrounding whitespaces": {
               "find": "\\S+(\\s+\\S+)*"

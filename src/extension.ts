@@ -13,44 +13,13 @@ export function activate(context: vscode.ExtensionContext) {
   // This line of code will only be executed once when your extension is activated
   // console.log('Congratulations, your extension "quick-replace-in-selection" is now active!');
 
-  // let replaceInSelection = new QuickReplaceInSelectionCommand();
-  module.getConfig().reloadConfig();
-
   // The command has been defined in the package.json file
   // Now provide the implementation of the command with registerCommand
   // The commandId parameter must match the command field in package.json
-  context.subscriptions.push(vscode.commands.registerCommand('selectMatchesOrAdjustSelection.selectMatchesInSelection', (args?: {}) => {
-    module.getSelectInSelectionCommand().performCommandWithArgs(args);
-  }));
-  context.subscriptions.push(vscode.commands.registerCommand('selectMatchesOrAdjustSelection.selectMatchesInLineSelections', (args?: {}) => {
-    module.getSelectInLineSelectionsCommand().performCommandWithArgs(args);
-  }));
-  context.subscriptions.push(vscode.commands.registerCommand('selectMatchesOrAdjustSelection.selectNextMatchesFromCursors', (args?: {}) => {
-    module.getSelectNextExCommand().performCommandWithArgs(args);
-  }));
-  context.subscriptions.push(vscode.commands.registerCommand('selectMatchesOrAdjustSelection.selectUpToNextMatchesFromCursors', (args?: {}) => {
-    module.getSelectUpToNextExCommand().performCommandWithArgs(args);
-  }));
-  context.subscriptions.push(vscode.commands.registerCommand('selectMatchesOrAdjustSelection.unselectSurroundingWhitespaces', () => {
-    module.getSelectInSelectionCommand().performCommandWithArgs({
-      target: "\\S+(\\s+\\S+)*"
-    });
-  }));
-  context.subscriptions.push(vscode.commands.registerCommand('selectMatchesOrAdjustSelection.normalizeSelection', () => {
-    module.getSelectInSelectionCommand().performCommandWithArgs({
-      target: "?1,2;?s-g (\\s*)(.*\\S)?"
-    });
-  }));
-
-  context.subscriptions.push(vscode.commands.registerCommand('selectMatchesOrAdjustSelection.selectMatchesByPattern', (args?: {}) => {
-    module.getSelectMatchesByPatternCommand().performCommandWithArgs(args);
-  }));
-  context.subscriptions.push(vscode.commands.registerCommand('selectMatchesOrAdjustSelection.repeatLastSelectMatches', () => {
-    module.getSelectMatchesRepeatLastCommand().performCommand();
-  }));
+  module.onActivateExtension(context);
 }
 
 // this method is called when your extension is deactivated
 export function deactivate() {
-  module.clearHistory();
+  module.onDeactivateExtension();
 }
