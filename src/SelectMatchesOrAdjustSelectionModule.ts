@@ -4,6 +4,7 @@ import { SelectNextExprFromCursorsCommand } from './SelectNextExprFromCursorsCom
 import { SelectUpToNextExprFromCursorsCommand } from './SelectUpToNextExprFromCursorsCommand';
 import { SelectExprInLineSelectionsCommand } from './SelectExprInLineSelectionsCommand';
 import { SelectMatchesByPatternCommand } from './SelectMatchesByPatternCommand';
+import { SelectMatchesRepeatLastCommand } from './SelectMatchesRepeatLastCommand';
 import { SelectMatchesCommandBase } from './SelectMatchesCommandBase';
 
 export class SelectMatchesOrAdjustSelectionModule {
@@ -15,6 +16,7 @@ export class SelectMatchesOrAdjustSelectionModule {
   private _selectUpToNextExprFromCursorsCommand : SelectUpToNextExprFromCursorsCommand;
   private _selectExprInLineSelectionsCommand : SelectExprInLineSelectionsCommand;
   private _selectMatchesByPatternCommand : SelectMatchesByPatternCommand;
+  private _selectMatchesRepeatLastCommand : SelectMatchesRepeatLastCommand;
 
   private static _instance : SelectMatchesOrAdjustSelectionModule | undefined;
 
@@ -33,6 +35,7 @@ export class SelectMatchesOrAdjustSelectionModule {
     this._selectUpToNextExprFromCursorsCommand = new SelectUpToNextExprFromCursorsCommand();
     this._selectExprInLineSelectionsCommand = new SelectExprInLineSelectionsCommand();
     this._selectMatchesByPatternCommand = new SelectMatchesByPatternCommand();
+    this._selectMatchesRepeatLastCommand = new SelectMatchesRepeatLastCommand();
   }
 
   public getConfig() : SelectMatchesOrAdjustSelectionConfig {
@@ -86,8 +89,16 @@ export class SelectMatchesOrAdjustSelectionModule {
     }
   }
 
+  public getDefaultInputAndSelectCommand() : SelectMatchesCommandBase {
+    return this.getSelectInSelectionCommand();
+  }
+
   public getSelectMatchesByPatternCommand() : SelectMatchesByPatternCommand {
     return this._selectMatchesByPatternCommand;
+  }
+
+  public getSelectMatchesRepeatLastCommand() : SelectMatchesRepeatLastCommand {
+    return this._selectMatchesRepeatLastCommand;
   }
 
   public clearHistory() {

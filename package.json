@@ -38,6 +38,7 @@
     "onCommand:selectMatchesOrAdjustSelection.selectNextMatchesFromCursors",
     "onCommand:selectMatchesOrAdjustSelection.selectUpToNextMatchesFromCursors",
     "onCommand:selectMatchesOrAdjustSelection.selectMatchesByPattern",
+    "onCommand:selectMatchesOrAdjustSelection.repeatLastSelectMatches",
     "onCommand:selectMatchesOrAdjustSelection.unselectSurroundingWhitespaces",
     "onCommand:selectMatchesOrAdjustSelection.normalizeSelection"
   ],
@@ -63,6 +64,10 @@
       {
         "command": "selectMatchesOrAdjustSelection.selectMatchesByPattern",
         "title": "Select Matches Using Pattern (or input)..."
+      },
+      {
+        "command": "selectMatchesOrAdjustSelection.repeatLastSelectMatches",
+        "title": "Select Matches (Repeat Last)"
       },
       {
         "command": "selectMatchesOrAdjustSelection.unselectSurroundingWhitespaces",

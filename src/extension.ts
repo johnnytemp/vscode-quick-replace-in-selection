@@ -45,6 +45,9 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(vscode.commands.registerCommand('selectMatchesOrAdjustSelection.selectMatchesByPattern', (args?: {}) => {
     module.getSelectMatchesByPatternCommand().performCommandWithArgs(args);
   }));
+  context.subscriptions.push(vscode.commands.registerCommand('selectMatchesOrAdjustSelection.repeatLastSelectMatches', () => {
+    module.getSelectMatchesRepeatLastCommand().performCommand();
+  }));
 }
 
 // this method is called when your extension is deactivated

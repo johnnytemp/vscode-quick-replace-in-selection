@@ -10,6 +10,7 @@ export class SelectMatchesByPatternCommand extends SelectMatchesCommandBase {
   private static lastRuleName : string = '';
   private _lastPatternSelectMethod : SelectMatchesCommandBase | null;
   private _underlyingCommand : SelectMatchesCommandBase | undefined;
+  private _lastExtraOptions : string = '';
 
   public constructor(command?: SelectMatchesCommandBase) {
     super();
@@ -52,6 +53,7 @@ export class SelectMatchesByPatternCommand extends SelectMatchesCommandBase {
   public clearHistory() {
     this.setLastSelectRuleName('');
     this.setLastPatternSelectMethod(null);
+    this._lastExtraOptions = '';
   }
 
   public performCommandWithArgs(args : any) {
@@ -60,6 +62,13 @@ export class SelectMatchesByPatternCommand extends SelectMatchesCommandBase {
       return;
     }
     this.performCommand();
+  }
+
+  public repeatCommand() {
+    let module = this.getModule();
+    let lastRuleName = this.getLastSelectRuleName();
+    let lastSelectCommand = this.getLastPatternSelectMethod();
+    this.handleError(this.performSelectionWithRule(lastRuleName, lastSelectCommand || module.getDefaultInputAndSelectCommand(), false, this._lastExtraOptions));
   }
 
   public performCommand() {
@@ -162,6 +171,9 @@ export class SelectMatchesByPatternCommand extends SelectMatchesCommandBase {
   }
 
   public performSelectionWithRule(patternName: string, selectMatchesCommand : SelectMatchesCommandBase, fromUserInput?: boolean, extraOptions?: string | undefined) : string | null {
+    if (fromUserInput) {
+      this._lastExtraOptions = extraOptions || '';
+    }
     let rule = this.lookupRule(patternName);
     if (!rule) {
       return 'No such pattern - ' + patternName;

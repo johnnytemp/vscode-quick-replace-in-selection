@@ -42,6 +42,10 @@ export class SelectMatchesCommandBase extends SearchOrReplaceCommandBase {
     }
   }
 
+  public repeatCommand() {
+    this.handleError(this.performSelection(this.getLastSelectSearchTarget(), this.addDefaultFlags()));
+  }
+
   public performCommand() {
     window.showInputBox({
       placeHolder: 'Target to select (regex)',
