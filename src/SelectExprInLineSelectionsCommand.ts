@@ -48,7 +48,7 @@ export class SelectExprInLineSelectionsCommand extends SelectMatchesCommandBase 
           }
         }
         if (regexp.lastIndex === searchStart) { // avoid searching stick at same position
-          regexp.lastIndex += 1;
+          regexp.lastIndex += source.substr(searchStart, 2) === "\r\n" ? 2 : 1;
         }
         searchStart = regexp.lastIndex;
       }

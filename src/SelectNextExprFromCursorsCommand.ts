@@ -31,28 +31,26 @@ export class SelectNextExprFromCursorsCommand extends SelectMatchesCommandBase {
       regexp.lastIndex = document.offsetAt(selection.end);
       let searchStart = regexp.lastIndex;
       let n = 0;
-      let count = nthOccurrence;
+      let remain = nthOccurrence;
       while ((arrMatch = regexp.exec(source))) {
         shouldExtends = shouldExtends && arrMatch.index === searchStart;
-        if (count > 0 && --count > 0) {
-          searchStart = regexp.lastIndex;
-          continue;
+        if (remain > 0) {
+          --remain;
         }
-        let offsetStart = (arrMatch.index || 0) + this.getCaptureGroupLength(arrMatch, options.skipGroup);
-        let offsetEnd = offsetStart + this.getCaptureGroupLength(arrMatch, options.selectGroup);
-        let newSelection = new Selection(
-          shouldExtends ? selection.start : document.positionAt(offsetStart),
-          document.positionAt(offsetEnd)
-        );
-        newSelections.push(newSelection);
-        break;
-        /* if (!hasGlobalFlag) {
+        if (remain === 0) {
+          let offsetStart = (arrMatch.index || 0) + this.getCaptureGroupLength(arrMatch, options.skipGroup);
+          let offsetEnd = offsetStart + this.getCaptureGroupLength(arrMatch, options.selectGroup);
+          let newSelection = new Selection(
+            shouldExtends ? selection.start : document.positionAt(offsetStart),
+            document.positionAt(offsetEnd)
+          );
+          newSelections.push(newSelection);
           break;
         }
-        if (offsetEnd === offsetStart && regexp.lastIndex === searchStart) { // avoid searching stick at same position
-          regexp.lastIndex += 1;
+        if (regexp.lastIndex === searchStart) { // avoid searching stick at same position
+          regexp.lastIndex += source.substr(searchStart, 2) === "\r\n" ? 2 : 1;
         }
-        searchStart = regexp.lastIndex; */
+        searchStart = regexp.lastIndex;
       }
     }
     return null;
