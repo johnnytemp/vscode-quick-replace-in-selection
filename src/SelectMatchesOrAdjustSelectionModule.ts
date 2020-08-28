@@ -1,4 +1,4 @@
-import { ExtensionContext, commands } from 'vscode';
+import { ExtensionContext, TextDocument, Selection, commands, window } from 'vscode';
 import { SelectMatchesOrAdjustSelectionConfig } from './SelectMatchesOrAdjustSelectionConfig';
 import { SelectExprInSelectionCommand } from './SelectExprInSelectionCommand';
 import { SelectNextExprFromCursorsCommand } from './SelectNextExprFromCursorsCommand';
@@ -7,6 +7,7 @@ import { SelectExprInLineSelectionsCommand } from './SelectExprInLineSelectionsC
 import { SelectMatchesByPatternCommand } from './SelectMatchesByPatternCommand';
 import { SelectMatchesRepeatLastCommand } from './SelectMatchesRepeatLastCommand';
 import { SelectMatchesCommandBase } from './SelectMatchesCommandBase';
+import * as helper from './helper';
 
 export class SelectMatchesOrAdjustSelectionModule {
   private _config : SelectMatchesOrAdjustSelectionConfig;
@@ -136,8 +137,15 @@ export class SelectMatchesOrAdjustSelectionModule {
         target: "\\S+(\\s+\\S+)*"
       });
     }));
+
+    let normalizeHelperCommand = new SelectExprInSelectionCommand();
+    normalizeHelperCommand.setSelectionPreProcessor((document : TextDocument, selections : Selection[]) => {
+      selections = helper.expandSelectionForIncompleteWordsAtBoundariesOrShiftInWordCursorsToWordStart(document, selections);
+      selections = helper.shiftOrExtendsInWhitespacesCursorsOrSelectionEndsToNextNonWhitespaces(document, selections);
+      return selections;
+    });
     context.subscriptions.push(commands.registerCommand('selectMatchesOrAdjustSelection.normalizeSelection', () => {
-      this.getSelectInSelectionCommand().performCommandWithArgs({
+      normalizeHelperCommand.performCommandWithArgs({
         target: "?1,2;?s-g (\\s*)(.*\\S)?"
       });
     }));

@@ -1,4 +1,4 @@
-import { window, TextEditor, Selection } from 'vscode';
+import { window, TextEditor, TextDocument, Selection } from 'vscode';
 import { SearchOrReplaceCommandBase } from './SearchOrReplaceCommandBase';
 import { SelectMatchesOrAdjustSelectionModule } from './SelectMatchesOrAdjustSelectionModule';
 
@@ -9,6 +9,18 @@ export type SelectMatchesOptions = { optionFlags : string, skipGroup: number | n
  */
 export class SelectMatchesCommandBase extends SearchOrReplaceCommandBase {
   static lastTarget : string = '';
+  private _selectionsPreProcessor : (document : TextDocument, selections : Selection[]) => Selection[];
+  private _selectionsPostProcessor : (document : TextDocument, newSelections : Selection[]) => void;
+
+  public constructor() {
+    super()
+    this._selectionsPreProcessor = (document, selections) => { return selections; };
+    this._selectionsPostProcessor = (document, newSelections) => { };
+  }
+
+  public setSelectionPreProcessor(processFunc : (document : TextDocument, selections : Selection[]) => Selection[]) {
+    this._selectionsPreProcessor = processFunc;
+  }
 
   public getCommandType() : string {
     return 'input';
@@ -71,10 +83,13 @@ export class SelectMatchesCommandBase extends SearchOrReplaceCommandBase {
     }
     let newSelections: Selection[] = [];
     let outInfo : any = { options: {}, regexp: {} };
-    let error = this.computeSelection(editor, newSelections, target, outInfo, flags);
+    let selections = editor.selections;
+    selections = this._selectionsPreProcessor(editor.document, selections);
+    let error = this.computeSelection(editor, selections, newSelections, target, outInfo, flags);
     if (error !== null) {
       return error;
     }
+    this._selectionsPostProcessor(editor.document, newSelections);
     let { deleteFlag, alignFlag } = this.extractCommonOptions(outInfo.options);
     if (newSelections.length > 0) {
       // console.log('Select In Selection: ' + newSelections.length + " matches found in " + editor.selections.length + " selections.");
@@ -116,7 +131,7 @@ export class SelectMatchesCommandBase extends SearchOrReplaceCommandBase {
     this.replaceTexts(editor, aligningSelections, alignTexts);
   }
 
-  public computeSelection(editor: TextEditor, newSelections: Selection[], target: string, outInfo: any, flags?: string) : string | null {
+  public computeSelection(editor: TextEditor, selections: Selection[], newSelections: Selection[], target: string, outInfo: any, flags?: string) : string | null {
     return null; // to be overridden
   }
 
@@ -142,8 +157,7 @@ export class SelectMatchesCommandBase extends SearchOrReplaceCommandBase {
       outInfo.regexp = regexp;
     }
     let document = editor.document;
-    let selections = editor.selections;
-    return { error, options, regexp, document, selections };
+    return { error, options, regexp, document };
   }
 
   /**

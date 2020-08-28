@@ -10,8 +10,8 @@ export class SelectUpToNextExprFromCursorsCommand extends SelectMatchesCommandBa
     return 'Up To Next Matches From Cursors';
   }
 
-  public computeSelection(editor: TextEditor, newSelections: Selection[], target: string, outInfo: any, flags?: string) : string | null {
-    let { error, options, regexp, document, selections } = this.parseOptionsAndBuildRegexes(editor, target, outInfo, flags);
+  public computeSelection(editor: TextEditor, selections: Selection[], newSelections: Selection[], target: string, outInfo: any, flags?: string) : string | null {
+    let { error, options, regexp, document } = this.parseOptionsAndBuildRegexes(editor, target, outInfo, flags);
     if (error || !regexp) {
       return error;
     }

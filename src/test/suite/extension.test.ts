@@ -129,6 +129,8 @@ suite('Extension Test Suite', () => {
     let selectInSelection = module.getSelectInSelectionCommand();
     let selectNextEx = module.getSelectNextExCommand();
     let selectUpToNextEx = module.getSelectUpToNextExCommand();
+    // let selectInLineSelections = module.getSelectInLineSelectionsCommand();
+    let selectByPattern = module.getSelectMatchesByPatternCommand();
 
     assert.deepEqual([new Selection(0, 0, 0, 0), new Selection(2, 0, 2, 0)], // cursors at start of 1st & 3rd lines
       editor.selections, 'initial selections');
@@ -144,5 +146,20 @@ suite('Extension Test Suite', () => {
     selectUpToNextEx.performCommandWithArgs({ target: "[a-z]" }); // extends selection up to next letter --> selects "n\\n"
     assert.deepEqual([new Selection(3, 1, 3, 5)],
       editor.selections, 'selections after Select Up To Next Matches From Cursors...');
+
+    editor.selections = [new Selection(0, 0, 2, 0)]; // select first two lines
+    selectByPattern.performCommandWithArgs({
+      patternName: "Line",
+      selectScope: "selectMatchesInLineSelections"
+    }); // select two lines, the 2nd is empty
+    assert.deepEqual([new Selection(0, 0, 0, 11), new Selection(1, 0, 1, 0)],
+      editor.selections, 'selections after Select All Matches In Line Selections, with pattern "Line"...');
+
+    selectByPattern.performCommandWithArgs({
+      patternName: "Line Start",
+      selectScope: "selectMatchesInLineSelections"
+    }); // select two lines' starts, both are empty
+    assert.deepEqual([new Selection(0, 0, 0, 0), new Selection(1, 0, 1, 0)],
+      editor.selections, 'selections after Select All Matches In Line Selections, with pattern "Line"...');
   });
 });
