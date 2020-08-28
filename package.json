@@ -80,6 +80,17 @@
     ],
     "keybindings": [
       {
+        "command": "selectMatchesOrAdjustSelection.selectMatchesByPattern",
+        "key": "ctrl+k ctrl+;",
+        "mac": "cmd+k cmd+;",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "selectMatchesOrAdjustSelection.repeatLastSelectMatches",
+        "key": "alt+;",
+        "when": "editorTextFocus"
+      },
+      {
         "command": "selectMatchesOrAdjustSelection.normalizeSelection",
         "key": "ctrl+shift+a",
         "mac": "cmd+shift+a",
