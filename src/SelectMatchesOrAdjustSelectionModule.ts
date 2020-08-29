@@ -134,7 +134,7 @@ export class SelectMatchesOrAdjustSelectionModule {
 
     context.subscriptions.push(commands.registerCommand('selectMatchesOrAdjustSelection.unselectSurroundingWhitespaces', () => {
       this.getSelectInSelectionCommand().performCommandWithArgs({
-        target: "\\S+(\\s+\\S+)*"
+        find: "\\S+(\\s+\\S+)*"
       });
     }));
 
@@ -146,7 +146,7 @@ export class SelectMatchesOrAdjustSelectionModule {
     });
     context.subscriptions.push(commands.registerCommand('selectMatchesOrAdjustSelection.normalizeSelection', () => {
       normalizeHelperCommand.performCommandWithArgs({
-        target: "?1,2;?s-g (\\s*)(.*\\S)?"
+        find: "?1,2;?s-g (\\s*)(.*\\S)?"
       });
     }));
 

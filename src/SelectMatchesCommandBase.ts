@@ -47,8 +47,8 @@ export class SelectMatchesCommandBase extends SearchOrReplaceCommandBase {
   }
 
   public performCommandWithArgs(args : any) {
-    if (typeof args === 'object' && args.target !== undefined) {
-      this.handleError(this.performSelection(args.target, this.addDefaultFlags()));
+    if (typeof args === 'object' && args.find !== undefined) {
+      this.handleError(this.performSelection(args.find, this.addDefaultFlags()));
     } else {
       this.performCommand();
     }

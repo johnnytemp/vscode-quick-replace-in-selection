@@ -1,22 +1,22 @@
 # Select Matches/Adjust Selection Using Regex Or Rules README
 
-This extension let you search and select the matches by a regular expression (regex) (or literal string[#3](#footnote3)), within the current selection, the whole document, or after cursors.
+A main feature of this extension are the various "Select Matches" commands. They let you search and select the matches by a regular expression (regex) (or literal string [#3](#footnote3)), within the current selection, the whole document, or after cursors. It also let you use *predefined patterns* to perform such selections. With these commands, you could do job like shrink selections, extends selections, move selections, etc.
 
-It also let you adjust selection by some *predefined rules* (or *patterns*) to be used. E.g. you could "Unselect Surrounding Whitespaces" and "Normalize Selection".
+Besides, it have some commands to make or adjust selections. E.g. you could do "Normalize Selection", which Unselect Surrounding Whitespaces and Expand the Incomplete Words. You could also select a `#hashtag` or `$variable` with a keyboard shortcut.
 
-**Note**: By default, all matches in the regex are *case sensitive* [#1](#footnote1), and `^`, `$`  match *text selection boundaries* instead of line boundaries [#2](#footnote2).
+**Note**: By default, for the "Select Matches" commands, all matches in the regex are *case sensitive* [#1](#footnote1), and `^`, `$`  match *text selection boundaries* instead of line boundaries [#2](#footnote2).
 
 ## Commands & Demo
 
-### "Select All Matches In Selection...", "Select Next Matches From Cursors..." and "Select Up To Next Matches From Cursors..."
+### "Select All Matches In Selection...", "Select All Matches In Line Selections...", "Select Next Matches From Cursors..." and "Select Up To Next Matches From Cursors..."
 
 ![Select Matches In Selection or From Cursors](https://github.com/johnnytemp/vscode-quick-replace-in-selection/raw/master/images/selectInSelectionOrFromCursors.gif)
 
-Remark: "Select All Matches In Selection..." also serve the purpose of "Find All In Selection".
+Remark: "Select All Matches In Selection..." is similar to "Find All In Selection".
 
 ## Features
 
-1. This extension use the regular expression that JavaScript support for search.
+- This extension mainly use the regular expression that JavaScript support for search.
 
     E.g. "select all matches in selection for  `.+`" would mean select any non-empty string (excluding newline characters), in the selected text(s).
 
@@ -24,10 +24,11 @@ Remark: "Select All Matches In Selection..." also serve the purpose of "Find All
 
     - https://medium.com/factory-mind/regex-tutorial-a-simple-cheatsheet-by-examples-649dc1c3f285
 
-2. You could also select only a substring of the match with the format "`?<skip group no.>,<select group no.>;`" in front of the regex input/parameter.  
-  E.g. An input "`?1,2;(<)(.*?)>`" will only select the text in-between a `< >` pair. "Group no" corresponds to regex's capture group. The "skip group" must start from the start and immediately followed by the "select group", otherwise the behavior is undefined.
+- You could also select only a substring of the match with the format "`?<skip group no.>,<select group no.>;`" in front of the regex input/parameter.
 
-3. Furthermore, there are some additional options for all the "Select Matches" commands, such as *nth-occurrence* and `d` for delete. The syntax is "`?[<nth-occurrence>][<option-flags>][|<skip group no.>,<select group no.>];<normal-regex>`". Current supported option flags are the following:
+    E.g. An input "`?1,2;(<)(.*?)>`" will only select the text in-between a `< >` pair. "Group no" corresponds to regex's capture group. The "skip group" must start from the regex pattern's beginning and immediately followed by the "select group", otherwise the behavior is undefined.
+
+- Furthermore, there are some additional options for all the "Select Matches" commands, such as *nth-occurrence* and `d` for delete. The "inline syntax" [#4](#footnote4) of them in the regex input box or `"find"` parameter is "`?[<nth-occurrence>][<option-flags>];<normal-regex>`". Current supported option flags are the following:
 
     - `d` - delete the selected matches.
     - `e` - e for extends (conditionally); only apply for "Select Next Matches From Cursors". This flag instruct the logic to (conditionally) extends non-empty selections if each visited occurrence (including the final match of each) is touching previous selection/occurrence.  
@@ -59,7 +60,7 @@ This extension contributes the following settings:
 Hints:
 
 - For how to define patterns in the configuration, you could look at the default patterns as examples. (`Ctrl-Shift-P` to open command palette, type "Open Default Settings (JSON)" & Enter, and search for `selectMatchesOrAdjustSelection.patterns`)
-- To hide a default pattern, add `"<Default Pattern Name>": false` inside `selectMatchesOrAdjustSelection.patterns`.
+- To hide a default pattern, add `"Pattern's Name": false` inside `selectMatchesOrAdjustSelection.patterns`.
 - You could make use of the default rules of the VS Code extension "Quick Replace In Selection" (by johnnywong), `Escape literal string for PCRE/extended regular expression` (optional) and then `Json stringify` and to put your regular expression in the `"find"` settings of `selectMatchesOrAdjustSelection.patterns`.
 - An experimental feature: to only replace the first match (instead of all matches) in each selection, put a leading "<code>?-g </code>" in the regex input box or `"find"` parameter.
 
@@ -83,7 +84,7 @@ Some default patterns are listed here:
     "command": "selectMatchesOrAdjustSelection.selectMatchesInSelection",
     "when": "editorTextFocus",
     "args": {
-        "target": "'[^'\\r\\n]*'"
+        "find": "'[^'\\r\\n]*'"
     }
 }
 ```
@@ -104,4 +105,9 @@ MIT - See [LICENSE](LICENSE)
 
 <a name="footnote1"></a>#1 - to do the opposite, type a leading "<code>?i </code>" before the regex in the input box (not a part of regex), or in the `"find"` value for patterns.  
 <a name="footnote2"></a>#2 - to do the opposite, type a leading "`+`" (preferred) or "<code>?m </code>" before the regex in the input box (not a part of regex), or in the `"find"` value for patterns.  
-<a name="footnote3"></a>#3 - to search with a *literal string*, add a leading "`*`" in the regex input box.
+<a name="footnote3"></a>#3 - to search with a *literal string*, add a leading "`*`" in the regex input box.  
+<a name="footnote4"></a>#4 - Such complete "inline syntax" is:  
+
+    "?" [<nth-occurrence>] [<option-flags>] [ "|" <skip group no.> "," <select group no.> ] ";" [ "?" <flags> " " | "+" | "*" ] <normal-regex>
+
+    where [ optional-1 | optional-2 ] are optional branches; "literal-characters" are literal characters; spaces are just for readability
