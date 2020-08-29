@@ -169,3 +169,37 @@ export function incrementBothBounds(document : TextDocument, selections : Select
   }
   return newSelections;
 }
+
+export function selectWordAndItsPrefixIfAny(document : TextDocument, selections : Selection[], wordPrefix: string) : Selection[] {
+  wordPrefix = wordPrefix.substr(0, 1); // first character, or empty string
+  let source = document.getText();
+  let newSelections : Selection[] = [];
+  let hasChanged = false;
+  for (let sel of selections) {
+    let pos = sel.start;
+    let offset = document.offsetAt(pos);
+    if (offset < source.length && source[offset] === wordPrefix) {
+      pos = document.positionAt(offset + 1);  // some language won't treat '$' as a word, so if cursor is at '$', move it right by 1 first to select the word there if any. (Otherwise, if no word there, doesn't select anything...)
+    }
+
+    // Info: for some languages like .js .ts .php, document.getWordRangeAtPosition() already include the '$', but the below is still worth it as it isn't guaranteed.
+    let wordRange = document.getWordRangeAtPosition(pos);
+    if (!wordRange) {
+      newSelections.push(sel);
+      continue;
+    }
+    let range = sel.union(wordRange);
+    let start = range.start;
+    offset = document.offsetAt(wordRange.start);
+    if (offset > 0 && source[offset - 1] === wordPrefix) {
+      start = document.positionAt(offset - 1);
+    }
+    sel = new Selection(start, range.end);
+    newSelections.push(sel);
+    hasChanged = true;
+  }
+  if (hasChanged) {
+    return newSelections;
+  }
+  return selections;
+}

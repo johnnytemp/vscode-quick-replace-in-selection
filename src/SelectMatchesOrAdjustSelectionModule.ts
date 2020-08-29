@@ -166,6 +166,20 @@ export class SelectMatchesOrAdjustSelectionModule {
       let newSelections = helper.incrementBothBounds(editor.document, editor.selections);
       editor.selections = newSelections;
     }));
+
+    context.subscriptions.push(commands.registerCommand('selectMatchesOrAdjustSelection.selectWordAndItsPrefixIfAny', (args?: string[]) => {
+      if (args === undefined) {
+        window.showInformationMessage('"Select Word and Its Prefix" need to be invoked by a key binding, and passed with the args of ["<prefix-character>"]');
+        return;
+      }
+      let editor = window.activeTextEditor;
+      if (!editor) {
+        return;
+      }
+      let prefix = args[0];
+      let newSelections = helper.selectWordAndItsPrefixIfAny(editor.document, editor.selections, prefix);
+      editor.selections = newSelections;
+    }));
   }
 
   public onDeactivateExtension() {

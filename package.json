@@ -42,7 +42,8 @@
     "onCommand:selectMatchesOrAdjustSelection.unselectSurroundingWhitespaces",
     "onCommand:selectMatchesOrAdjustSelection.normalizeSelection",
     "onCommand:selectMatchesOrAdjustSelection.incrementLeftBound",
-    "onCommand:selectMatchesOrAdjustSelection.incrementBothBounds"
+    "onCommand:selectMatchesOrAdjustSelection.incrementBothBounds",
+    "onCommand:selectMatchesOrAdjustSelection.selectWordAndItsPrefixIfAny"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -86,6 +87,10 @@
       {
         "command": "selectMatchesOrAdjustSelection.incrementBothBounds",
         "title": "Increment Selection Starts and Ends"
+      },
+      {
+        "command": "selectMatchesOrAdjustSelection.selectWordAndItsPrefixIfAny",
+        "title": "Select Word and Its Prefix"
       }
     ],
     "keybindings": [
@@ -117,6 +122,34 @@
         "key": "ctrl+k l",
         "mac": "cmd+k l",
         "when": "editorTextFocus"
+      },
+      {
+        "command": "selectMatchesOrAdjustSelection.selectWordAndItsPrefixIfAny",
+        "key": "ctrl+k 2",
+        "mac": "cmd+k 2",
+        "when": "editorTextFocus",
+        "args": ["@"]
+      },
+      {
+        "command": "selectMatchesOrAdjustSelection.selectWordAndItsPrefixIfAny",
+        "key": "ctrl+k 3",
+        "mac": "cmd+k 3",
+        "when": "editorTextFocus",
+        "args": ["#"]
+      },
+      {
+        "command": "selectMatchesOrAdjustSelection.selectWordAndItsPrefixIfAny",
+        "key": "ctrl+k 4",
+        "mac": "cmd+k 4",
+        "when": "editorTextFocus",
+        "args": ["$"]
+      },
+      {
+        "command": "selectMatchesOrAdjustSelection.selectWordAndItsPrefixIfAny",
+        "key": "ctrl+k 5",
+        "mac": "cmd+k 5",
+        "when": "editorTextFocus",
+        "args": ["%"]
       }
     ],
     "configuration": {
