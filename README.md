@@ -8,11 +8,28 @@ Besides, it have some commands to make or adjust selections. E.g. you could do "
 
 ## Commands & Demo
 
-### "Select All Matches In Selection...", "Select All Matches In Line Selections...", "Select Next Matches From Cursors..." and "Select Up To Next Matches From Cursors..."
+### "Select All Matches In Selection...", "Select Next Matches From Cursors..." and "Select Up To Next Matches From Cursors..."
 
-![Select Matches In Selection or From Cursors](https://github.com/johnnytemp/vscode-quick-replace-in-selection/raw/master/images/selectInSelectionOrFromCursors.gif)
+![Select Matches In Selection or From Cursors](https://github.com/johnnytemp/vscode-select-matches-or-adjust-selection/raw/master/images/selectInSelectionOrFromCursors.gif)
 
 Remark: "Select All Matches In Selection..." is similar to "Find All In Selection".
+
+### "Select Matches Using Pattern (or input)..." (Shortcut: Ctrl-K Ctrl-;) and "Select All Matches In Line Selections..."
+
+![Select Matches Using Pattern Or In Line Selections](https://github.com/johnnytemp/vscode-select-matches-or-adjust-selection/raw/master/images/selectByPatternOrInLineSelections.gif)
+
+### "Normalize Selection" (Shortcut: Ctrl-Shift-A)
+
+![Normalize Selection](https://github.com/johnnytemp/vscode-select-matches-or-adjust-selection/raw/master/images/normalizeSelection.gif)
+
+### "Select Word and Its Prefix" (Shortcut: "Ctrl-K 4" for prefix `$`)
+
+![Select Word and Its Prefix](https://github.com/johnnytemp/vscode-select-matches-or-adjust-selection/raw/master/images/selectWordAndItsPrefix.gif)
+
+### "Increment Selection Starts" (Shortcut: "Ctrl-K H"), "Increment Selection Starts and Ends" (Shortcut: "Ctrl-K L")
+
+- "Increment Selection Starts" extends selection starts by 1 column.
+- "Increment Selection Starts and Ends" extends both selection starts and ends by 1 column each.
 
 ## Features
 

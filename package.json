@@ -41,8 +41,8 @@
     "onCommand:selectMatchesOrAdjustSelection.repeatLastSelectMatches",
     "onCommand:selectMatchesOrAdjustSelection.unselectSurroundingWhitespaces",
     "onCommand:selectMatchesOrAdjustSelection.normalizeSelection",
-    "onCommand:selectMatchesOrAdjustSelection.incrementLeftBound",
-    "onCommand:selectMatchesOrAdjustSelection.incrementBothBounds",
+    "onCommand:selectMatchesOrAdjustSelection.incrementLeftBoundary",
+    "onCommand:selectMatchesOrAdjustSelection.incrementBothBoundaries",
     "onCommand:selectMatchesOrAdjustSelection.selectWordAndItsPrefixIfAny"
   ],
   "main": "./out/extension.js",
@@ -81,11 +81,11 @@
         "title": "Normalize Selection"
       },
       {
-        "command": "selectMatchesOrAdjustSelection.incrementLeftBound",
+        "command": "selectMatchesOrAdjustSelection.incrementLeftBoundary",
         "title": "Increment Selection Starts"
       },
       {
-        "command": "selectMatchesOrAdjustSelection.incrementBothBounds",
+        "command": "selectMatchesOrAdjustSelection.incrementBothBoundaries",
         "title": "Increment Selection Starts and Ends"
       },
       {
@@ -112,13 +112,13 @@
         "when": "editorTextFocus"
       },
       {
-        "command": "selectMatchesOrAdjustSelection.incrementLeftBound",
+        "command": "selectMatchesOrAdjustSelection.incrementLeftBoundary",
         "key": "ctrl+k h",
         "mac": "cmd+k h",
         "when": "editorTextFocus"
       },
       {
-        "command": "selectMatchesOrAdjustSelection.incrementBothBounds",
+        "command": "selectMatchesOrAdjustSelection.incrementBothBoundaries",
         "key": "ctrl+k l",
         "mac": "cmd+k l",
         "when": "editorTextFocus"
