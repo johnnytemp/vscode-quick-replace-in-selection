@@ -1,4 +1,4 @@
-# Select Matches/Adjust Selection Using Regex Or Rules README
+# Select Matches Or Adjust Selection Using Regex Or Rules README
 
 A main feature of this extension are the various "Select Matches" commands. They let you search and select the matches by a regular expression (regex) (or literal string [#3](#footnote3)), within the current selection, the whole document, or after cursors. It also let you use *predefined patterns* to perform such selections. With these commands, you could do job like shrink selections, extends selections, move selections, etc.
 
