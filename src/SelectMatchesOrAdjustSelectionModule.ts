@@ -149,6 +149,23 @@ export class SelectMatchesOrAdjustSelectionModule {
         target: "?1,2;?s-g (\\s*)(.*\\S)?"
       });
     }));
+
+    context.subscriptions.push(commands.registerCommand('selectMatchesOrAdjustSelection.incrementLeftBound', () => {
+      let editor = window.activeTextEditor;
+      if (!editor) {
+        return;
+      }
+      let newSelections = helper.incrementLeftBound(editor.document, editor.selections);
+      editor.selections = newSelections;
+    }));
+    context.subscriptions.push(commands.registerCommand('selectMatchesOrAdjustSelection.incrementBothBounds', () => {
+      let editor = window.activeTextEditor;
+      if (!editor) {
+        return;
+      }
+      let newSelections = helper.incrementBothBounds(editor.document, editor.selections);
+      editor.selections = newSelections;
+    }));
   }
 
   public onDeactivateExtension() {

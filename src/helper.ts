@@ -131,3 +131,41 @@ export function shiftOrExtendsInWhitespacesCursorsOrSelectionEndsToNextNonWhites
   }
   return selections;
 }
+
+export function incrementLeftBound(document : TextDocument, selections : Selection[]) : Selection[] {
+  let source = document.getText();
+  let newSelections: Selection[] = [];
+  for (let sel of selections) {
+    let offset = document.offsetAt(sel.start);
+    if (offset > 0) {
+      offset -= (offset >= 2 && source.substr(offset - 2, 2) === "\r\n") ? 2 : 1;
+      sel = new Selection(sel.end, document.positionAt(offset)); // reversed selection
+    } else {
+      sel = new Selection(sel.end, sel.start);
+    }
+    newSelections.push(sel);
+  }
+  return newSelections;
+}
+
+export function incrementBothBounds(document : TextDocument, selections : Selection[]) : Selection[] {
+  let source = document.getText();
+  let newSelections: Selection[] = [];
+  for (let sel of selections) {
+    let start = sel.start;
+    let end = sel.end;
+    let offset = document.offsetAt(start);
+    if (offset > 0) {
+      offset -= (offset >= 2 && source.substr(offset - 2, 2) === "\r\n") ? 2 : 1;
+      start = document.positionAt(offset);
+    }
+    offset = document.offsetAt(end);
+    if (offset < source.length) {
+      offset += (offset <= source.length - 2 && source.substr(offset, 2) === "\r\n") ? 2 : 1;
+      end = document.positionAt(offset);
+    }
+    sel = new Selection(start, end);
+    newSelections.push(sel);
+  }
+  return newSelections;
+}
