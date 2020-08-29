@@ -7,7 +7,6 @@ import * as vscode from 'vscode';
 // import * as myExtension from '../../extension';
 import { QuickReplaceInSelectionModule } from '../../QuickReplaceInSelectionModule';
 import { SelectMatchesOrAdjustSelectionModule } from '../../SelectMatchesOrAdjustSelectionModule';
-import { SelectNextExprFromCursorsCommand } from '../../SelectNextExprFromCursorsCommand';
 
 var editorContent = 'Hello world' + "\n" +
   '' + "\n" +

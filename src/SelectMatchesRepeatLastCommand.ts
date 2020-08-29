@@ -1,4 +1,3 @@
-import { QuickReplaceInSelectionCommand } from './QuickReplaceInSelectionCommand';
 import { window } from 'vscode';
 import { SelectMatchesCommandBase } from './SelectMatchesCommandBase';
 
