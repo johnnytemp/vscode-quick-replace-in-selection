@@ -1,7 +1,7 @@
 {
   "name": "select-matches-or-adjust-selection",
   "displayName": "Select Matches/Adjust Selection Using Regex Or Rules",
-  "description": "Using regular expression (regex) searching or preset rules, perform commands like \"Select All Matches In Selection...\", \"Select Next Matches From Cursors...\", \"Unselect Surrounding Whitespaces\" and \"Normalize Selection\"",
+  "description": "Using regular expression (regex) searching or preset patterns, perform commands like \"Select All Matches In Selection...\", \"Select Next Matches From Cursors...\", \"Unselect Surrounding Whitespaces\" and \"Normalize Selection\"",
   "version": "0.9.0",
   "publisher": "johnnywong",
   "icon": "images/select-matches-or-adjust-selection-icon.png",
