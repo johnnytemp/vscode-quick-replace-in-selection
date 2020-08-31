@@ -40,10 +40,11 @@ This operation unselect surrounding whitespaces, and it make incomplete words at
 
 <br>
 
-### "Increment Selection Starts" (Shortcut: "Ctrl-K H"), "Increment Selection Starts and Ends" (Shortcut: "Ctrl-K L")
+### "Increment Selection Starts" (Shortcut: "Ctrl-K H"), "Increment Selection Starts and Ends" (Shortcut: "Ctrl-K L") and "Decrement Selection Starts and Ends" (Shortcut: "Ctrl-K Shift-L")
 
-- "Increment Selection Starts" extends selection starts by 1 column.
-- "Increment Selection Starts and Ends" extends both selection starts and ends by 1 column each.
+- "Increment Selection Starts" extends selection starts by 1 character.
+- "Increment Selection Starts and Ends" extends both selection starts and ends by 1 character each.
+- "Decrement Selection Starts and Ends" shrink both selection starts and ends by 1 character each.
 
 ## Features
 
