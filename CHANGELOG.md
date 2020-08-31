@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.10.0] - 2020-08-31
+
+### Added
+- Two new patterns for regex's ()-pair
+- Add command "Decrement Selection Starts and Ends"
+- Support only specify args.selectScope for selectMatchesOrAdjustSelection.selectMatchesByPattern command.
+
+### Changed
+- Changed a macOS's shortcut from `Alt-;` to `Cmd-;`.
+- Better error for "No matches found to select, ..."
+
+### Fix
+- Fix command "Ctrl-k h" & "Ctrl-k l" not work.
+
 ## [0.9.1] - 2020-08-30
 
 - Initial release

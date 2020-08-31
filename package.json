@@ -2,7 +2,7 @@
   "name": "select-matches-or-adjust-selection",
   "displayName": "Select Matches Or Adjust Selection Using Regex Or Rules",
   "description": "Using regular expression (regex) searching or preset patterns, perform commands like \"Select All Matches In Selection...\", \"Select Next Matches From Cursors...\", \"Unselect Surrounding Whitespaces\" and \"Normalize Selection\"",
-  "version": "0.9.1",
+  "version": "0.10.0",
   "publisher": "johnnywong",
   "icon": "images/select-matches-or-adjust-selection-icon.png",
   "engines": {
@@ -43,6 +43,7 @@
     "onCommand:selectMatchesOrAdjustSelection.normalizeSelection",
     "onCommand:selectMatchesOrAdjustSelection.incrementLeftBoundary",
     "onCommand:selectMatchesOrAdjustSelection.incrementBothBoundaries",
+    "onCommand:selectMatchesOrAdjustSelection.decrementBothBoundaries",
     "onCommand:selectMatchesOrAdjustSelection.selectWordAndItsPrefixIfAny"
   ],
   "main": "./out/extension.js",
@@ -89,6 +90,10 @@
         "title": "Increment Selection Starts and Ends"
       },
       {
+        "command": "selectMatchesOrAdjustSelection.decrementBothBoundaries",
+        "title": "Decrement Selection Starts and Ends"
+      },
+      {
         "command": "selectMatchesOrAdjustSelection.selectWordAndItsPrefixIfAny",
         "title": "Select Word and Its Prefix"
       }
@@ -122,6 +127,12 @@
         "command": "selectMatchesOrAdjustSelection.incrementBothBoundaries",
         "key": "ctrl+k l",
         "mac": "cmd+k l",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "selectMatchesOrAdjustSelection.decrementBothBoundaries",
+        "key": "ctrl+k shift+l",
+        "mac": "cmd+k shift+l",
         "when": "editorTextFocus"
       },
       {
@@ -177,6 +188,12 @@
             },
             "Non-whitespaces": {
               "find": "\\S+"
+            },
+            "Regex's ()-pair (max 3 levels nested, experimental)": {
+              "find": "(?<!\\\\)\\(([^\r\n()\\\\]+(?=$|[\r\n()\\\\])|\\\\.|(?<!\\\\)\\(([^\r\n()\\\\]+(?=$|[\r\n()\\\\])|\\\\.|(?<!\\\\)\\(([^\r\n()\\\\]+(?=$|[\r\n()\\\\])|\\\\.)*\\))*\\))*\\)"
+            },
+            "Regex's ()-pair in \\-escaped double-quoted string (max 3 levels nested, experimental)": {
+              "find": "(?<!\\\\\\\\)\\(([^\r\n()\"\\\\]+(?=$|[\r\n()\"\\\\])|\\\\\\\\[\\\\]?.|\\\\[^\\\\]|(?<!\\\\\\\\)\\(([^\r\n()\"\\\\]+(?=$|[\r\n()\"\\\\])|\\\\\\\\[\\\\]?.|\\\\[^\\\\]|(?<!\\\\\\\\)\\(([^\r\n()\"\\\\]+(?=$|[\r\n()\"\\\\])|\\\\\\\\[\\\\]?.|\\\\[^\\\\])*\\))*\\))*\\)"
             },
             "Simple expression": {
               "find": "((!!? ?)?[$]?\\w+( ?\\( ?\\))?|'[^'\r\n\\\\]*'|\"([^\"\\\\]+|\\\\.)*\"|`[^`\\\\]*`)(\\s*([-+*/.&|^?:[]|\\|\\||&&|::|->|[<>]=?|[!=]==?)\\s*((!!? ?)?[$]?\\w+( ?\\( ?\\))?|'[^'\r\n\\\\]*'|\"([^\"\\\\]+|\\\\.)*\"|`[^`\\\\]*`)(\\s*\\])?)*"

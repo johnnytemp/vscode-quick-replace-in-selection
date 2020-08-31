@@ -170,6 +170,29 @@ export function incrementBothBounds(document : TextDocument, selections : Select
   return newSelections;
 }
 
+export function decrementBothBounds(document : TextDocument, selections : Selection[]) : Selection[] {
+  let source = document.getText();
+  let newSelections: Selection[] = [];
+  for (let sel of selections) {
+    let start = sel.start;
+    let end = sel.end;
+    let offset = document.offsetAt(start);
+    if (!sel.isEmpty) {
+      offset += (source.substr(offset, 2) === "\r\n") ? 2 : 1;
+      start = document.positionAt(offset);
+    }
+    let startOffset = offset;
+    offset = document.offsetAt(end);
+    if (offset > startOffset) {
+      offset -= (source.substr(offset - 2, 2) === "\r\n") ? 2 : 1;
+      end = document.positionAt(offset);
+    }
+    sel = new Selection(start, end);
+    newSelections.push(sel);
+  }
+  return newSelections;
+}
+
 export function selectWordAndItsPrefixIfAny(document : TextDocument, selections : Selection[], wordPrefix: string) : Selection[] {
   wordPrefix = wordPrefix.substr(0, 1); // first character, or empty string
   let source = document.getText();

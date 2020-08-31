@@ -100,6 +100,7 @@ Hints:
 Some default patterns are listed here:
 
 - Line
+- Regex's ()-pair (max 3 levels nested, experimental) [#5](#footnote5)
 - Simple expression [#5](#footnote5)
 - Simple string [#5](#footnote5)
 - Whitespaces to non-whitespaces boundary

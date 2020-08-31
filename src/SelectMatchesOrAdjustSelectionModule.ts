@@ -166,6 +166,14 @@ export class SelectMatchesOrAdjustSelectionModule {
       let newSelections = helper.incrementBothBounds(editor.document, editor.selections);
       editor.selections = newSelections;
     }));
+    context.subscriptions.push(commands.registerCommand('selectMatchesOrAdjustSelection.decrementBothBoundaries', () => {
+      let editor = window.activeTextEditor;
+      if (!editor) {
+        return;
+      }
+      let newSelections = helper.decrementBothBounds(editor.document, editor.selections);
+      editor.selections = newSelections;
+    }));
 
     context.subscriptions.push(commands.registerCommand('selectMatchesOrAdjustSelection.selectWordAndItsPrefixIfAny', (args?: string[]) => {
       if (args === undefined) {
