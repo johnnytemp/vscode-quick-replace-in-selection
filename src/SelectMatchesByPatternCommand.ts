@@ -23,7 +23,7 @@ export class SelectMatchesByPatternCommand extends SelectMatchesCommandBase {
       return this._underlyingCommand;
     }
     let module = this.getModule();
-    return module.getInputAndSelectCommandById(args.selectScope || '');
+    return module.getInputAndSelectCommandById(args ? args.selectScope : '');
   }
 
   public getCommandType() : string {
@@ -61,7 +61,8 @@ export class SelectMatchesByPatternCommand extends SelectMatchesCommandBase {
       this.handleError(this.performSelectionWithRule(args.patternName, this.getSelectMatchesCommand(args), false, args.extraOptions));
       return;
     }
-    this.performCommand();
+    let selectScopeCommand = args && args.selectScope ? this.getSelectMatchesCommand(args) : undefined;
+    this.performCommand(selectScopeCommand);
   }
 
   public repeatCommand() {
@@ -71,9 +72,12 @@ export class SelectMatchesByPatternCommand extends SelectMatchesCommandBase {
     this.handleError(this.performSelectionWithRule(lastRuleName, lastSelectCommand || module.getDefaultInputAndSelectCommand(), false, this._lastExtraOptions));
   }
 
-  public performCommand() {
+  public performCommand(selectScopeCommand? : SelectMatchesCommandBase | undefined) {
     if (this._underlyingCommand !== undefined) {
       return this.performCommandWithSelectCommand(this._underlyingCommand);
+    }
+    if (selectScopeCommand) {
+      return this.performCommandWithSelectCommand(selectScopeCommand);
     }
     let selectCommands = this.getModule().getAvailableInputAndSelectCommands();
     let lastSelectCommand = this.getLastPatternSelectMethod();
@@ -186,7 +190,7 @@ export class SelectMatchesByPatternCommand extends SelectMatchesCommandBase {
       }
       regex = '?' + extraOptions + (matches[1] || '') + (matches[2] || (matches[3] ? '|' : '')) + (matches[3] || '') + ';' + regex.substr(matches[0].length);
     }
-    return selectMatchesCommand.performSelection(regex, this.getFlagsFromRule(rule));
+    return selectMatchesCommand.performSelection(regex, this.getFlagsFromRule(rule), false, patternName);
   }
 
   protected getFlagsFromRule(rule : SelectRule) : string {

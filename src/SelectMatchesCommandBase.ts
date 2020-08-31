@@ -70,7 +70,7 @@ export class SelectMatchesCommandBase extends SearchOrReplaceCommandBase {
     });
   }
 
-  public performSelection(target: string, flags?: string, fromUserInput?: boolean) : string | null {
+  public performSelection(target: string, flags?: string, fromUserInput?: boolean, patternName?: string) : string | null {
     if (fromUserInput && this.getCommandType() === 'input') {
       this.setLastSelectSearchTarget(target);
     }
@@ -103,7 +103,10 @@ export class SelectMatchesCommandBase extends SearchOrReplaceCommandBase {
       }
       editor.revealRange(newSelections[0]);
     } else {
-      return 'No matches found to select, for regex /' + outInfo.regexp.source + '/';
+      return 'No matches found to select, for ' + (patternName ?
+        'pattern "' + patternName + '"':
+        'regex /' + outInfo.regexp.source + '/'
+      );
     }
     return null;
   }

@@ -150,7 +150,7 @@ export class SelectMatchesOrAdjustSelectionModule {
       });
     }));
 
-    context.subscriptions.push(commands.registerCommand('selectMatchesOrAdjustSelection.incrementLeftBound', () => {
+    context.subscriptions.push(commands.registerCommand('selectMatchesOrAdjustSelection.incrementLeftBoundary', () => {
       let editor = window.activeTextEditor;
       if (!editor) {
         return;
@@ -158,7 +158,7 @@ export class SelectMatchesOrAdjustSelectionModule {
       let newSelections = helper.incrementLeftBound(editor.document, editor.selections);
       editor.selections = newSelections;
     }));
-    context.subscriptions.push(commands.registerCommand('selectMatchesOrAdjustSelection.incrementBothBounds', () => {
+    context.subscriptions.push(commands.registerCommand('selectMatchesOrAdjustSelection.incrementBothBoundaries', () => {
       let editor = window.activeTextEditor;
       if (!editor) {
         return;

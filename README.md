@@ -1,10 +1,10 @@
 # Select Matches Or Adjust Selection Using Regex Or Rules README
 
-A main feature of this extension are the various "Select Matches" commands. They let you search and select the matches by a regular expression (regex) (or literal string [#3](#footnote3)), within the current selection, the whole document, or after cursors. It also let you use *predefined patterns* to perform such selections. With these commands, you could do job like shrink selections, extends selections, move selections, etc.
+A main feature of this extension are the various "Select Matches" commands. They let you search and select the matches by a regular expression (regex) (or literal string [#1](#footnote1)), within the current selection, the whole document, or after cursors. It also let you use *predefined patterns* to perform such selections. With these commands, you could do job like shrink selections, extends selections, move selections, etc.
 
 Besides, it have some commands to make or adjust selections. E.g. you could do "Normalize Selection", which Unselect Surrounding Whitespaces and Expand the Incomplete Words. You could also select a `#hashtag` or `$variable` with a keyboard shortcut.
 
-**Note**: By default, for the "Select Matches" commands, all matches in the regex are *case sensitive* [#1](#footnote1), and `^`, `$`  match *text selection boundaries* instead of line boundaries [#2](#footnote2).
+**Note**: By default, for the "Select Matches" commands, all matches in the regex are *case sensitive* [#2](#footnote2), and `^`, `$`  match *text selection boundaries* instead of line boundaries [#3](#footnote3).
 
 ## Commands & Demo
 
@@ -12,19 +12,33 @@ Besides, it have some commands to make or adjust selections. E.g. you could do "
 
 ![Select Matches In Selection or From Cursors](https://github.com/johnnytemp/vscode-select-matches-or-adjust-selection/raw/master/images/selectInSelectionOrFromCursors.gif)
 
+The "... From Cursors..." above meant to search from cursors or selection ends onwards.
+
 Remark: "Select All Matches In Selection..." is similar to "Find All In Selection".
+
+<br>
 
 ### "Select Matches Using Pattern (or input)..." (Shortcut: Ctrl-K Ctrl-;) and "Select All Matches In Line Selections..."
 
 ![Select Matches Using Pattern Or In Line Selections](https://github.com/johnnytemp/vscode-select-matches-or-adjust-selection/raw/master/images/selectByPatternOrInLineSelections.gif)
 
+The "Line Selections" meant the current text selections will be further split into one-line-each for searching a pattern inside.
+
+<br>
+
 ### "Normalize Selection" (Shortcut: Ctrl-Shift-A)
 
 ![Normalize Selection](https://github.com/johnnytemp/vscode-select-matches-or-adjust-selection/raw/master/images/normalizeSelection.gif)
 
+This operation unselect surrounding whitespaces, and it make incomplete words at selection boundaries to be complete. (Also, for empty-selection cursors, it jumps from inside word to word start; and jumps from inside spaces-and-tabs to the end of them)
+
+<br>
+
 ### "Select Word and Its Prefix" (Shortcut: "Ctrl-K 4" for prefix `$`)
 
 ![Select Word and Its Prefix](https://github.com/johnnytemp/vscode-select-matches-or-adjust-selection/raw/master/images/selectWordAndItsPrefix.gif)
+
+<br>
 
 ### "Increment Selection Starts" (Shortcut: "Ctrl-K H"), "Increment Selection Starts and Ends" (Shortcut: "Ctrl-K L")
 
@@ -86,8 +100,8 @@ Hints:
 Some default patterns are listed here:
 
 - Line
-- Simple expression
-- Simple string
+- Simple expression [#5](#footnote5)
+- Simple string [#5](#footnote5)
 - Whitespaces to non-whitespaces boundary
 - Word
 
@@ -95,16 +109,27 @@ Some default patterns are listed here:
 
 - You could also define custom keyboard shortcuts for each command, e.g.:
 
-```
-{
-    "key": "alt+'",
-    "command": "selectMatchesOrAdjustSelection.selectMatchesInSelection",
-    "when": "editorTextFocus",
-    "args": {
-        "find": "'[^'\\r\\n]*'"
+    ```
+    {
+        "key": "alt+'",
+        "command": "selectMatchesOrAdjustSelection.selectMatchesInSelection",
+        "when": "editorTextFocus",
+        "args": {
+            "find": "'[^'\\r\\n]*'"
+        }
+    },
+    {
+        "key": "alt+shift+'",
+        "command": "selectMatchesOrAdjustSelection.selectMatchesByPattern",
+        "args": {
+            "selectScope": "selectNextMatchesFromCursors",
+            "patternName": "Simple string"
+        }
     }
-}
-```
+    ```
+
+    - For `"selectScope"`, it is one of `"selectMatchesInSelection"`, `"selectMatchesInLineSelections"`, `"selectNextMatchesFromCursors"` and `"selectUpToNextMatchesFromCursors"`.
+    - If `"patternName"` is not specified, it will prompt a picker to choose from.
 
 ## Known Issues
 
@@ -120,11 +145,13 @@ MIT - See [LICENSE](LICENSE)
 
 ## Footnotes
 
-<a name="footnote1"></a>#1 - to do the opposite, type a leading "<code>?i </code>" before the regex in the input box (not a part of regex), or in the `"find"` value for patterns.  
-<a name="footnote2"></a>#2 - to do the opposite, type a leading "`+`" (preferred) or "<code>?m </code>" before the regex in the input box (not a part of regex), or in the `"find"` value for patterns.  
-<a name="footnote3"></a>#3 - to search with a *literal string*, add a leading "`*`" in the regex input box.  
+<a name="footnote1"></a>#1 - to search with a *literal string*, add a leading "`*`" in the regex input box.  
+<a name="footnote2"></a>#2 - to do the opposite, type a leading "<code>?i </code>" before the regex in the input box (not a part of regex), or in the `"find"` value for patterns.  
+<a name="footnote3"></a>#3 - to do the opposite, type a leading "`+`" (preferred) or "<code>?m </code>" before the regex in the input box (not a part of regex), or in the `"find"` value for patterns.  
 <a name="footnote4"></a>#4 - Such complete "inline syntax" is:  
 
     "?" [<nth-occurrence>] [<option-flags>] [ "|" <skip group no.> "," <select group no.> ] ";" [ "?" <flags> " " | "+" | "*" ] <normal-regex>
 
-    where [ optional-1 | optional-2 ] are optional branches; "literal-characters" are literal characters; spaces are just for readability
+    where [ optional-1 | optional-2 ] are optional branches; "characters" are literal characters; spaces are just for readability
+
+<a name="footnote5"></a>#5 - these patterns are only expected to work in many basic cases. They have limitations and fail to work for more complicate cases. Thus, use them with inspection and at your own risk.  

@@ -103,6 +103,7 @@
       {
         "command": "selectMatchesOrAdjustSelection.repeatLastSelectMatches",
         "key": "alt+;",
+        "mac": "cmd+;",
         "when": "editorTextFocus"
       },
       {
