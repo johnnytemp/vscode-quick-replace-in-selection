@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.10.1] - 2020-09-04
+
+### Fix
+- Fix command "Select Matches (Repeat Last)" not work correctly in case of keyboard shortcut with just "selectScope" args.
+- Fix "Simple expression" to work for negative numbers.
+
 ## [0.10.0] - 2020-08-31
 
 ### Added

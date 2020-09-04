@@ -159,6 +159,7 @@ export class SelectMatchesByPatternCommand extends SelectMatchesCommandBase {
     } else {
       this.setLastSelectRuleName(ruleName);
     }
+    this.setLastPatternSelectMethod(selectMatchesCommand); // set last method, because if invoked by `args: { "selectScope": "x" }` it prompts for the pattern, but I prefer the selectScope is not remembered yet until the rule is chosen here.
     module.setLastSelectCommand(this);
     if (isAdditionalOptionsForPattern) {
       window.showInputBox({

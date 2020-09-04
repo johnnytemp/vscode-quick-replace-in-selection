@@ -2,7 +2,7 @@
   "name": "select-matches-or-adjust-selection",
   "displayName": "Select Matches Or Adjust Selection Using Regex Or Rules",
   "description": "Using regular expression (regex) searching or preset patterns, perform commands like \"Select All Matches In Selection...\", \"Select Next Matches From Cursors...\", \"Unselect Surrounding Whitespaces\" and \"Normalize Selection\"",
-  "version": "0.10.0",
+  "version": "0.10.1",
   "publisher": "johnnywong",
   "icon": "images/select-matches-or-adjust-selection-icon.png",
   "engines": {
@@ -21,7 +21,8 @@
     "regular expression",
     "regex",
     "find",
-    "search"
+    "search",
+    "delete"
   ],
   "bugs": {
     "url": "https://github.com/johnnytemp/vscode-select-matches-or-adjust-selection",
@@ -169,7 +170,7 @@
       "properties": {
         "selectMatchesOrAdjustSelection.patterns": {
           "type": "object",
-          "description": "The patterns for the commands which contain \"(Use pattern)...\"",
+          "description": "The patterns for the commands which contain \"Using pattern\"",
           "default": {
             "Chained identifiers": {
               "find": "[$]?\\w+(([.]|->|::)\\w+)*"
@@ -196,10 +197,10 @@
               "find": "(?<!\\\\\\\\)\\(([^\r\n()\"\\\\]+(?=$|[\r\n()\"\\\\])|\\\\\\\\[\\\\]?.|\\\\[^\\\\]|(?<!\\\\\\\\)\\(([^\r\n()\"\\\\]+(?=$|[\r\n()\"\\\\])|\\\\\\\\[\\\\]?.|\\\\[^\\\\]|(?<!\\\\\\\\)\\(([^\r\n()\"\\\\]+(?=$|[\r\n()\"\\\\])|\\\\\\\\[\\\\]?.|\\\\[^\\\\])*\\))*\\))*\\)"
             },
             "Simple expression": {
-              "find": "((!!? ?)?[$]?\\w+( ?\\( ?\\))?|'[^'\r\n\\\\]*'|\"([^\"\\\\]+|\\\\.)*\"|`[^`\\\\]*`)(\\s*([-+*/.&|^?:[]|\\|\\||&&|::|->|[<>]=?|[!=]==?)\\s*((!!? ?)?[$]?\\w+( ?\\( ?\\))?|'[^'\r\n\\\\]*'|\"([^\"\\\\]+|\\\\.)*\"|`[^`\\\\]*`)(\\s*\\])?)*"
+              "find": "((!!? ?|[-+])?[$]?\\w+( ?\\( ?\\))?|'[^'\r\n\\\\]*'|\"([^\"\\\\]+|\\\\.)*\"|`[^`\\\\]*`)(\\s*([-+*/.&|^?:[]|\\|\\||&&|::|->|[<>]=?|[!=]==?)\\s*((!!? ?|[-+])?[$]?\\w+( ?\\( ?\\))?|'[^'\r\n\\\\]*'|\"([^\"\\\\]+|\\\\.)*\"|`[^`\\\\]*`)(\\s*\\])?)*"
             },
             "Simple expression + optional comma": {
-              "find": "?e;((!!? ?)?[$]?\\w+( ?\\( ?\\))?|'[^'\r\n\\\\]*'|\"([^\"\\\\]+|\\\\.)*\"|`[^`\\\\]*`)(\\s*([-+*/.&|^?:[]|\\|\\||&&|::|->|[<>]=?|[!=]==?)\\s*((!!? ?)?[$]?\\w+( ?\\( ?\\))?|'[^'\r\n\\\\]*'|\"([^\"\\\\]+|\\\\.)*\"|`[^`\\\\]*`)(\\s*\\])?)*(\\s*,\\s*)?"
+              "find": "?e;((!!? ?|[-+])?[$]?\\w+( ?\\( ?\\))?|'[^'\r\n\\\\]*'|\"([^\"\\\\]+|\\\\.)*\"|`[^`\\\\]*`)(\\s*([-+*/.&|^?:[]|\\|\\||&&|::|->|[<>]=?|[!=]==?)\\s*((!!? ?|[-+])?[$]?\\w+( ?\\( ?\\))?|'[^'\r\n\\\\]*'|\"([^\"\\\\]+|\\\\.)*\"|`[^`\\\\]*`)(\\s*\\])?)*(\\s*,\\s*)?"
             },
             "Simple string": {
               "find": "'[^'\r\n\\\\]*'|\"([^\"\\\\]+|\\\\.)*\"|`[^`\\\\]*`"
