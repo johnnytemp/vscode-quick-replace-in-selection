@@ -1,73 +1,47 @@
-# Select Matches Or Adjust Selection Using Regex Or Rules README
+# Quick Replace In Selection README
 
-A main feature of this extension are the various "Select Matches" commands. They let you search and select the matches by a regular expression (regex) (or literal string [#1](#footnote1)), within the current selection, the whole document, or after cursors. It also let you use *predefined patterns* to perform such selections. With these commands, you could do job like shrink selections, extends selections, move selections, etc.
+Quick Replace In Selection let you search and replace all occurrences by a regular expression (regex) (or literal string[#3](#footnote3)), within the current selection or the whole document.
 
-Besides, it have some commands to make or adjust selections. E.g. you could do "Normalize Selection", which Unselect Surrounding Whitespaces and Expand the Incomplete Words. You could also select a `#hashtag` or `$variable` with a keyboard shortcut.
+It also support *predefined rules* to be used, and those rules allow *multiple replacements* in order at a time.
 
-**Note**: By default, for the "Select Matches" commands, all matches in the regex are *case sensitive* [#2](#footnote2), and `^`, `$`  match *text selection boundaries* instead of line boundaries [#3](#footnote3).
+**Note**: By default, all matches are *case sensitive* [#1](#footnote1), and `^`, `$`  match *text selection boundaries* instead of line boundaries [#2](#footnote2).
 
 ## Commands & Demo
 
-### "Select All Matches In Selection...", "Select Next Matches From Cursors..." and "Select Up To Next Matches From Cursors..."
+### Quick Replace In Selection
 
-![Select Matches In Selection or From Cursors](https://github.com/johnnytemp/vscode-select-matches-or-adjust-selection/raw/master/images/selectInSelectionOrFromCursors.gif)
+![Quick Replace In Selection](https://github.com/johnnytemp/vscode-quick-replace-in-selection/raw/master/images/replaceInSelection.gif)
 
-The "... From Cursors..." above meant to search from cursors or selection ends onwards.
+### Quick Replace In Selection (Use Rule)... (Shortcut: `Ctrl-K Ctrl-H`)
 
-Remark: "Select All Matches In Selection..." is similar to "Find All In Selection".
+![Quick Replace In Selection (Use Rule)...](https://github.com/johnnytemp/vscode-quick-replace-in-selection/raw/master/images/replaceInSelectionByRule.gif)
 
-<br>
+### Quick Replace In Selection (Repeat Last)
 
-### "Select Matches Using Pattern (or input)..." (Shortcut: Ctrl-K Ctrl-;) and "Select All Matches In Line Selections..."
-
-![Select Matches Using Pattern Or In Line Selections](https://github.com/johnnytemp/vscode-select-matches-or-adjust-selection/raw/master/images/selectByPatternOrInLineSelections.gif)
-
-The "Line Selections" meant the current text selections will be further split into one-line-each for searching a pattern inside.
-
-<br>
-
-### "Normalize Selection" (Shortcut: Ctrl-Shift-A)
-
-![Normalize Selection](https://github.com/johnnytemp/vscode-select-matches-or-adjust-selection/raw/master/images/normalizeSelection.gif)
-
-This operation unselect surrounding whitespaces, and it make incomplete words at selection boundaries to be complete. (Also, for empty-selection cursors, it jumps from inside word to word start; and jumps from inside spaces-and-tabs to the end of them)
-
-<br>
-
-### "Select Word and Its Prefix" (Shortcut: "Ctrl-K 4" for prefix `$`)
-
-![Select Word and Its Prefix](https://github.com/johnnytemp/vscode-select-matches-or-adjust-selection/raw/master/images/selectWordAndItsPrefix.gif)
-
-<br>
-
-### "Increment Selection Starts" (Shortcut: "Ctrl-K H"), "Increment Selection Starts and Ends" (Shortcut: "Ctrl-K L") and "Decrement Selection Starts and Ends" (Shortcut: "Ctrl-K Shift-L")
-
-- "Increment Selection Starts" extends selection starts by 1 character.
-- "Increment Selection Starts and Ends" extends both selection starts and ends by 1 character each.
-- "Decrement Selection Starts and Ends" shrink both selection starts and ends by 1 character each.
+Repeat the last replace action which use either input expressions, or a rule.
 
 ## Features
 
-- This extension mainly use the regular expression that JavaScript support for search.
+This extension use the regular expression that JavaScript support for search and replace. In addition, a `$&` in the "Replace to" input box or `"replace"` values in the rules mean the whole match.
 
-    E.g. "select all matches in selection for  `.+`" would mean select any non-empty string (excluding newline characters), in the selected text(s).
+The "Replace to" input box support extra escape sequence `\n`, `\r`, `\t`, `\\` as in regex. Other unrecognized sequences are preserved.
 
-    For more information on regular expression, you may checkout:
+E.g. "`.+` replace to `[$&]`" would mean replace any non-empty string (excluding newline characters), in the selected text(s), to be wrapped by `[]`.
 
-    - https://medium.com/factory-mind/regex-tutorial-a-simple-cheatsheet-by-examples-649dc1c3f285
+For more information on regular expression, you may checkout:
 
-- You could also select only a substring of the match with the format "`?<skip group no.>,<select group no.>;`" in front of the regex input/parameter.
+- https://medium.com/factory-mind/regex-tutorial-a-simple-cheatsheet-by-examples-649dc1c3f285
 
-    E.g. An input "`?1,2;(<)(.*?)>`" will only select the text in-between a `< >` pair. "Group no" corresponds to regex's capture group. The "skip group" must start from the regex pattern's beginning and immediately followed by the "select group", otherwise the behavior is undefined.
+## Major Use Case
 
-- Furthermore, there are some additional options for all the "Select Matches" commands, such as *nth-occurrence* and `d` for delete. The "inline syntax" [#4](#footnote4) of them in the regex input box or `"find"` parameter is "`?[<nth-occurrence>][<option-flags>];<normal-regex>`". Current supported option flags are the following:
+Sometimes you might want to replace some character(s) to another within current text selection (e.g. to delimit the text into lines).
 
-    - `d` - delete the selected matches.
-    - `e` - e for extends (conditionally); only apply for "Select Next Matches From Cursors". This flag instruct the logic to (conditionally) extends non-empty selections if each visited occurrence (including the final match of each) is touching previous selection/occurrence.  
-        E.g. if you search for "`?2e;\w+ ?`", and the selection is the "The " in "The Quick Brown Fox Jumps...", it will result in extended selection so that "The Quick Brown " is selected (because both occurrences "Quick " & "Brown " is touching each other and also with the selection). Without this `e` flag, "Brown " - the second occurrence - will be selected instead.
-    - Experimental flags (may change in future):
-        - `a` - a for align; align the selected matches (assume at most one per line) to the same column. Alignment is undefined if the assumption isn't true.
-        - `M` - M for (forced) move; only apply for "Select Next Matches From Cursors" and "Select Up To Next Matches From Cursors". This flag roughly means "jump really to the next match instead of the current position's match". It forbids a match at exactly the cursor position for each empty selection (aka cursors). (For each non-empty selection(s), they are assumed the last match already. Thus the first search position - selection end - is valid for the "next match")
+However, VS Code's builtin `Replace` may have these inconveniences:
+
+- too many steps: need to open dialog, enable the "Find in selection" option, some `Tab` keys or clicks, and need to press/trigger "Replace All"
+- it changes the last Find Target memory
+
+This extension solves them all.
 
 ## Requirements
 
@@ -77,61 +51,55 @@ None.
 
 This extension contributes the following settings:
 
-- `selectMatchesOrAdjustSelection.patterns`: define the patterns to be used by the command `Select Matches Using Pattern (or input)...`
+- `quickReplaceInSelection.rules`: define the rules to be used by the command `Quick Replace In Selection (Use Rule)...`
 
-    E.g. to define a pattern which search newlines, add this to your settings file:
+    E.g. to define a rule which replaces newlines to `\n`, to this in your settings file:
 
     ```
-    "selectMatchesOrAdjustSelection.patterns": {
-        "Test Pattern's Name": {
-            "find": "\r?\n"
+    "quickReplaceInSelection.rules": {
+        "Test Rule's Name": {
+            "find": ["\n"],
+            "replace": ["\\n"]
         }
     }
     ```
+
+    Remark: Next to  `"find":` & `"replace":` above, can specify `"flags"` to add regular expression's modifiers.  
+    &nbsp; E.g. specify `"flags": "i"` for case insensitive match, or `"flags": "m"` to change `^`, `$` to match line boundaries instead.
 
 Hints:
 
-- For how to define patterns in the configuration, you could look at the default patterns as examples. (`Ctrl-Shift-P` to open command palette, type "Open Default Settings (JSON)" & Enter, and search for `selectMatchesOrAdjustSelection.patterns`)
-- To hide a default pattern, add `"Pattern's Name": false` inside `selectMatchesOrAdjustSelection.patterns`.
-- You could make use of the default rules of the VS Code extension "Quick Replace In Selection" (by johnnywong), `Escape literal string for PCRE/extended regular expression` (optional) and then `Json stringify` and to put your regular expression in the `"find"` settings of `selectMatchesOrAdjustSelection.patterns`.
-- An experimental feature: to only replace the first match (instead of all matches) in each selection, put a leading "<code>?-g </code>" in the regex input box or `"find"` parameter.
+- For how to define rules in the configuration, you could look at the default rules as examples. (`Ctrl-Shift-P` to open command palette, type "Open Default Settings (JSON)" & Enter, and search for `quickReplaceInSelection.rules`)
+- You could make use of the default rules `Escape literal string for PCRE/extended regular expression` (optional) and then `Json stringify` and to put your regular expression in the `"find"` settings of `quickReplaceInSelection.rules`.
+- An experimental feature: to only replace the first match (instead of all matches) in each selection, put a trailing `-g` in the `"flags"` of the rule, or a leading "<code>?-g </code>" in regex input box.
 
-## Default patterns
+## Default rules
 
-Some default patterns are listed here:
+Some default rules are listed here:
 
-- Line
-- Regex's ()-pair (max 3 levels nested, experimental) [#5](#footnote5)
-- Simple expression [#5](#footnote5)
-- Simple string [#5](#footnote5)
-- Whitespaces to non-whitespaces boundary
-- Word
+- Encode html entities (minimal)
+- Escape literal string for PCRE/extended regular expression
+- Join lines by comma
+- Json stringify
+- Quote as C-string
+- Single-quote lines and join by comma
+- Split CSV/TSV into lines
+- Trim lines
 
 ## Keyboard shortcuts
 
-- You could also define custom keyboard shortcuts for each command, e.g.:
+- You could also define custom keyboard shortcuts for each rule:
 
-    ```
-    {
-        "key": "alt+'",
-        "command": "selectMatchesOrAdjustSelection.selectMatchesInSelection",
-        "when": "editorTextFocus",
-        "args": {
-            "find": "'[^'\\r\\n]*'"
-        }
-    },
-    {
-        "key": "alt+shift+'",
-        "command": "selectMatchesOrAdjustSelection.selectMatchesByPattern",
-        "args": {
-            "selectScope": "selectNextMatchesFromCursors",
-            "patternName": "Simple string"
-        }
+```
+{
+    "key": "alt+j",
+    "command": "quickReplaceInSelection.replaceInSelectionByRule",
+    "when": "editorTextFocus",
+    "args": {
+        "ruleName": "Json stringify"
     }
-    ```
-
-    - For `"selectScope"`, it is one of `"selectMatchesInSelection"`, `"selectMatchesInLineSelections"`, `"selectNextMatchesFromCursors"` and `"selectUpToNextMatchesFromCursors"`.
-    - If `"patternName"` is not specified, it will prompt a picker to choose from.
+}
+```
 
 ## Known Issues
 
@@ -147,13 +115,6 @@ MIT - See [LICENSE](LICENSE)
 
 ## Footnotes
 
-<a name="footnote1"></a>#1 - to search with a *literal string*, add a leading "`*`" in the regex input box.  
-<a name="footnote2"></a>#2 - to do the opposite, type a leading "<code>?i </code>" before the regex in the input box (not a part of regex), or in the `"find"` value for patterns.  
-<a name="footnote3"></a>#3 - to do the opposite, type a leading "`+`" (preferred) or "<code>?m </code>" before the regex in the input box (not a part of regex), or in the `"find"` value for patterns.  
-<a name="footnote4"></a>#4 - Such complete "inline syntax" is:  
-
-    "?" [<nth-occurrence>] [<option-flags>] [ "|" <skip group no.> "," <select group no.> ] ";" [ "?" <flags> " " | "+" | "*" ] <normal-regex>
-
-    where [ optional-1 | optional-2 ] are optional branches; "characters" are literal characters; spaces are just for readability
-
-<a name="footnote5"></a>#5 - these patterns are only expected to work in many basic cases. They have limitations and fail to work for more complicate cases. Thus, use them with inspection and at your own risk.  
+<a name="footnote1"></a>#1 - to do the opposite, type a leading "<code>?i </code>" before the regex in the input box (not a part of regex), or use `"flags"` in rules.  
+<a name="footnote2"></a>#2 - to do the opposite, type a leading "`+`" (preferred) or "<code>?m </code>" before the regex in the input box (not a part of regex), or use `"flags"` in rules.  
+<a name="footnote3"></a>#3 - to search & replace with a *literal string*, add a leading "`*`" in the regex input box. This also disable backslash escape and `$&` in the "Replace to" input box. (this feature is not available to rules)

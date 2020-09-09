@@ -1,36 +1,37 @@
 # Change Log
 
-All notable changes to the "select-matches-or-adjust-selection" extension will be documented in this file.
+All notable changes to the "quick-replace-in-selection" extension will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
-## [0.10.1] - 2020-09-04
-
-### Fix
-- Fix command "Select Matches (Repeat Last)" not work correctly in case of keyboard shortcut with just "selectScope" args.
-- Fix "Simple expression" to work for negative numbers.
-
-## [0.10.0] - 2020-08-31
+## [1.2.0] - 2020-08-14
 
 ### Added
-- Two new patterns for regex's ()-pair
-- Add command "Decrement Selection Starts and Ends"
-- Support only specify args.selectScope for selectMatchesOrAdjustSelection.selectMatchesByPattern command.
+- Support regex input box to start with "*" to mean the expression which follows is a literal string instead of regex, and so is the replace-to expression. (i.e. the backslash escape and "$&" just match literally)  
+Remark: rules are predefined and so no need to be able to replace instantly, so they may use the "Escape literal string for PCRE/extended regular expression" rule to escape a string to be matched literally.
+
+## [1.1.0] - 2020-08-12
+
+### Added
+- New command "Quick Replace In Selection (Repeat Last)"
+- Allow keyboard shortcuts to be associated to a rule.
+- Support special "-g" postfix in regex's "flags" to mean replace first match only (for each selection). E.g. "?mi-g " in the input box, or `"flags": "mi-g"` in rules.
 
 ### Changed
-- Changed a macOS's shortcut from `Alt-;` to `Cmd-;`.
-- Better error for "No matches found to select, ..."
+- Settings `quick-replace.rules` has been changed to `quickReplaceInSelection.rules`
 
 ### Fix
-- Fix command "Ctrl-k h" & "Ctrl-k l" not work.
+- "find" attribute in the rules accidentally supported special prefixes like "+" & "?i ". It is removed now.
 
-## [0.9.1] - 2020-08-30
+## [1.0.1] - 2020-08-08
+
+- Fix README markdown problems which show "?i" instead of "?i " wrongly.
+
+## [1.0.0] - 2020-08-07
 
 - Initial release
-- Support select matches by input box commands corresponding 4 select scopes: matches in selection, matches in line selections, next matches from cursors, and up to next matches from cursors.
-- Support select matches using predefined patterns, using the above 4 select scopes
-- Support a "Normalize Selection" command to exclude (unselect) surrounding whitespaces with Ctrl-Shift-A or Cmd-Shift-A.
-- Support a few commands, e.g. "Ctrl-K 4", to help select the '$' sign of variable faster.
+- Support inputting "Target to replace" and "Replace to"
+- Support replace by a defined rule with multiple replacements
