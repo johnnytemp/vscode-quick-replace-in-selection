@@ -1,9 +1,10 @@
 import { QuickReplaceRule } from './QuickReplaceInSelectionConfig';
 import { QuickReplaceInSelectionCommand } from './QuickReplaceInSelectionCommand';
+import { IRepeatableCommand } from './RepeatableCommand';
 import { window } from 'vscode';
 
 export class QuickReplaceInSelectionByRuleCommand extends QuickReplaceInSelectionCommand {
-  private static lastRuleName : string = '';
+  private _lastRuleName : string = '';
 
   public getCommandType() : string {
     return 'rule';
@@ -21,7 +22,7 @@ export class QuickReplaceInSelectionByRuleCommand extends QuickReplaceInSelectio
     let module = this.getModule();
 
     let rules = module.getConfig().getRules();
-    let lastRuleName = QuickReplaceInSelectionByRuleCommand.getLastRuleName();
+    let lastRuleName = this.getLastRuleName();
 
     let ruleNames = [];
     if (lastRuleName !== '') {
@@ -39,12 +40,14 @@ export class QuickReplaceInSelectionByRuleCommand extends QuickReplaceInSelectio
       if (ruleName.startsWith('( Last Rule: ')) {
         ruleName = lastRuleName;
       } else if (ruleName === '( Input Expressions... )') {
-        QuickReplaceInSelectionByRuleCommand.lastRuleName = ''; // also clear last rule, so that '( Input Expressions... )' is the first item for faster re-run.
-        module.setLastCommand(null);
+        this.setLastRuleName(''); // also clear last rule, so that '( Input Expressions... )' is the first item for faster re-run.
+        if (module.getLastCommand() === this) {
+          module.setLastCommand(null);  // clear because last rule name is cleared. However, now the last command should be copied at setLastCommand() and so this shouldn't occur.
+        }
         module.getQuickReplaceCommand().performCommand();
         return;
       } else {
-        QuickReplaceInSelectionByRuleCommand.lastRuleName = ruleName;
+        this.setLastRuleName(ruleName);
       }
       module.setLastCommand(this);
       this.handleError(this.performRule(ruleName));
@@ -52,7 +55,7 @@ export class QuickReplaceInSelectionByRuleCommand extends QuickReplaceInSelectio
   }
 
   public repeatCommand() {
-    this.handleError(this.performRule(QuickReplaceInSelectionByRuleCommand.lastRuleName));
+    this.handleError(this.performRule(this.getLastRuleName()));
   }
 
   //==== implementation methods ====
@@ -90,11 +93,15 @@ export class QuickReplaceInSelectionByRuleCommand extends QuickReplaceInSelectio
   }
 
   public clearHistory() {
-    QuickReplaceInSelectionByRuleCommand.lastRuleName = '';
+    this._lastRuleName = '';
   }
 
-  public static getLastRuleName() {
-    return QuickReplaceInSelectionByRuleCommand.lastRuleName;
+  public getLastRuleName() {
+    return this._lastRuleName;
+  }
+
+  public setLastRuleName(name : string) {
+    this._lastRuleName = name;
   }
 
 }

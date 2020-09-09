@@ -2,13 +2,14 @@ import { window, TextDocument, Selection, Range, EndOfLine } from 'vscode';
 import { QuickReplaceInSelectionModule } from './QuickReplaceInSelectionModule';
 import { SearchOrReplaceCommandBase } from './SearchOrReplaceCommandBase';
 import * as helper from './helper';
+import { IRepeatableCommand } from './RepeatableCommand';
 
 /**
  * QuickReplaceInSelectionCommand class -> should this be called QuickReplaceInSelectionInputCommand & "Quick Replace In Selection (Input)"?
  */
 export class QuickReplaceInSelectionCommand extends SearchOrReplaceCommandBase {
-  static lastTarget : string = '';
-  static lastReplacement : string = '';
+  private _lastTarget: string = '';
+  private _lastReplacement: string = '';
 
   public getCommandType() : string {
     return 'input';
@@ -29,12 +30,12 @@ export class QuickReplaceInSelectionCommand extends SearchOrReplaceCommandBase {
   public performCommand() {
     window.showInputBox({
       placeHolder: 'Target to replace (regex)',
-      value: QuickReplaceInSelectionCommand.lastTarget
+      value: this.getLastTarget()
     }).then((target: string | undefined) => {
       if (target !== undefined) {
         window.showInputBox({
           placeHolder: 'Replace to',
-          value: QuickReplaceInSelectionCommand.lastReplacement
+          value: this.getLastReplacement()
         }).then((replacement: string | undefined) => {
           if (replacement !== undefined) {
             this.getModule().setLastCommand(this);
@@ -46,13 +47,27 @@ export class QuickReplaceInSelectionCommand extends SearchOrReplaceCommandBase {
   }
 
   public repeatCommand() {
-    this.handleError(this.performReplacement([QuickReplaceInSelectionCommand.lastTarget], [QuickReplaceInSelectionCommand.lastReplacement], this.addDefaultFlags()));
+    this.handleError(this.performReplacement([this.getLastTarget()], [this.getLastReplacement()], this.addDefaultFlags()));
   }
 
   public clearHistory() {
-    QuickReplaceInSelectionCommand.lastTarget = '';
-    QuickReplaceInSelectionCommand.lastReplacement = '';
+    this.setLastTarget('');
+    this.setLastReplacement('');
   }
+
+  public getLastTarget(): string {
+    return this._lastTarget;
+  }
+  public setLastTarget(value: string) {
+    this._lastTarget = value;
+  }
+  public getLastReplacement(): string {
+    return this._lastReplacement;
+  }
+  public setLastReplacement(value: string) {
+    this._lastReplacement = value;
+  }
+
 
   //==== implementation methods ====
 
@@ -66,8 +81,8 @@ export class QuickReplaceInSelectionCommand extends SearchOrReplaceCommandBase {
       return 'Invalid count of find/replace parameters';
     }
     if (fromUserInput && this.getCommandType() === 'input') {
-      QuickReplaceInSelectionCommand.lastTarget = targets[0];
-      QuickReplaceInSelectionCommand.lastReplacement = replacements[0];
+      this.setLastTarget(targets[0]);
+      this.setLastReplacement(replacements[0]);
     }
     if (targets[0] === '' && replacements[0] === '') {  // this special case is for clear history
       return null;

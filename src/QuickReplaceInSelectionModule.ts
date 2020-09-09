@@ -3,13 +3,14 @@ import { QuickReplaceInSelectionConfig } from './QuickReplaceInSelectionConfig';
 import { QuickReplaceInSelectionCommand } from './QuickReplaceInSelectionCommand';
 import { QuickReplaceInSelectionByRuleCommand } from './QuickReplaceInSelectionByRuleCommand';
 import { QuickReplaceInSelectionRepeatLastCommand } from './QuickReplaceInSelectionRepeatLastCommand';
+import { IRepeatableCommand } from './RepeatableCommand';
 
 export class QuickReplaceInSelectionModule {
   private _config : QuickReplaceInSelectionConfig;
   private _quickReplaceCommand : QuickReplaceInSelectionCommand;
   private _replaceByRuleCommand : QuickReplaceInSelectionByRuleCommand;
   private _repeatLastCommand : QuickReplaceInSelectionRepeatLastCommand;
-  private _lastCommand : QuickReplaceInSelectionCommand | null = null;
+  private _lastCommand : IRepeatableCommand | null = null;
 
   private static _instance : QuickReplaceInSelectionModule | undefined;
 
@@ -43,17 +44,21 @@ export class QuickReplaceInSelectionModule {
     return this._repeatLastCommand;
   }
 
-  public getLastCommand() : QuickReplaceInSelectionCommand | null {
+  public getLastCommand() : IRepeatableCommand | null {
     return this._lastCommand;
   }
 
-  public setLastCommand(command : QuickReplaceInSelectionCommand | null) {
-    this._lastCommand = command;
+  public setLastCommand(command : IRepeatableCommand | null) {
+    this._lastCommand = command ? command.clone() : command;
   }
 
   public clearHistory() {
     this.getQuickReplaceCommand().clearHistory();
     this.getReplaceByRuleCommand().clearHistory();
+    let lastCommand = this.getLastCommand();
+    if (lastCommand) {
+      lastCommand.clearHistory();
+    }
     this.setLastCommand(null);
   }
 

@@ -1,8 +1,9 @@
 
 import { window, TextEditor, Range } from 'vscode';
 import * as helper from './helper';
+import { RepeatableCommand } from './RepeatableCommand';
 
-export class SearchOrReplaceCommandBase {
+export class SearchOrReplaceCommandBase extends RepeatableCommand {
 
   public handleError(error : string | null) {
     if (error === null) {
