@@ -1,10 +1,10 @@
 # Quick Replace In Selection README
 
-Quick Replace In Selection let you search and replace all occurrences by a regular expression (regex) (or literal string[#3](#footnote3)), within the current selection or the whole document.
+Quick Replace In Selection let you search and replace all occurrences by a regular expression (regex) (or literal string[#1](#footnote1)), within the current selection or the whole document.
 
 It also support *predefined rules* to be used, and those rules allow *multiple replacements* in order at a time.
 
-**Note**: By default, all matches are *case sensitive* [#1](#footnote1), and `^`, `$`  match *text selection boundaries* instead of line boundaries [#2](#footnote2).
+**Note**: By default, all matches are *case sensitive* [#2](#footnote2), and `^`, `$`  match *text selection boundaries* instead of line boundaries [#3](#footnote3).
 
 ## Commands & Demo
 
@@ -53,7 +53,7 @@ This extension contributes the following settings:
 
 - `quickReplaceInSelection.rules`: define the rules to be used by the command `Quick Replace In Selection (Use Rule)...`
 
-    E.g. to define a rule which replaces newlines to `\n`, to this in your settings file:
+    E.g. to define a rule which replaces newlines to `\n`, add this to your settings file:
 
     ```
     "quickReplaceInSelection.rules": {
@@ -88,18 +88,18 @@ Some default rules are listed here:
 
 ## Keyboard shortcuts
 
-- You could also define custom keyboard shortcuts for each rule:
+- You could also define custom keyboard shortcuts for each rule, e.g.:
 
-```
-{
-    "key": "alt+j",
-    "command": "quickReplaceInSelection.replaceInSelectionByRule",
-    "when": "editorTextFocus",
-    "args": {
-        "ruleName": "Json stringify"
+    ```
+    {
+        "key": "alt+j",
+        "command": "quickReplaceInSelection.replaceInSelectionByRule",
+        "when": "editorTextFocus",
+        "args": {
+            "ruleName": "Json stringify"
+        }
     }
-}
-```
+    ```
 
 ## Known Issues
 
@@ -115,6 +115,6 @@ MIT - See [LICENSE](LICENSE)
 
 ## Footnotes
 
-<a name="footnote1"></a>#1 - to do the opposite, type a leading "<code>?i </code>" before the regex in the input box (not a part of regex), or use `"flags"` in rules.  
-<a name="footnote2"></a>#2 - to do the opposite, type a leading "`+`" (preferred) or "<code>?m </code>" before the regex in the input box (not a part of regex), or use `"flags"` in rules.  
-<a name="footnote3"></a>#3 - to search & replace with a *literal string*, add a leading "`*`" in the regex input box. This also disable backslash escape and `$&` in the "Replace to" input box. (this feature is not available to rules)
+<a name="footnote1"></a>#1 - to search & replace with a *literal string*, add a leading "`*`" in the regex input box. This also disable backslash escape and `$&` in the "Replace to" input box. (this feature is not available to rules)  
+<a name="footnote2"></a>#2 - to do the opposite, type a leading "<code>?i </code>" before the regex in the input box (not a part of regex), or use `"flags"` in rules.  
+<a name="footnote3"></a>#3 - to do the opposite, type a leading "`+`" (preferred) or "<code>?m </code>" before the regex in the input box (not a part of regex), or use `"flags"` in rules.
