@@ -2,7 +2,7 @@
   "name": "quick-replace-in-selection",
   "displayName": "Quick Replace In Selection",
   "description": "Search and replace by some regular expressions in current selection with quick steps",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "publisher": "johnnywong",
   "icon": "images/quick-replace-in-selection-icon.png",
   "engines": {
@@ -122,6 +122,11 @@
               "replace": "\"$1\", "
             }
           }
+        },
+        "quickReplaceInSelection.repeatCommandUseCache": {
+          "type": "boolean",
+          "description": "Whether the \"repeat last\" command should use separate state cache, instead of use the state from the UI control. Enable this will make UI control not able to clear the last command state, and make the last command unidentifiable, but leading to a more stable \"repeat last\" command.",
+          "default": false
         }
       }
     }

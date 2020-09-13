@@ -8,6 +8,7 @@ type QuickReplaceRulesFalseAble = { [key: string]: { [key: string] : any } | fal
 export class QuickReplaceInSelectionConfig {
   private _config : WorkspaceConfiguration;
   private _rules : QuickReplaceRules = {};
+  private _repeatCommandUseCache : boolean = false;
 
   public constructor() {
     this._config = this.reloadConfig();
@@ -18,6 +19,10 @@ export class QuickReplaceInSelectionConfig {
     return this._rules;
   }
 
+  public getRepeatCommandUseCache() : boolean {
+    return this._repeatCommandUseCache;
+  }
+
   public onConfigChanged() {
     this._config = this.reloadConfig();
   }
@@ -25,6 +30,7 @@ export class QuickReplaceInSelectionConfig {
   public reloadConfig() : WorkspaceConfiguration {
     let vsConfig = workspace.getConfiguration('quickReplaceInSelection');
     this.reloadReplaceRules(vsConfig);
+    this._repeatCommandUseCache = vsConfig.get("repeatCommandUseCache") || false;
     return vsConfig;
   }
 

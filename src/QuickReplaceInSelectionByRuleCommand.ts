@@ -42,7 +42,7 @@ export class QuickReplaceInSelectionByRuleCommand extends QuickReplaceInSelectio
       } else if (ruleName === '( Input Expressions... )') {
         this.setLastRuleName(''); // also clear last rule, so that '( Input Expressions... )' is the first item for faster re-run.
         if (module.getLastCommand() === this) {
-          module.setLastCommand(null);  // clear because last rule name is cleared. However, now the last command should be copied at setLastCommand() and so this shouldn't occur.
+          module.setLastCommand(null);  // clear because last rule name is cleared. However, now the last command is copied at setLastCommand() if "repeatCommandUseCache" is true, and so this never occur in such case.
         }
         module.getQuickReplaceCommand().performCommand();
         return;

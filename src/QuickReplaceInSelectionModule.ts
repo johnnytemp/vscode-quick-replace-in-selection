@@ -49,7 +49,11 @@ export class QuickReplaceInSelectionModule {
   }
 
   public setLastCommand(command : IRepeatableCommand | null) {
-    this._lastCommand = command ? command.clone() : command;
+    if (command && this._config.getRepeatCommandUseCache()) {
+      this._lastCommand = command.clone();
+    } else {
+      this._lastCommand = command;
+    }
   }
 
   public clearHistory() {
