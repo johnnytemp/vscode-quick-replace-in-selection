@@ -38,7 +38,6 @@ export class QuickReplaceInSelectionCommand extends SearchOrReplaceCommandBase {
           value: this.getLastReplacement()
         }).then((replacement: string | undefined) => {
           if (replacement !== undefined) {
-            this.getModule().setLastCommand(this);
             this.handleError(this.performReplacement([target], [replacement], this.addDefaultFlags(), true));
           }
         });
@@ -83,6 +82,7 @@ export class QuickReplaceInSelectionCommand extends SearchOrReplaceCommandBase {
     if (fromUserInput && this.getCommandType() === 'input') {
       this.setLastTarget(targets[0]);
       this.setLastReplacement(replacements[0]);
+      this.getModule().setLastCommand(this);
     }
     if (targets[0] === '' && replacements[0] === '') {  // this special case is for clear history
       return null;
