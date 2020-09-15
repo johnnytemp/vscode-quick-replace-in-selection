@@ -20,8 +20,12 @@ export class QuickReplaceInSelectionCommand extends SearchOrReplaceCommandBase {
   }
 
   public performCommandWithArgs(args : any) {
-    if (typeof args === 'object' && args.target !== undefined && args.replacement !== undefined) {
-      this.handleError(this.performReplacement([args.target], [args.replacement], this.addDefaultFlags()));
+    if (typeof args === 'object' && args.find !== undefined) {
+      if (args.replace !== undefined) {
+        this.handleError(this.performReplacement([args.find], [args.replace], this.addDefaultFlags()));
+      } else {
+        this.onTargetChosen(args.find);
+      }
     } else {
       this.performCommand();
     }
@@ -33,14 +37,18 @@ export class QuickReplaceInSelectionCommand extends SearchOrReplaceCommandBase {
       value: this.getLastTarget()
     }).then((target: string | undefined) => {
       if (target !== undefined) {
-        window.showInputBox({
-          placeHolder: 'Replace to',
-          value: this.getLastReplacement()
-        }).then((replacement: string | undefined) => {
-          if (replacement !== undefined) {
-            this.handleError(this.performReplacement([target], [replacement], this.addDefaultFlags(), true));
-          }
-        });
+        this.onTargetChosen(target);
+      }
+    });
+  }
+
+  public onTargetChosen(target : string) {
+    window.showInputBox({
+      placeHolder: 'Replace to',
+      value: this.getLastReplacement()
+    }).then((replacement: string | undefined) => {
+      if (replacement !== undefined) {
+        this.handleError(this.performReplacement([target], [replacement], this.addDefaultFlags(), true));
       }
     });
   }

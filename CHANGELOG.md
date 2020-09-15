@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.2.3] - 2020-09-16
+
+### Added
+
+- Add a "Quick Replace Selections To..." command, which always replace the whole selections.
+- Command "quickReplaceInSelection.replaceInSelection" support "args" object with keys "find" & "replace".
+
 ## [1.2.2] - 2020-09-14
 
 ### Changed

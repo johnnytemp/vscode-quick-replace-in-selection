@@ -2,6 +2,7 @@ import { ExtensionContext, commands } from 'vscode';
 import { QuickReplaceInSelectionConfig } from './QuickReplaceInSelectionConfig';
 import { QuickReplaceInSelectionCommand } from './QuickReplaceInSelectionCommand';
 import { QuickReplaceInSelectionByRuleCommand } from './QuickReplaceInSelectionByRuleCommand';
+import { QuickReplaceSelectionsCommand } from "./QuickReplaceSelectionsCommand";
 import { QuickReplaceInSelectionRepeatLastCommand } from './QuickReplaceInSelectionRepeatLastCommand';
 import { IRepeatableCommand } from './RepeatableCommand';
 
@@ -9,6 +10,7 @@ export class QuickReplaceInSelectionModule {
   private _config : QuickReplaceInSelectionConfig;
   private _quickReplaceCommand : QuickReplaceInSelectionCommand;
   private _replaceByRuleCommand : QuickReplaceInSelectionByRuleCommand;
+  private _replaceSelectionsCommand : QuickReplaceSelectionsCommand;
   private _repeatLastCommand : QuickReplaceInSelectionRepeatLastCommand;
   private _lastCommand : IRepeatableCommand | null = null;
 
@@ -25,6 +27,7 @@ export class QuickReplaceInSelectionModule {
     this._config = new QuickReplaceInSelectionConfig();
     this._quickReplaceCommand = new QuickReplaceInSelectionCommand();
     this._replaceByRuleCommand = new QuickReplaceInSelectionByRuleCommand();
+    this._replaceSelectionsCommand = new QuickReplaceSelectionsCommand();
     this._repeatLastCommand = new QuickReplaceInSelectionRepeatLastCommand();
   }
 
@@ -38,6 +41,10 @@ export class QuickReplaceInSelectionModule {
 
   public getReplaceByRuleCommand() : QuickReplaceInSelectionByRuleCommand {
     return this._replaceByRuleCommand;
+  }
+
+  public getReplaceSelectionsCommand() : QuickReplaceSelectionsCommand {
+    return this._replaceSelectionsCommand;
   }
 
   public getRepeatLastCommand() : QuickReplaceInSelectionRepeatLastCommand {
@@ -59,6 +66,7 @@ export class QuickReplaceInSelectionModule {
   public clearHistory() {
     this.getQuickReplaceCommand().clearHistory();
     this.getReplaceByRuleCommand().clearHistory();
+    this.getReplaceSelectionsCommand().clearHistory();
     let lastCommand = this.getLastCommand();
     if (lastCommand) {
       lastCommand.clearHistory();
@@ -69,17 +77,22 @@ export class QuickReplaceInSelectionModule {
   public onActivateExtension(context: ExtensionContext) {
     this.getConfig().reloadConfig();
 
-    let disposable = commands.registerCommand('quickReplaceInSelection.replaceInSelection', () => {
+    let disposable = commands.registerCommand('quickReplaceInSelection.replaceInSelection', (args?: {}) => {
       // The code you place here will be executed every time your command is executed
 
       // // Display a message box to the user
       // vscode.window.showInformationMessage('Hello World from Quick Replace In Selection!');
-      this.getQuickReplaceCommand().performCommand();
+      this.getQuickReplaceCommand().performCommandWithArgs(args);
     });
     context.subscriptions.push(disposable);
 
     disposable = commands.registerCommand('quickReplaceInSelection.replaceInSelectionByRule', (args?: {}) => {
       this.getReplaceByRuleCommand().performCommandWithArgs(args);
+    });
+    context.subscriptions.push(disposable);
+
+    disposable = commands.registerCommand('quickReplaceInSelection.replaceSelectionsTo', (args?: {}) => {
+      this.getReplaceSelectionsCommand().performCommandWithArgs(args);
     });
     context.subscriptions.push(disposable);
 

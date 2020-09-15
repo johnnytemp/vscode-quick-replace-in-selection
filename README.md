@@ -16,6 +16,10 @@ It also support *predefined rules* to be used, and those rules allow *multiple r
 
 ![Quick Replace In Selection (Use Rule)...](https://github.com/johnnytemp/vscode-quick-replace-in-selection/raw/master/images/replaceInSelectionByRule.gif)
 
+### Quick Replace Selections To...
+
+Replace every selection with the inputted replacement, which has the same syntax as "Quick Replace In Selection". Usually the replacement contains `$&` to be useful.
+
 ### Quick Replace In Selection (Repeat Last)
 
 Repeat the last replace action which use either input expressions, or a rule.
@@ -73,7 +77,7 @@ Hints:
 - You could make use of the default rules `Escape literal string for PCRE/extended regular expression` (optional) and then `Json stringify` and to put your regular expression in the `"find"` settings of `quickReplaceInSelection.rules`.
 - An experimental feature: to only replace the first match (instead of all matches) in each selection, put a trailing `-g` in the `"flags"` of the rule, or a leading "<code>?-g </code>" in regex input box.
 
-## Default rules
+## Default Rules
 
 Some default rules are listed here:
 
@@ -86,7 +90,7 @@ Some default rules are listed here:
 - Split CSV/TSV into lines
 - Trim lines
 
-## Keyboard shortcuts
+## Keyboard Shortcuts
 
 - You could also define custom keyboard shortcuts for each rule, e.g.:
 
@@ -98,8 +102,19 @@ Some default rules are listed here:
         "args": {
             "ruleName": "Json stringify"
         }
+    },
+    {
+        "key": "shift+alt+7",
+        "command": "quickReplaceInSelection.replaceInSelection",
+        "when": "editorTextFocus",
+        "args": {
+            "find": "&",
+            "replace": "\\n"
+        }
     }
     ```
+
+    - If `"replace"` is not specified, it will prompt a picker to choose from.
 
 ## Known Issues
 

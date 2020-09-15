@@ -2,7 +2,7 @@
   "name": "quick-replace-in-selection",
   "displayName": "Quick Replace In Selection",
   "description": "Search and replace by some regular expressions in current selection with quick steps",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "publisher": "johnnywong",
   "icon": "images/quick-replace-in-selection-icon.png",
   "engines": {
@@ -15,6 +15,7 @@
     "replace",
     "regular expression",
     "regex",
+    "selection",
     "encode",
     "escape",
     "csv"
@@ -31,6 +32,7 @@
   "activationEvents": [
     "onCommand:quickReplaceInSelection.replaceInSelection",
     "onCommand:quickReplaceInSelection.replaceInSelectionByRule",
+    "onCommand:quickReplaceInSelection.replaceSelectionsTo",
     "onCommand:quickReplaceInSelection.repeatLastReplace"
   ],
   "main": "./out/extension.js",
@@ -45,6 +47,10 @@
         "title": "Quick Replace In Selection (Use rule)..."
       },
       {
+        "command": "quickReplaceInSelection.replaceSelectionsTo",
+        "title": "Quick Replace Selections To..."
+      },
+      {
         "command": "quickReplaceInSelection.repeatLastReplace",
         "title": "Quick Replace In Selection (Repeat Last)"
       }
@@ -54,6 +60,11 @@
         "command": "quickReplaceInSelection.replaceInSelectionByRule",
         "key": "ctrl+k ctrl+h",
         "mac": "cmd+k cmd+h",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "quickReplaceInSelection.replaceSelectionsTo",
+        "key": "ctrl+shift+alt+r",
         "when": "editorTextFocus"
       }
     ],
